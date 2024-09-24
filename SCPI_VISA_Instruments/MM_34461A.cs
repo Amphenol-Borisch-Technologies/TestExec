@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag3446x_2_08;
-using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
+using static ABT.Test.TestExecutive.SCPI_VISA_Instruments.Keysight;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -11,7 +11,7 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // https://www.keysight.com/us/en/search.html/command+expert
 //
 
-namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
 
 public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequency, Fresistance, Period, Resistance, Temperature, VoltageAC, VoltageDC, VoltageDiodic }
 
@@ -23,34 +23,34 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
         public static Boolean IsMM_34461A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(Ag3446x)); }
 
         public static void DelayAutoSet(SCPI_VISA_Instrument SVI, Boolean state) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(state);
         }
                 
         public static Boolean DelayAutoIs(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
             return state;
         }
 
         public static void DelaySet(SCPI_VISA_Instrument SVI, MMD mmd) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), mmd));
         }
 
         public static void DelaySet(SCPI_VISA_Instrument SVI, Double Seconds) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Seconds);
         }
 
         public static Double DelayGet(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Query(MINimum, out Double seconds);
             return seconds;
         }
 
         public static Double Get(SCPI_VISA_Instrument SVI, PROPERTY property) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             // SCPI FORMAT:DATA(ASCii/REAL) command unavailable on KS 34461A.
             switch (property) {
                 case PROPERTY.AmperageAC:
@@ -90,24 +90,24 @@ public enum PROPERTY { AmperageAC, AmperageDC, Capacitance, Continuity, Frequenc
                     ((Ag3446x)SVI.Instrument).SCPI.MEASure.DIODe.QueryAsciiReal(out Double diodeVoltage);
                     return diodeVoltage;
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(PROPERTY)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(PROPERTY)));
             }
         }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Mustn't invoke TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
+            // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
             SCPI99.Initialize(SVI);
         }
 
         public static void TerminalsSetRear(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             if (TerminalsGet(SVI) == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34461A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), MMD.DEFault));            
             ((Ag3446x)SVI.Instrument).SCPI.TRIGger.DELay.AUTO.Command(true);
         }
 
         public static TERMINAL TerminalsGet(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((Ag3446x)SVI.Instrument).SCPI.ROUTe.TERMinals.Query(out String terminals);
             return String.Equals(terminals, "REAR") ? TERMINAL.Rear : TERMINAL.Front;
         }

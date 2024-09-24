@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls.Expressions;
-using static ABT.TestSpace.TestExec.Switching.RelayForms;
-using static ABT.TestSpace.TestExec.Switching.USB_ERB24.UE24;
+using static ABT.Test.TestExecutive.Switching.RelayForms;
+using static ABT.Test.TestExecutive.Switching.USB_ERB24.UE24;
 
-namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
+namespace ABT.Test.TestExecutive.Switching.USB_ERB24 {
     public enum SWITCHED_STATE { disconnected, CONNECTED };
 
     public sealed class SwitchedNet {
@@ -124,7 +124,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             switch (SwitchedState) {
                 case SWITCHED_STATE.disconnected:  return !are;
                 case SWITCHED_STATE.CONNECTED:     return are;
-                default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
+                default:                           throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
             }
         }
 
@@ -164,7 +164,7 @@ namespace ABT.TestSpace.TestExec.Switching.USB_ERB24 {
             switch (SwitchedState) {
                 case SWITCHED_STATE.disconnected:  foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, StateNegate(s.S));  break;
                 case SWITCHED_STATE.CONNECTED:     foreach (State s in SRs[SwitchedRouteGet(SN1, SN2)]) UE24.Set(s.UE, s.R, s.S);               break;
-                default:                           throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
+                default:                           throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(SWITCHED_STATE)));
             }
         }
 

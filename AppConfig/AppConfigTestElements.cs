@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ABT.TestSpace.TestExec.AppConfig {
+namespace ABT.Test.TestExecutive.AppConfig {
     public class TestOperationsSection : ConfigurationSection {
         public const String ClassName = nameof(TestOperationsSection);
         [ConfigurationProperty("TestOperations")] public TestOperations TestOperations { get { return ((TestOperations)(base["TestOperations"])); } }

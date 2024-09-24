@@ -8,9 +8,9 @@ using Agilent.CommandExpert.ScpiNet.Ag3446x_2_08;
 using Agilent.CommandExpert.ScpiNet.AgE3610XB_1_0_0_1_00;
 using Agilent.CommandExpert.ScpiNet.AgE36200_1_0_0_1_0_2_1_00;
 using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
-using ABT.TestSpace.TestExec.Logging;
+using ABT.Test.TestExecutive.Logging;
 
-namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
     // NOTE:  https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
     public enum SCPI_IDENTITY { Manufacturer, Model, SerialNumber, FirmwareRevision }
     // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".
@@ -69,7 +69,7 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
 
         public static Dictionary<Alias, SCPI_VISA_Instrument> Get() {
             IEnumerable<SCPI_VISA_Instrument> svis =
-                from svi in XElement.Load(TestExecutive.GlobalConfigurationFile).Elements("SCPI_VISA_Instruments").Elements("SVI")
+                from svi in XElement.Load(TestExec.GlobalConfigurationFile).Elements("SCPI_VISA_Instruments").Elements("SVI")
                 select new SCPI_VISA_Instrument(new Alias(svi.Element("ID").Value), svi.Element("Description").Value, svi.Element("Address").Value);
             Dictionary<Alias, SCPI_VISA_Instrument> SVIs = new Dictionary<Alias, SCPI_VISA_Instrument>();
             foreach (SCPI_VISA_Instrument svi in svis) SVIs.Add(new Alias(svi.ID.ToString()), svi);

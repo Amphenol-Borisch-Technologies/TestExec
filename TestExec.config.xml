@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
-	This TestExecutive.GlobalConfigurationFile file allows configuring TestExecutive settings easily:
+	This TestExec.GlobalConfigurationFile file allows configuring TestExec settings easily:
 	SCPI VISA instruments:
 	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
-	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExecutive if needed.
+	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExec if needed.
 
-	NOTE:  Each TestExecutor must utilize sealed class 'SVIA' in file TestExecutor.cs to map generic SCPI VISA
+	NOTE:  Each TestPlan must utilize sealed class 'SVIA' in file TestPlan.cs to map generic SCPI VISA
 	      Instrument IDs to, optimally, more meaningful domain specific aliases:
 		  
 			  internal static class SVIA {
@@ -19,14 +19,14 @@
 			  }
 
 			- Include only required/utilized SCPI VISA Instruments:
-				- That is, if this TestExecutive.GlobalConfigurationFile contains elements for 10 power supplies, but a TestExecutor program
+				- That is, if this TestExec.GlobalConfigurationFile contains elements for 10 power supplies, but a TestPlan program
 				  only requires & utilizes 2, simply don't alias the unused 8 in class 'SVIA'.
-			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestExecutor's program.
-			- Allows a TestExecutor program to be most easily ported to different Test Systems having different TestExecutive.GlobalConfigurationFile configurations.
-				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestExecutor programs on Test System #2
+			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestPlan's program.
+			- Allows a TestPlan program to be most easily ported to different Test Systems having different TestExec.GlobalConfigurationFile configurations.
+				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
 					with different SCPI VISA Instruments.
-				- If all TestExecutor.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
-					compatible subsets of the Test Systems' TestExecutive.GlobalConfigurationFile configurations.
+				- If all TestPlan.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
+					compatible subsets of the Test Systems' TestExec.GlobalConfigurationFile configurations.
 			- This approach is similar to the Keysight i3070's Board config files:
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
 				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
@@ -66,26 +66,26 @@
 <Configuration>
 	<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->
   <!-- BarCodeScannerID is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
-        When a TestExecutor's App.config LOGGER_SerialNumberDialogEnabled = true:
+        When a TestPlan's App.config LOGGER_SerialNumberDialogEnabled = true:
 				- Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
 				- SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Code39 encoded Serial Number.
           - This enforces correct Barcode Scanning of ABT Serial Numbers, unlike hand-typing them, with it's substantially higher error rates..
-				When a TestExecutor's App.config LOGGER_SerialNumberDialogEnabled = false:
+				When a TestPlan's App.config LOGGER_SerialNumberDialogEnabled = false:
 				- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
            
         NOTE:  Barcode Scanner must be a corded USB scanner, and must also be explicitly supported by Microsoft's Windows.Devices.PointOfService namespace.
         - List of supported scanners at https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.
-				NOTE:  Barcode Scanner must be programmed into USB HID mode to work correctly with TestExecutive's SerialNumberDialog class to read ABT Serial Numbers.
+				NOTE:  Barcode Scanner must be programmed into USB HID mode to work correctly with TestExec's SerialNumberDialog class to read ABT Serial Numbers.
               - For a Voyager 1200g, scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program into USB HID mode.
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
   
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
-  <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExecutive.
+  <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExec.
                 
-         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExecutor App.config's UUT_SerialNumberRegExCustom key/value pair.
+         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestPlan App.config's UUT_SerialNumberRegExCustom key/value pair.
          - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
            SerialNumberRegExDefault is customizable to any/every UUT tested.
          - When not overridden by an App.config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
@@ -127,10 +127,10 @@
   </Apps>
 
   <Folders>
-    <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExecutive\Honeywell Voyager 1200g</BarcodeScanner>	<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
-    <Instruments>P:\Test\Engineers\Equipment Manuals\TestExecutive\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
-    <TestExecutors>C:\Program Files\ABT</TestExecutors>																													<!-- TestExecutor executables. -->
-    <Relays>P:\Test\Engineers\Equipment Manuals\TestExecutive\Measurement Computing</Relays>										<!-- MCC USB-ERB24, ULI & InstaCal -->
+    <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExec\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
+    <Instruments>P:\Test\Engineers\Equipment Manuals\TestExec\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
+    <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
+    <Relays>P:\Test\Engineers\Equipment Manuals\TestExec\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
  
 	<SCPI_VISA_Instruments>  

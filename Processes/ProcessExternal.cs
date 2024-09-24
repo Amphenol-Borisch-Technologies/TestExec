@@ -5,9 +5,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABT.TestSpace.TestExec.AppConfig;
+using ABT.Test.TestExecutive.AppConfig;
 
-namespace ABT.TestSpace.TestExec.Processes {
+namespace ABT.Test.TestExecutive.Processes {
     public enum PROCESS_METHOD { ExitCode, Redirect }
 
     public static class ProcessExternal {

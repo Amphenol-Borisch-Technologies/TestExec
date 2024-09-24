@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace ABT.TestSpace.TestExec {
+namespace ABT.Test.TestExecutive {
     public class TimerMilliSeconds {
         private readonly Int32 _milliSeconds;
         private readonly DateTime _start;

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace ABT.TestSpace.TestExec.AppConfig {
+namespace ABT.Test.TestExecutive.AppConfig {
     partial class SelectTests {
         /// <summary>
         /// Required designer variable.

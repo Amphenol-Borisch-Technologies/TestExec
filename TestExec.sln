@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExecutive", "TestExecutive.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TestExecutiveSetup", "..\TestExecutiveSetup\TestExecutiveSetup.vdproj", "{12754A71-E92D-4285-8E9D-93948BC8DF9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExec", "TestExec.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,7 +11,7 @@ Global
 		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
-		Description = TestExecutive
+		Description = TestExec
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,13 +22,6 @@ Global
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|x64.ActiveCfg = Release|x64
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|x64.Build.0 = Release|x64
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Debug|Any CPU.ActiveCfg = Debug
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Debug|Any CPU.Build.0 = Debug
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Debug|x64.ActiveCfg = Debug
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Debug|x64.Build.0 = Debug
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Release|Any CPU.ActiveCfg = Release
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Release|Any CPU.Build.0 = Release
-		{12754A71-E92D-4285-8E9D-93948BC8DF9D}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

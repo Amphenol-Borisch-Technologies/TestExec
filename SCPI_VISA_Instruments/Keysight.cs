@@ -9,9 +9,9 @@ using System.Collections.Generic;
 // Enthusiastically recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-// NOTE:  Unlike all other classes in namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
+// NOTE:  Unlike all other classes in namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
 // not Instrument objects contained in their SCPI_VISA_Instrument objects.
-namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
     public enum CHANNEL { C1, C2 }
     public enum MMD { MINimum, MAXimum, DEFault }
     public enum TERMINAL { Front, Rear };

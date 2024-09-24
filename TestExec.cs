@@ -21,28 +21,28 @@ using Microsoft.Win32;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
-using ABT.TestSpace.TestExec.AppConfig;
-using ABT.TestSpace.TestExec.SCPI_VISA_Instruments;
-using ABT.TestSpace.TestExec.Logging;
-using ABT.TestSpace.TestExec.Switching.USB_ERB24;
-using static ABT.TestSpace.TestExec.Switching.RelayForms;
+using ABT.Test.TestExecutive.AppConfig;
+using ABT.Test.TestExecutive.SCPI_VISA_Instruments;
+using ABT.Test.TestExecutive.Logging;
+using ABT.Test.TestExecutive.Switching.USB_ERB24;
+using static ABT.Test.TestExecutive.Switching.RelayForms;
 
-// NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestExecutor based closed source/proprietary projects:
-//        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestExecutor.
+// NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
+//        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
 //          - That is, it's excellent for non-GUI (WinForms/WPF/UWP/WinUI 3) C# development.
 //          - VS Code is free for both private & commercial use:
 //            - https://code.visualstudio.com/docs/supporting/FAQ
 //            - https://code.visualstudio.com/license
-// NOTE:  Recommend using Microsoft's Visual Studio Community Edition to develop/debug open sourced TestExecutive:
-//        - https://github.com/Amphenol-Borisch-Technologies/TestExecutive/blob/master/LICENSE.txt
+// NOTE:  Recommend using Microsoft's Visual Studio Community Edition to develop/debug open sourced TestExec:
+//        - https://github.com/Amphenol-Borisch-Technologies/TestExec/blob/master/LICENSE.txt
 //        - "An unlimited number of users within an organization can use Visual Studio Community for the following scenarios:
 //           in a classroom learning environment, for academic research, or for contributing to open source projects."
-//        - TestExecutor based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
+//        - TestPlan based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
 //          - https://visualstudio.microsoft.com/vs/community/
 //          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
 // NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
 //          - If not developing GUI code (WinForms/WPF/UWP/WinUI 3), then VS Code is entirely sufficient & potentially preferable.
-// TODO:  Eventually; refactor TestExecutive to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
+// TODO:  Eventually; refactor TestExec to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 //        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
@@ -55,25 +55,25 @@ using static ABT.TestSpace.TestExec.Switching.RelayForms;
 // NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
 // NOTE:  With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 // NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
-//        TestExecutive's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExecutive:
+//        TestExec's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExec:
 //             Opening repositories:
-//             P:\Test\Engineers\repos\TestExecutor
+//             P:\Test\Engineers\repos\TestPlan
 //             Opening repositories:
-//             P:\Test\Engineers\repos\TestExecutor
-//             C:\Users\phils\source\repos\TestExecutive
+//             P:\Test\Engineers\repos\TestPlan
+//             C:\Users\phils\source\repos\TestExec
 //             Git failed with a fatal error.
 //             Git failed with a fatal error.
 //             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
 //        - Temporarily disabling Zero Trust by "pausing" it resolves above error.
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
-//        - FYI, synchronizing with TestExecutor's repository doesn't error out, as it doesn't utilize a Git server.
+//        - FYI, synchronizing with TestPlan's repository doesn't error out, as it doesn't utilize a Git server.
 
-namespace ABT.TestSpace.TestExec {
+namespace ABT.Test.TestExecutive {
     /// <remarks>
     ///  <b>References:</b>
     /// <item>
-    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutive">TestExecutive</a></description>
-    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExecutor">TestExecutor</a></description>
+    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExec">TestExec</a></description>
+    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestPlan">TestPlan</a></description>
     ///  </item>
     ///  </remarks>
     /// <summary>
@@ -91,46 +91,46 @@ namespace ABT.TestSpace.TestExec {
     /// </summary>
     /// 
     /// <summary>
-    /// NOTE:  Two types of TestExecutor cancellations possible, each having two sub-types resulting in 4 altogether:
+    /// NOTE:  Two types of TestPlan cancellations possible, each having two sub-types resulting in 4 altogether:
     /// <para>
     /// A) Spontaneous Operator Initiated Cancellations:
     ///      1)  Operator Proactive:
     ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
     ///            cancel currently executing Measurement.
-    ///          - Requires TestExecutor implementation by the Test Developer, but is initiated by Operator, so categorized as such.
+    ///          - Requires TestPlan implementation by the Test Developer, but is initiated by Operator, so categorized as such.
     ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
     ///      2)  Operator Reactive:
-    ///          - TestExecutive's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
+    ///          - TestExec's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
     ///            which simply invokes CTS_Cancel.Cancel().
-    ///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExecutive.MeasurementsRun()'s foreach loop.
-    ///            - If true, TestExecutive.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
+    ///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExec.MeasurementsRun()'s foreach loop.
+    ///            - If true, TestExec.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
     ///            prior to the next Measurement's execution.
     ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
     /// B) PrePlanned Developer Programmed Cancellations:
-    ///      3)  TestExecutor/Test Developer initiated cancellations:
-    ///          - Any TestExecutor's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
+    ///      3)  TestPlan/Test Developer initiated cancellations:
+    ///          - Any TestPlan's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
     ///          - Permits immediate cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
     ///      4)  App.config's CancelNotPassed:
     ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-    ///          - If the current TestExecutor.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
-    ///            TestExecutive.MeasurementsRun() will break/exit, stopping further testing.
-    ///		    - Do not pass Go, do not collect $200, go directly to TestExecutive.MeasurementsPostRun().
+    ///          - If the current TestPlan.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
+    ///            TestExec.MeasurementsRun() will break/exit, stopping further testing.
+    ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MeasurementsPostRun().
     ///
-    /// NOTE:  The Operator Proactive &amp; TestExecutor/Test Developer initiated cancellations both occur while the currently executing TestExecutor.MeasurementRun() conpletes, via 
+    /// NOTE:  The Operator Proactive &amp; TestPlan/Test Developer initiated cancellations both occur while the currently executing TestPlan.MeasurementRun() conpletes, via 
     ///        thrown OperationCanceledException.
-    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing TestExecutor.MeasurementRun() completes, via checks
-    ///        inside the TestExecutive.MeasurementsRun() loop.
+    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing TestPlan.MeasurementRun() completes, via checks
+    ///        inside the TestExec.MeasurementsRun() loop.
     /// </para>
     /// </summary>
-    public abstract partial class TestExecutive : Form {
-        public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExecutive\TestExecutive.config.xml"; // NOTE:  Update this path if installed into another folder.
-        public const String MutexTestExecutorName = "MutexTestExecutor";
-        public static Mutex MutexTestExecutor = null;
+    public abstract partial class TestExec : Form {
+        public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExec\TestExec.config.xml"; // NOTE:  Update this path if installed into another folder.
+        public const String MutexTestPlanName = "MutexTestPlan";
+        public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
         public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
@@ -149,7 +149,7 @@ namespace ABT.TestSpace.TestExec {
         private const String NOT_APPLICABLE = "NotApplicable";
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
 
-        protected TestExecutive(Icon icon) {
+        protected TestExec(Icon icon) {
             InitializeComponent();
             Icon = icon;
             // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
@@ -306,8 +306,8 @@ namespace ABT.TestSpace.TestExec {
         private void PreApplicationExit() {
             Initialize();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-            MutexTestExecutor.ReleaseMutex();
-            MutexTestExecutor.Dispose();
+            MutexTestPlan.ReleaseMutex();
+            MutexTestPlan.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -445,22 +445,22 @@ namespace ABT.TestSpace.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior by TestExecutive, despite TestExecutive being a DLL library:
-        // - Suspect the standard way to implement TestExecutive as an independent application capable of opening &
-        //   executing client UUT TestExecutor.exe/executables is to reverse their architecture:
-        //   - TestExecutive compiled into an independent .exe/executable instead of a .dll/library.
-        //   - TestExecutors compiled into .dll/libraries instead of independent .exe/executables.
-        //   - However, upgrades/bug-fixes to TestExecutive would then forcibly be applied to all a Test System's TestExecutors:
-        //     - There should be only one TestExecutive app per Test System PC.
-        //     - Like current DLL based TestExecutive, an .exe based TestExecutive would also permit fragmentation of TestExecutives,
-        //       albeit on a PC to PC basis, rather than a TestExecutor to TestExecutor basis.
-        // - TestExecutive currently being a DLL accentuates fragmentation; each TestExecutor app can potentially have a unique TestExecutive version.
-        //   - Advantageously though, needn't apply upgrades/bug-fixes to TestExecutors if concerned about breaking functionality.
-        //     - Simply don't copy the new TestExecutive.dll file into TestExecutor folders of concern.
+        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior by TestExec, despite TestExec being a DLL library:
+        // - Suspect the standard way to implement TestExec as an independent application capable of opening &
+        //   executing client UUT TestPlan.exe/executables is to reverse their architecture:
+        //   - TestExec compiled into an independent .exe/executable instead of a .dll/library.
+        //   - TestPlans compiled into .dll/libraries instead of independent .exe/executables.
+        //   - However, upgrades/bug-fixes to TestExec would then forcibly be applied to all a Test System's TestPlans:
+        //     - There should be only one TestExec app per Test System PC.
+        //     - Like current DLL based TestExec, an .exe based TestExec would also permit fragmentation of TestExecs,
+        //       albeit on a PC to PC basis, rather than a TestPlan to TestPlan basis.
+        // - TestExec currently being a DLL accentuates fragmentation; each TestPlan app can potentially have a unique TestExec version.
+        //   - Advantageously though, needn't apply upgrades/bug-fixes to TestPlans if concerned about breaking functionality.
+        //     - Simply don't copy the new TestExec.dll file into TestPlan folders of concern.
         private void TSMI_File_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestExecutors").Value;
-                ofd.Filter = "TestExecutor Programs|*.exe";
+                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestPlans").Value;
+                ofd.Filter = "TestPlan Programs|*.exe";
                 ofd.DereferenceLinks = true;
                 ofd.RestoreDirectory = true;
 
@@ -518,7 +518,7 @@ namespace ABT.TestSpace.TestExec {
             sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
             sb.AppendLine($"  - Modify GlobalConfigurationFile to use a discovered Barcode Scanner.");
             sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
-            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExecutive/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
+            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExec/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
             sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
             foreach (DeviceInformation di in dic) {
                 sb.AppendLine($"Name: '{di.Name}'.");
@@ -546,18 +546,14 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
-        private void TSMI_System_TestExecutiveConfigXML_Click(Object sender, EventArgs e) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Unlike {Assembly.GetEntryAssembly().GetName().Name}.exe.config, {GlobalConfigurationFile} is a global configuration file that applies to all TestExecutor apps on its host PC.{Environment.NewLine}");
-            sb.AppendLine("Changing it thus changes behavior for all TestExecutors, so proceed with caution.");
-            DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", GlobalConfigurationFile);
+        private void TSMI_System_TestExecConfigXML_Click(Object sender, EventArgs e) {
+
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             Form about = new MessageBoxMonoSpaced (
-                Title: "About TestExecutive",
+                Title: "About TestExec",
                 Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
-                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutive"
+                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExec"
             );
             _ = about.ShowDialog();
         }
@@ -591,9 +587,9 @@ namespace ABT.TestSpace.TestExec {
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new MessageBoxMonoSpaced (
-                Title: "About TestExecutor",
+                Title: "About TestPlan",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
-                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExecutor"
+                Link: "https://github.com/Amphenol-Borisch-Technologies/TestPlan"
             );
             _ = about.ShowDialog();
         }
@@ -677,7 +673,7 @@ namespace ABT.TestSpace.TestExec {
         private String MeasurementEvaluate(Measurement measurement) {
             switch (measurement.ClassName) {
                 case MeasurementCustom.ClassName:
-                    return measurement.TestEvent; // Test Developer must set TestEvent in TestExecutor, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
+                    return measurement.TestEvent; // Test Developer must set TestEvent in TestPlan, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
                 case MeasurementNumeric.ClassName:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;

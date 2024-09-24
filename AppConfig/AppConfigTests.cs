@@ -5,14 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ABT.TestSpace.TestExec.AppConfig {
+namespace ABT.Test.TestExecutive.AppConfig {
     public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
     public enum SI_UNITS_MODIFIER { AC, DC, Peak, PP, NotApplicable, RMS }
 
     public abstract class MeasurementAbstract {
         public const String ClassName = nameof(MeasurementAbstract);
-        public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestExecutor's App.config.
-        public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestExecutor's App.config.
+        public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestPlan's App.config.
+        public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestPlan's App.config.
 
         private protected MeasurementAbstract() { }
 

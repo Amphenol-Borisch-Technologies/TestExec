@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 
-namespace ABT.TestSpace.TestExec {
-    public abstract partial class TestExecutive : Form {
+namespace ABT.Test.TestExecutive {
+    public abstract partial class TestExec : Form {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@ namespace ABT.TestSpace.TestExec {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExecutive));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestExec));
             this.ButtonRun = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextTest = new System.Windows.Forms.TextBox();
@@ -71,7 +71,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_ManualsBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_ManualsRelays = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_System_TestExecutiveConfigXML = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_System_TestExecConfigXML = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_System_About = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,9 +101,10 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonRun.BackColor = System.Drawing.Color.Green;
             this.ButtonRun.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRun.Location = new System.Drawing.Point(152, 546);
+            this.ButtonRun.Location = new System.Drawing.Point(203, 672);
+            this.ButtonRun.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ButtonRun.Name = "ButtonRun";
-            this.ButtonRun.Size = new System.Drawing.Size(88, 52);
+            this.ButtonRun.Size = new System.Drawing.Size(117, 64);
             this.ButtonRun.TabIndex = 1;
             this.ButtonRun.Text = "&Run";
             this.ButtonRun.UseVisualStyleBackColor = false;
@@ -114,9 +115,10 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonCancel.BackColor = System.Drawing.Color.Yellow;
             this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(287, 544);
+            this.ButtonCancel.Location = new System.Drawing.Point(383, 670);
+            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ButtonCancel.Name = "ButtonCancel";
-            this.ButtonCancel.Size = new System.Drawing.Size(88, 52);
+            this.ButtonCancel.Size = new System.Drawing.Size(117, 64);
             this.ButtonCancel.TabIndex = 2;
             this.ButtonCancel.Text = "&Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = false;
@@ -125,10 +127,11 @@ namespace ABT.TestSpace.TestExec {
             // TextTest
             // 
             this.TextTest.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.TextTest.Location = new System.Drawing.Point(556, 569);
+            this.TextTest.Location = new System.Drawing.Point(741, 700);
+            this.TextTest.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TextTest.Name = "TextTest";
             this.TextTest.ReadOnly = true;
-            this.TextTest.Size = new System.Drawing.Size(128, 20);
+            this.TextTest.Size = new System.Drawing.Size(169, 22);
             this.TextTest.TabIndex = 9;
             this.TextTest.TabStop = false;
             this.TextTest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -137,10 +140,10 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.LabelTestEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LabelTestEvent.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTestEvent.Location = new System.Drawing.Point(574, 546);
-            this.LabelTestEvent.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.LabelTestEvent.Location = new System.Drawing.Point(765, 672);
+            this.LabelTestEvent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.LabelTestEvent.Name = "LabelTestEvent";
-            this.LabelTestEvent.Size = new System.Drawing.Size(90, 16);
+            this.LabelTestEvent.Size = new System.Drawing.Size(120, 20);
             this.LabelTestEvent.TabIndex = 8;
             this.LabelTestEvent.Text = "Test Event";
             this.LabelTestEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -152,10 +155,11 @@ namespace ABT.TestSpace.TestExec {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtfResults.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtfResults.Location = new System.Drawing.Point(23, 21);
+            this.rtfResults.Location = new System.Drawing.Point(31, 26);
+            this.rtfResults.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rtfResults.Name = "rtfResults";
             this.rtfResults.ReadOnly = true;
-            this.rtfResults.Size = new System.Drawing.Size(1134, 500);
+            this.rtfResults.Size = new System.Drawing.Size(1511, 614);
             this.rtfResults.TabIndex = 7;
             this.rtfResults.TabStop = false;
             this.rtfResults.Text = "";
@@ -165,9 +169,10 @@ namespace ABT.TestSpace.TestExec {
             this.ButtonSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ButtonSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonSelect.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ButtonSelect.Location = new System.Drawing.Point(23, 547);
+            this.ButtonSelect.Location = new System.Drawing.Point(31, 673);
+            this.ButtonSelect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ButtonSelect.Name = "ButtonSelect";
-            this.ButtonSelect.Size = new System.Drawing.Size(88, 47);
+            this.ButtonSelect.Size = new System.Drawing.Size(117, 58);
             this.ButtonSelect.TabIndex = 0;
             this.ButtonSelect.Text = "&Select";
             this.ButtonSelect.UseVisualStyleBackColor = true;
@@ -177,10 +182,11 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonEmergencyStop.Image = global::ABT.TestSpace.Properties.Resources.EmergencyStop;
-            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1075, 531);
+            this.ButtonEmergencyStop.Image = global::ABT.Test.Properties.Resources.EmergencyStop;
+            this.ButtonEmergencyStop.Location = new System.Drawing.Point(1433, 654);
+            this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
-            this.ButtonEmergencyStop.Size = new System.Drawing.Size(82, 83);
+            this.ButtonEmergencyStop.Size = new System.Drawing.Size(109, 102);
             this.ButtonEmergencyStop.TabIndex = 5;
             this.ButtonEmergencyStop.Text = "&Emergency Stop";
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
@@ -197,8 +203,8 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT});
             this.MS.Location = new System.Drawing.Point(0, 0);
             this.MS.Name = "MS";
-            this.MS.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.MS.Size = new System.Drawing.Size(1180, 24);
+            this.MS.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.MS.Size = new System.Drawing.Size(1573, 28);
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
@@ -210,13 +216,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Separator1,
             this.TSMI_File_Exit});
             this.TSMI_File.Name = "TSMI_File";
-            this.TSMI_File.Size = new System.Drawing.Size(37, 20);
+            this.TSMI_File.Size = new System.Drawing.Size(46, 24);
             this.TSMI_File.Text = "&File";
             // 
             // TSMI_File_Change
             // 
             this.TSMI_File_Change.Name = "TSMI_File_Change";
-            this.TSMI_File_Change.Size = new System.Drawing.Size(115, 22);
+            this.TSMI_File_Change.Size = new System.Drawing.Size(142, 26);
             this.TSMI_File_Change.Text = "&Change";
             this.TSMI_File_Change.Click += new System.EventHandler(this.TSMI_File_Change_Click);
             // 
@@ -225,7 +231,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_File_Save.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Save.Image")));
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
-            this.TSMI_File_Save.Size = new System.Drawing.Size(115, 22);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(142, 26);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -233,12 +239,12 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_File_Separator1
             // 
             this.TSMI_File_Separator1.Name = "TSMI_File_Separator1";
-            this.TSMI_File_Separator1.Size = new System.Drawing.Size(112, 6);
+            this.TSMI_File_Separator1.Size = new System.Drawing.Size(139, 6);
             // 
             // TSMI_File_Exit
             // 
             this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(115, 22);
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(142, 26);
             this.TSMI_File_Exit.Text = "&Exit";
             this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
             // 
@@ -251,7 +257,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_Microsoft,
             this.TSMI_Apps_TexasInstruments});
             this.TSMI_Apps.Name = "TSMI_Apps";
-            this.TSMI_Apps.Size = new System.Drawing.Size(49, 20);
+            this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
             // 
             // TSMI_Apps_Keysight
@@ -261,13 +267,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightBenchVue
             // 
             this.TSMI_Apps_KeysightBenchVue.Name = "TSMI_Apps_KeysightBenchVue";
-            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(213, 26);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
             this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
@@ -275,7 +281,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightCommandExpert
             // 
             this.TSMI_Apps_KeysightCommandExpert.Name = "TSMI_Apps_KeysightCommandExpert";
-            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(213, 26);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
             this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
@@ -283,7 +289,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_KeysightConnectionExpert
             // 
             this.TSMI_Apps_KeysightConnectionExpert.Name = "TSMI_Apps_KeysightConnectionExpert";
-            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(171, 22);
+            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(213, 26);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
@@ -293,13 +299,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MeasurementComputing.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_MeasurementComputingInstaCal});
             this.TSMI_Apps_MeasurementComputing.Name = "TSMI_Apps_MeasurementComputing";
-            this.TSMI_Apps_MeasurementComputing.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_MeasurementComputing.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_MeasurementComputing.Text = "Measurement &Computing";
             // 
             // TSMI_Apps_MeasurementComputingInstaCal
             // 
             this.TSMI_Apps_MeasurementComputingInstaCal.Name = "TSMI_Apps_MeasurementComputingInstaCal";
-            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(116, 22);
+            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(144, 26);
             this.TSMI_Apps_MeasurementComputingInstaCal.Text = "&InstaCal";
             this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
             this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
@@ -310,20 +316,20 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrohipMPLAB_IPE,
             this.TSMI_Apps_MicrohipMPLAB_X_IDE});
             this.TSMI_Apps_Microchip.Name = "TSMI_Apps_Microchip";
-            this.TSMI_Apps_Microchip.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_Microchip.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_Microchip.Text = "&Microchip";
             // 
             // TSMI_Apps_MicrohipMPLAB_IPE
             // 
             this.TSMI_Apps_MicrohipMPLAB_IPE.Name = "TSMI_Apps_MicrohipMPLAB_IPE";
-            this.TSMI_Apps_MicrohipMPLAB_IPE.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_Apps_MicrohipMPLAB_IPE.Size = new System.Drawing.Size(179, 26);
             this.TSMI_Apps_MicrohipMPLAB_IPE.Text = "MPLAB &IPE";
             this.TSMI_Apps_MicrohipMPLAB_IPE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_IPE_Click);
             // 
             // TSMI_Apps_MicrohipMPLAB_X_IDE
             // 
             this.TSMI_Apps_MicrohipMPLAB_X_IDE.Name = "TSMI_Apps_MicrohipMPLAB_X_IDE";
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Size = new System.Drawing.Size(143, 22);
+            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Size = new System.Drawing.Size(179, 26);
             this.TSMI_Apps_MicrohipMPLAB_X_IDE.Text = "MPLAB &X IDE";
             this.TSMI_Apps_MicrohipMPLAB_X_IDE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_X_IDE_Click);
             // 
@@ -335,14 +341,14 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_Microsoft.Text = "Micro&soft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
             // 
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Enabled = false;
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Name = "TSMI_Apps_MicrosoftSQLServerManagementStudio";
-            this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Size = new System.Drawing.Size(241, 22);
+            this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Text = "&SQL Server Management Studio";
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.ToolTipText = "Coming soon!";
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click);
@@ -350,7 +356,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_MicrosoftVisualStudio
             // 
             this.TSMI_Apps_MicrosoftVisualStudio.Name = "TSMI_Apps_MicrosoftVisualStudio";
-            this.TSMI_Apps_MicrosoftVisualStudio.Size = new System.Drawing.Size(241, 22);
+            this.TSMI_Apps_MicrosoftVisualStudio.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftVisualStudio.Text = "&Visual Studio";
             this.TSMI_Apps_MicrosoftVisualStudio.ToolTipText = "C# forever!";
             this.TSMI_Apps_MicrosoftVisualStudio.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftVisualStudio_Click);
@@ -358,14 +364,14 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Apps_MicrosoftVisualStudioCode
             // 
             this.TSMI_Apps_MicrosoftVisualStudioCode.Name = "TSMI_Apps_MicrosoftVisualStudioCode";
-            this.TSMI_Apps_MicrosoftVisualStudioCode.Size = new System.Drawing.Size(241, 22);
+            this.TSMI_Apps_MicrosoftVisualStudioCode.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftVisualStudioCode.Text = "Visual Studio &Code";
             this.TSMI_Apps_MicrosoftVisualStudioCode.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftVisualStudioCode_Click);
             // 
             // TSMI_Apps_MicrosoftXML_Notepad
             // 
             this.TSMI_Apps_MicrosoftXML_Notepad.Name = "TSMI_Apps_MicrosoftXML_Notepad";
-            this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(241, 22);
+            this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
             this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
             // 
@@ -374,13 +380,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Apps_TexasInstruments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool});
             this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
-            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(211, 22);
+            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(260, 26);
             this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
             // 
             // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
             // 
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(197, 22);
+            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(246, 26);
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
             this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
@@ -390,7 +396,7 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Feedback_Compliments,
             this.TSMI_Feedback_Critiques});
             this.TSMI_Feedback.Name = "TSMI_Feedback";
-            this.TSMI_Feedback.Size = new System.Drawing.Size(69, 20);
+            this.TSMI_Feedback.Size = new System.Drawing.Size(86, 24);
             this.TSMI_Feedback.Text = "Feed&back";
             // 
             // TSMI_Feedback_Compliments
@@ -399,13 +405,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits,
             this.TSMI_Feedback_ComplimentsMoney});
             this.TSMI_Feedback_Compliments.Name = "TSMI_Feedback_Compliments";
-            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(146, 22);
+            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(180, 26);
             this.TSMI_Feedback_Compliments.Text = "&Compliments";
             // 
             // TSMI_Feedback_ComplimentsPraiseεPlaudits
             // 
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits.Name = "TSMI_Feedback_ComplimentsPraiseεPlaudits";
-            this.TSMI_Feedback_ComplimentsPraiseεPlaudits.Size = new System.Drawing.Size(163, 22);
+            this.TSMI_Feedback_ComplimentsPraiseεPlaudits.Size = new System.Drawing.Size(203, 26);
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits.Text = "&Praise && Plaudits";
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits.ToolTipText = "\"I can live for two months on a good compliment.\" - Mark Twain";
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits.Click += new System.EventHandler(this.TSMI_Feedback_ComplimentsPraiseεPlaudits_Click);
@@ -413,7 +419,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Feedback_ComplimentsMoney
             // 
             this.TSMI_Feedback_ComplimentsMoney.Name = "TSMI_Feedback_ComplimentsMoney";
-            this.TSMI_Feedback_ComplimentsMoney.Size = new System.Drawing.Size(163, 22);
+            this.TSMI_Feedback_ComplimentsMoney.Size = new System.Drawing.Size(203, 26);
             this.TSMI_Feedback_ComplimentsMoney.Text = "&Money!";
             this.TSMI_Feedback_ComplimentsMoney.ToolTipText = "For a good cause! ";
             this.TSMI_Feedback_ComplimentsMoney.Click += new System.EventHandler(this.TSMI_Feedback_ComplimentsMoney_Click);
@@ -424,13 +430,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_Feedback_CritiquesBugReport,
             this.TSMI_Feedback_CritiquesImprovementRequest});
             this.TSMI_Feedback_Critiques.Name = "TSMI_Feedback_Critiques";
-            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(146, 22);
+            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(180, 26);
             this.TSMI_Feedback_Critiques.Text = "Criti&ques";
             // 
             // TSMI_Feedback_CritiquesBugReport
             // 
             this.TSMI_Feedback_CritiquesBugReport.Name = "TSMI_Feedback_CritiquesBugReport";
-            this.TSMI_Feedback_CritiquesBugReport.Size = new System.Drawing.Size(191, 22);
+            this.TSMI_Feedback_CritiquesBugReport.Size = new System.Drawing.Size(238, 26);
             this.TSMI_Feedback_CritiquesBugReport.Text = "&Bug Report";
             this.TSMI_Feedback_CritiquesBugReport.ToolTipText = "\"The devil is is in the details.\" - Friedrich Nietzsche";
             this.TSMI_Feedback_CritiquesBugReport.Click += new System.EventHandler(this.TSMI_Feedback_CritiqueBugReport_Click);
@@ -438,7 +444,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_Feedback_CritiquesImprovementRequest
             // 
             this.TSMI_Feedback_CritiquesImprovementRequest.Name = "TSMI_Feedback_CritiquesImprovementRequest";
-            this.TSMI_Feedback_CritiquesImprovementRequest.Size = new System.Drawing.Size(191, 22);
+            this.TSMI_Feedback_CritiquesImprovementRequest.Size = new System.Drawing.Size(238, 26);
             this.TSMI_Feedback_CritiquesImprovementRequest.Text = "&Improvement Request";
             this.TSMI_Feedback_CritiquesImprovementRequest.ToolTipText = "\"God is in the details.\" - Mies van der Rohe";
             this.TSMI_Feedback_CritiquesImprovementRequest.Click += new System.EventHandler(this.TSMI_Feedback_CritiqueImprovementRequest_Click);
@@ -449,17 +455,17 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_BarcodeScannerDiscovery,
             this.TSMI_System_Diagnostics,
             this.TSMI_System_Manuals,
-            this.TSMI_System_TestExecutiveConfigXML,
+            this.TSMI_System_TestExecConfigXML,
             this.TSMI_System_Separator1,
             this.TSMI_System_About});
             this.TSMI_System.Name = "TSMI_System";
-            this.TSMI_System.Size = new System.Drawing.Size(57, 20);
+            this.TSMI_System.Size = new System.Drawing.Size(70, 24);
             this.TSMI_System.Text = "S&ystem";
             // 
             // TSMI_System_BarcodeScannerDiscovery
             // 
             this.TSMI_System_BarcodeScannerDiscovery.Name = "TSMI_System_BarcodeScannerDiscovery";
-            this.TSMI_System_BarcodeScannerDiscovery.Size = new System.Drawing.Size(273, 22);
+            this.TSMI_System_BarcodeScannerDiscovery.Size = new System.Drawing.Size(309, 26);
             this.TSMI_System_BarcodeScannerDiscovery.Text = "&Barcode Scanner Discovery";
             this.TSMI_System_BarcodeScannerDiscovery.ToolTipText = "Corded scanners only; no Bluetooth or Wireless scanners.";
             this.TSMI_System_BarcodeScannerDiscovery.Click += new System.EventHandler(this.TSMI_System_BarcodeScannerDiscovery_Click);
@@ -470,13 +476,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_DiagnosticsSCPI_VISA_Instruments,
             this.TSMI_System_DiagnosticsRelays});
             this.TSMI_System_Diagnostics.Name = "TSMI_System_Diagnostics";
-            this.TSMI_System_Diagnostics.Size = new System.Drawing.Size(273, 22);
+            this.TSMI_System_Diagnostics.Size = new System.Drawing.Size(309, 26);
             this.TSMI_System_Diagnostics.Text = "&Diagnostics";
             // 
             // TSMI_System_DiagnosticsSCPI_VISA_Instruments
             // 
             this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.Name = "TSMI_System_DiagnosticsSCPI_VISA_Instruments";
-            this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.Size = new System.Drawing.Size(191, 22);
+            this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.Size = new System.Drawing.Size(236, 26);
             this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.Text = "&SCPI VISA Instruments";
             this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.ToolTipText = "Invoke SCPI_VISA_Instruments self-tests.";
             this.TSMI_System_DiagnosticsSCPI_VISA_Instruments.Click += new System.EventHandler(this.TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click);
@@ -485,7 +491,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TSMI_System_DiagnosticsRelays.Enabled = false;
             this.TSMI_System_DiagnosticsRelays.Name = "TSMI_System_DiagnosticsRelays";
-            this.TSMI_System_DiagnosticsRelays.Size = new System.Drawing.Size(191, 22);
+            this.TSMI_System_DiagnosticsRelays.Size = new System.Drawing.Size(236, 26);
             this.TSMI_System_DiagnosticsRelays.Text = "&Relays";
             this.TSMI_System_DiagnosticsRelays.ToolTipText = "Adapt MS-Test Unit Tests of USB-ERB24 class.";
             this.TSMI_System_DiagnosticsRelays.Click += new System.EventHandler(this.TSMI_System_DiagnosticsRelays_Click);
@@ -497,13 +503,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_System_ManualsInstruments,
             this.TSMI_System_ManualsRelays});
             this.TSMI_System_Manuals.Name = "TSMI_System_Manuals";
-            this.TSMI_System_Manuals.Size = new System.Drawing.Size(273, 22);
+            this.TSMI_System_Manuals.Size = new System.Drawing.Size(309, 26);
             this.TSMI_System_Manuals.Text = "&Manuals";
             // 
             // TSMI_System_ManualsBarcodeScanner
             // 
             this.TSMI_System_ManualsBarcodeScanner.Name = "TSMI_System_ManualsBarcodeScanner";
-            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(162, 22);
+            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(224, 26);
             this.TSMI_System_ManualsBarcodeScanner.Text = "&Barcode Scanner";
             this.TSMI_System_ManualsBarcodeScanner.ToolTipText = "If you\'re bored...";
             this.TSMI_System_ManualsBarcodeScanner.Click += new System.EventHandler(this.TSMI_System_ManualsBarcodeScanner_Click);
@@ -511,7 +517,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_System_ManualsInstruments
             // 
             this.TSMI_System_ManualsInstruments.Name = "TSMI_System_ManualsInstruments";
-            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(162, 22);
+            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(224, 26);
             this.TSMI_System_ManualsInstruments.Text = "&Instruments";
             this.TSMI_System_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_System_ManualsInstruments.Click += new System.EventHandler(this.TSMI_System_ManualsInstruments_Click);
@@ -519,28 +525,28 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_System_ManualsRelays
             // 
             this.TSMI_System_ManualsRelays.Name = "TSMI_System_ManualsRelays";
-            this.TSMI_System_ManualsRelays.Size = new System.Drawing.Size(162, 22);
+            this.TSMI_System_ManualsRelays.Size = new System.Drawing.Size(224, 26);
             this.TSMI_System_ManualsRelays.Text = "&Relays";
             this.TSMI_System_ManualsRelays.ToolTipText = "...zzzzzz...";
             this.TSMI_System_ManualsRelays.Click += new System.EventHandler(this.TSMI_System_ManualsRelays_Click);
             // 
-            // TSMI_System_TestExecutiveConfigXML
+            // TSMI_System_TestExecConfigXML
             // 
-            this.TSMI_System_TestExecutiveConfigXML.Name = "TSMI_System_TestExecutiveConfigXML";
-            this.TSMI_System_TestExecutiveConfigXML.Size = new System.Drawing.Size(273, 22);
-            this.TSMI_System_TestExecutiveConfigXML.Text = "&TestExecutive.GlobalConfigurationFile";
-            this.TSMI_System_TestExecutiveConfigXML.ToolTipText = "Test System\'s configuration.";
-            this.TSMI_System_TestExecutiveConfigXML.Click += new System.EventHandler(this.TSMI_System_TestExecutiveConfigXML_Click);
+            this.TSMI_System_TestExecConfigXML.Name = "TSMI_System_TestExecConfigXML";
+            this.TSMI_System_TestExecConfigXML.Size = new System.Drawing.Size(309, 26);
+            this.TSMI_System_TestExecConfigXML.Text = "&TestExec.GlobalConfigurationFile";
+            this.TSMI_System_TestExecConfigXML.ToolTipText = "Test System\'s configuration.";
+            this.TSMI_System_TestExecConfigXML.Click += new System.EventHandler(this.TSMI_System_TestExecConfigXML_Click);
             // 
             // TSMI_System_Separator1
             // 
             this.TSMI_System_Separator1.Name = "TSMI_System_Separator1";
-            this.TSMI_System_Separator1.Size = new System.Drawing.Size(270, 6);
+            this.TSMI_System_Separator1.Size = new System.Drawing.Size(306, 6);
             // 
             // TSMI_System_About
             // 
             this.TSMI_System_About.Name = "TSMI_System_About";
-            this.TSMI_System_About.Size = new System.Drawing.Size(273, 22);
+            this.TSMI_System_About.Size = new System.Drawing.Size(309, 26);
             this.TSMI_System_About.Text = "&About...";
             this.TSMI_System_About.Click += new System.EventHandler(this.TSMI_System_About_Click);
             // 
@@ -555,13 +561,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Separator1,
             this.TSMI_UUT_About});
             this.TSMI_UUT.Name = "TSMI_UUT";
-            this.TSMI_UUT.Size = new System.Drawing.Size(42, 20);
+            this.TSMI_UUT.Size = new System.Drawing.Size(51, 24);
             this.TSMI_UUT.Text = "&UUT";
             // 
             // TSMI_UUT_AppConfig
             // 
             this.TSMI_UUT_AppConfig.Name = "TSMI_UUT_AppConfig";
-            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_AppConfig.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_AppConfig.Text = "&App.config";
             this.TSMI_UUT_AppConfig.ToolTipText = "UUT\'s test configuration.";
             this.TSMI_UUT_AppConfig.Click += new System.EventHandler(this.TSMI_UUT_AppConfig_Click);
@@ -569,7 +575,7 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -579,13 +585,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
             // 
             this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(137, 22);
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(168, 26);
             this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
             this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
@@ -596,20 +602,20 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_StatisticsDisplay,
             this.TSMI_UUT_StatisticsReset});
             this.TSMI_UUT_Statistics.Name = "TSMI_UUT_Statistics";
-            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_Statistics.Text = "&Statistics";
             // 
             // TSMI_UUT_StatisticsDisplay
             // 
             this.TSMI_UUT_StatisticsDisplay.Name = "TSMI_UUT_StatisticsDisplay";
-            this.TSMI_UUT_StatisticsDisplay.Size = new System.Drawing.Size(112, 22);
+            this.TSMI_UUT_StatisticsDisplay.Size = new System.Drawing.Size(141, 26);
             this.TSMI_UUT_StatisticsDisplay.Text = "&Display";
             this.TSMI_UUT_StatisticsDisplay.Click += new System.EventHandler(this.TSMI_UUT_StatisticsDisplay_Click);
             // 
             // TSMI_UUT_StatisticsReset
             // 
             this.TSMI_UUT_StatisticsReset.Name = "TSMI_UUT_StatisticsReset";
-            this.TSMI_UUT_StatisticsReset.Size = new System.Drawing.Size(112, 22);
+            this.TSMI_UUT_StatisticsReset.Size = new System.Drawing.Size(141, 26);
             this.TSMI_UUT_StatisticsReset.Text = "&Reset";
             this.TSMI_UUT_StatisticsReset.CheckStateChanged += new System.EventHandler(this.TSMI_UUT_StatisticsReset_Click);
             // 
@@ -619,13 +625,13 @@ namespace ABT.TestSpace.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
             // 
             this.TSMI_UUT_TestDataP_DriveTDR_Folder.Name = "TSMI_UUT_TestDataP_DriveTDR_Folder";
-            this.TSMI_UUT_TestDataP_DriveTDR_Folder.Size = new System.Drawing.Size(215, 22);
+            this.TSMI_UUT_TestDataP_DriveTDR_Folder.Size = new System.Drawing.Size(268, 26);
             this.TSMI_UUT_TestDataP_DriveTDR_Folder.Text = "&P: Drive TDR Folder";
             this.TSMI_UUT_TestDataP_DriveTDR_Folder.ToolTipText = "P:\\Test\\TDR";
             this.TSMI_UUT_TestDataP_DriveTDR_Folder.Click += new System.EventHandler(this.TSMI_UUT_TestData_P_DriveTDR_Folder_Click);
@@ -634,7 +640,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = false;
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Name = "TSMI_UUT_TestDataSQL_ReportingAndQuerying";
-            this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Size = new System.Drawing.Size(215, 22);
+            this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Size = new System.Drawing.Size(268, 26);
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Text = "&SQL Reporting && Querying";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.ToolTipText = "Coming soon!";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Click += new System.EventHandler(this.TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click);
@@ -642,12 +648,12 @@ namespace ABT.TestSpace.TestExec {
             // TSMI_UUT_Separator1
             // 
             this.TSMI_UUT_Separator1.Name = "TSMI_UUT_Separator1";
-            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(130, 6);
+            this.TSMI_UUT_Separator1.Size = new System.Drawing.Size(162, 6);
             // 
             // TSMI_UUT_About
             // 
             this.TSMI_UUT_About.Name = "TSMI_UUT_About";
-            this.TSMI_UUT_About.Size = new System.Drawing.Size(133, 22);
+            this.TSMI_UUT_About.Size = new System.Drawing.Size(165, 26);
             this.TSMI_UUT_About.Text = "&About...";
             this.TSMI_UUT_About.Click += new System.EventHandler(this.TSMI_UUT_About_Click);
             // 
@@ -660,16 +666,17 @@ namespace ABT.TestSpace.TestExec {
             this.StatusStatisticsLabel,
             this.StatusModeLabel,
             this.StatusCustomLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 615);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 758);
             this.StatusStrip.Name = "StatusStrip";
-            this.StatusStrip.Size = new System.Drawing.Size(1180, 22);
+            this.StatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.StatusStrip.Size = new System.Drawing.Size(1573, 26);
             this.StatusStrip.TabIndex = 10;
             // 
             // StatusTimeLabel
             // 
             this.StatusTimeLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusTimeLabel.Name = "StatusTimeLabel";
-            this.StatusTimeLabel.Size = new System.Drawing.Size(34, 17);
+            this.StatusTimeLabel.Size = new System.Drawing.Size(42, 20);
             this.StatusTimeLabel.Text = "Time";
             this.StatusTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -677,7 +684,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.StatusStatisticsLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusStatisticsLabel.Name = "StatusStatisticsLabel";
-            this.StatusStatisticsLabel.Size = new System.Drawing.Size(53, 17);
+            this.StatusStatisticsLabel.Size = new System.Drawing.Size(67, 20);
             this.StatusStatisticsLabel.Text = "Statistics";
             this.StatusStatisticsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -685,7 +692,7 @@ namespace ABT.TestSpace.TestExec {
             // 
             this.StatusModeLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusModeLabel.Name = "StatusModeLabel";
-            this.StatusModeLabel.Size = new System.Drawing.Size(38, 17);
+            this.StatusModeLabel.Size = new System.Drawing.Size(48, 20);
             this.StatusModeLabel.Text = "Mode";
             this.StatusModeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -694,16 +701,16 @@ namespace ABT.TestSpace.TestExec {
             this.StatusCustomLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.StatusCustomLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.StatusCustomLabel.Name = "StatusCustomLabel";
-            this.StatusCustomLabel.Size = new System.Drawing.Size(1040, 17);
+            this.StatusCustomLabel.Size = new System.Drawing.Size(1396, 20);
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.Text = "Custom";
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TestExecutive
+            // TestExec
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1180, 637);
+            this.ClientSize = new System.Drawing.Size(1573, 784);
             this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelect);
@@ -714,10 +721,10 @@ namespace ABT.TestSpace.TestExec {
             this.Controls.Add(this.ButtonRun);
             this.Controls.Add(this.MS);
             this.MainMenuStrip = this.MS;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "TestExecutive";
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Name = "TestExec";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TestExecutor";
+            this.Text = "TestPlan";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_Closing);
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.MS.ResumeLayout(false);
@@ -761,7 +768,7 @@ namespace ABT.TestSpace.TestExec {
         private ToolStripMenuItem TSMI_System_BarcodeScannerDiscovery;
         private ToolStripSeparator TSMI_UUT_Separator1;
         private ToolStripMenuItem TSMI_UUT_About;
-        private ToolStripMenuItem TSMI_System_TestExecutiveConfigXML;
+        private ToolStripMenuItem TSMI_System_TestExecConfigXML;
         private ToolStripMenuItem TSMI_UUT_AppConfig;
         private ToolStripMenuItem TSMI_Apps_Keysight;
         private ToolStripMenuItem TSMI_Apps_KeysightBenchVue;

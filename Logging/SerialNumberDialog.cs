@@ -6,14 +6,14 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
 
-namespace ABT.TestSpace.TestExec.Logging {
+namespace ABT.Test.TestExecutive.Logging {
     public sealed partial class SerialNumberDialog : Form {
-        // NOTE:  Honeywell Voyager 1200g Scanner must be programmed into USB HID mode to work correctly with TestExecutive to read ABT Serial #s.
+        // NOTE:  Honeywell Voyager 1200g Scanner must be programmed into USB HID mode to work correctly with TestExec to read ABT Serial #s.
         //       - Scan PAP131 label from "Honeywell Voyager 1200G User's Guide ReadMe.pdf" to program 1200 into USB HID mode.
         //       - Both "ReadMe" & "User's Guides" documents reside in this folder for convenience.
         //       - https://sps-support.honeywell.com/s/article/The-scanner-is-not-recognized-by-Microsoft-Universal-Windows-Platform-application
         // NOTE:  Voyager 1200g won't scan ABT Serial #s into Notepad/Wordpad/Text Editor of Choice when in USB HID mode:
-        //       - It will only deliver scanned data to a USB HID application like TestExecutive's SerialNumberDialog class.
+        //       - It will only deliver scanned data to a USB HID application like TestExec's SerialNumberDialog class.
         //       - You must scan the Voyager 1200G's PAP124 barcodes to restore "normal" keyboard wedge mode.
         // NOTE:  Honeywell Voyager 1200g USB Barcode Scanner is a Microsoft supported Point of Service peripheral.
         //  - https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support
@@ -40,7 +40,7 @@ namespace ABT.TestSpace.TestExec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            String scannerID = XElement.Load(TestExecutive.GlobalConfigurationFile).Element("BarCodeScannerID").Value;
+            String scannerID = XElement.Load(TestExec.GlobalConfigurationFile).Element("BarCodeScannerID").Value;
             DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
             if (_scanner == null) throw new InvalidOperationException($"{Environment.NewLine}Cannot find Barcode scanner Device ID:{Environment.NewLine}'{scannerID}'{Environment.NewLine}");

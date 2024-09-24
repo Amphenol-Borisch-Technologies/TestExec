@@ -1,7 +1,7 @@
 ﻿using Agilent.CommandExpert.ScpiNet.AgEL30000_1_2_5_1_0_6_17_114;
 using System;
 using System.Runtime.CompilerServices;
-using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
+using static ABT.Test.TestExecutive.SCPI_VISA_Instruments.Keysight;
 // All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
 //  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
@@ -10,7 +10,7 @@ using static ABT.TestSpace.TestExec.SCPI_VISA_Instruments.Keysight;
 // Enthusiastically recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
+namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
     public enum LOAD_MODE { CURR = 0, POW = 1, RES = 2, VOLT = 3 }
     public enum LOAD_MEASURE { CURR = 0, POW = 1, VOLT = 3 }
 
@@ -22,25 +22,25 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
         public static Boolean IsEL_34143A(SCPI_VISA_Instrument SVI) { return (SVI.Instrument.GetType() == typeof(AgEL30000)); }
 
         public static void Initialize(SCPI_VISA_Instrument SVI) {
-            // NOTE:  Mustn't invoke TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
+            // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
             SCPI99.Initialize(SVI);
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.PROTection.CLEar.Command();
             ((AgEL30000)SVI.Instrument).SCPI.DISPlay.WINDow.TEXT.CLEar.Command();
         }
 
         public static void Local(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SYSTem.LOCal.Command();
         }
 
         public static LOAD_MODE Get(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.MODE.Query(null, out String LoadMode);
             return (LOAD_MODE)Enum.Parse(typeof(LOAD_MODE), LoadMode);
         }
 
         public static Double Get(SCPI_VISA_Instrument SVI, LOAD_MEASURE LoadMeasure, SENSE_MODE KelvinSense) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             VoltageSenseModeSet(SVI, KelvinSense);
             switch (LoadMeasure) {
                 case LOAD_MEASURE.CURR:
@@ -53,12 +53,12 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(null, out Double[] voltsDC);
                     return voltsDC[0];
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MEASURE)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(LOAD_MEASURE)));
             }
         }
 
         public static Double Get(SCPI_VISA_Instrument SVI, PS_DC DC, CHANNEL Channel, SENSE_MODE KelvinSense) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             VoltageSenseModeSet(SVI, KelvinSense);
             switch (DC) {
                 case PS_DC.Amps:
@@ -68,18 +68,18 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.MEASure.SCALar.VOLTage.DC.Query(Channels[Channel], out Double[] voltsDC);
                     return voltsDC[(Int32)(Channel)];
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(PS_DC)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(PS_DC)));
             }
         }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Query(null, out Boolean state);
             return ((state ? STATE.ON : STATE.off) == State);
         }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             if (!Is(SVI, LoadMode)) return false;
             Double delta = 0.01;
             switch (LoadMode) {
@@ -96,38 +96,38 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Query(null, null, out Double[] voltsDC);
                     return SCPI99.IsCloseEnough(LoadValue, voltsDC[0], delta);
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
 
         public static Boolean Is(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return LoadMode == Get(SVI);
         }
 
         public static void Remote(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SYSTem.REMote.Command();
         }
 
         public static void RemoteLock(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SYSTem.RWLock.Command();
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             if (!Is(SVI, State)) ((AgEL30000)SVI.Instrument).SCPI.OUTPut.STATe.Command(State is STATE.ON, null);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, STATE State, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Set(SVI, LoadValue, LoadMode, KelvinSense);
             Set(SVI, State);
         }
 
         public static void Set(SCPI_VISA_Instrument SVI, Double LoadValue, LOAD_MODE LoadMode, SENSE_MODE KelvinSense) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
             VoltageSenseModeSet(SVI, KelvinSense);
             switch (LoadMode) {
@@ -155,17 +155,17 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     // TODO:  Eventually; ((AgEL30000)SVI.Instrument).SCPI.SOURce.POWer.PROTection.STATe.Command(false, null);
                     break;
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
 
         public static Boolean SlewRatesAre(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, LOAD_MODE LoadMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return ((SlewRateRising, SlewRateFalling) == SlewRatesGet(SVI, LoadMode));
         }
 
         public static (Double SlewRateRising, Double SlewRateFalling) SlewRatesGet(SCPI_VISA_Instrument SVI, LOAD_MODE LoadMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Double[] slewRateRising; Double[] slewRateFalling;
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
@@ -185,13 +185,13 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.NEGative.IMMediate.Query(null, null, out slewRateFalling);
                     break;
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
             return (slewRateRising[0], slewRateFalling[0]);
         }
 
         public static void SlewRatesSet(SCPI_VISA_Instrument SVI, Double SlewRateRising, Double SlewRateFalling, LOAD_MODE LoadMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             switch (LoadMode) {
                 case LOAD_MODE.CURR:
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.CURRent.SLEW.COUP.Command(false, null);
@@ -222,23 +222,23 @@ namespace ABT.TestSpace.TestExec.SCPI_VISA_Instruments {
                     ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SLEW.NEGative.IMMediate.Command(SlewRateFalling, null);
                     break;
                 default:
-                    throw new NotImplementedException(TestExecutive.NotImplementedMessageEnum(typeof(LOAD_MODE)));
+                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(LOAD_MODE)));
             }
         }
 
         public static SENSE_MODE VoltageSenseModeGet(SCPI_VISA_Instrument SVI) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Query(null, out String SenseMode);
             return (SENSE_MODE)Enum.Parse(typeof(SENSE_MODE), SenseMode);
         }
 
         public static Boolean VoltageSenseModeIs(SCPI_VISA_Instrument SVI, SENSE_MODE SenseMode) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return SenseMode == VoltageSenseModeGet(SVI);
         }
 
         public static void VoltageSenseModeSet(SCPI_VISA_Instrument SVI, SENSE_MODE KelvinSense) {
-            TestExecutive.CT_EmergencyStop.ThrowIfCancellationRequested();
+            TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             ((AgEL30000)SVI.Instrument).SCPI.SOURce.VOLTage.SENSe.SOURce.Command(Enum.GetName(typeof(SENSE_MODE), KelvinSense));
             // Despite being part of VOLTage sub-system, SCPI.SOURce.VOLTage.SENSe.SOURce.Command("EXTernal"/"INTernal") enables/disables 4-wire Kelvin sensing for all Kelvin capable loads.
         }
