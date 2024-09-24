@@ -135,6 +135,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Ag34980_2_43">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag34980_2_43.dll</HintPath>
+    </Reference>
+    <Reference Include="AgE363x_1_7">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE363x_1_7.dll</HintPath>
+    </Reference>
+    <Reference Include="AgE364xD_1_7">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE364xD_1_7.dll</HintPath>
+    </Reference>
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>

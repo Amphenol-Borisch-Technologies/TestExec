@@ -10,7 +10,7 @@ using ABT.Test.TestExecutive.Logging;
 namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
     // NOTE:  https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/IVI-Drivers-Pros-and-Cons/td-p/4165671.
 
-    public abstract class SCPI_VISA_InstrumentOld {
+    public abstract class SCPI_VISA_Instrument {
         public enum COMMANDS { CLS, ESE, OPC, RST, SRE, WAI }       // SCPI Mandated Commands & Queries; required for all SCPI implementations.
         public enum QUERIES { ESE, ESR, IDN, OPC, SRE, STB, TST }   // https://www.ivifoundation.org/downloads/SCPI/scpi-99.pdf
         public enum IDN_FIELDS { Manufacturer, Model, SerialNumber, FirmwareRevision } // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".  
@@ -25,7 +25,7 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
         public Boolean Is() { return String.Equals(IDN(IDN_FIELDS.Model), MODEL); }
         public StringBuilder SCPI = new();
 
-        public SCPI_VISA_InstrumentOld(Alias id, String description, String address, String className) {
+        public SCPI_VISA_Instrument(Alias id, String description, String address, String className) {
             ID = id;
             Description = description;
             Address = address;
