@@ -1,10 +1,10 @@
-# TestExecutive
-A minimalist functional test sequencer/test executive library for sibling project TestExecutor.
+# TestExec
+A minimalist functional test sequencer/test executive library for sibling project TestPlan.
    
-  Sibling project TestExecutor is both a demonstration program and a functional test of TestExecutive.
+  Sibling project TestPlan is both a demonstration program and a functional test of TestExec.
   
-  TestExecutive is always current; its repository is the master for ABT's developing production test sequencer.
+  TestExec is always current; its repository is the master for ABT's developing production test sequencer.
 
   References:
-  - https://github.com/Amphenol-Borisch-Technologies/TestExecutor
+  - https://github.com/Amphenol-Borisch-Technologies/TestExec
   - https://en.wikipedia.org/wiki/Test_execution_engine
