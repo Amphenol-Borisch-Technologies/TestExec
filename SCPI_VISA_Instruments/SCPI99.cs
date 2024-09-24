@@ -33,56 +33,56 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
         //      - ...Then, SCPI VISA instruments utilizing this SCPI99 class should work, albeit inconveniently.
         private const Char IDENTITY_SEPARATOR = ',';
 
-        public static void Clear(SCPI_VISA_Instrument SVI) {
+        public static void Clear(SCPI_VISA_InstrumentOld SVI) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
             new AgSCPI99(SVI.Address).SCPI.CLS.Command();
         }
 
-        public static void Clear(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static void Clear(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Clear(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) Clear(kvp.Value);
         }
 
-        public static Boolean Cleared(SCPI_VISA_Instrument SVI) {
+        public static Boolean Cleared(SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             new AgSCPI99(SVI.Address).SCPI.ESR.Query(out Int32 esr);
             return esr == 0;
         }
 
-        public static Boolean Cleared(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static Boolean Cleared(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Boolean cleared = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) cleared &= Cleared(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) cleared &= Cleared(kvp.Value);
             return cleared;
         }
 
-        public static void Command(SCPI_VISA_Instrument SVI, String SCPI_Command) {
+        public static void Command(SCPI_VISA_InstrumentOld SVI, String SCPI_Command) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             new AgSCPI99(SVI.Address).Transport.Command.Invoke(SCPI_Command);
         }
 
-        internal static String ErrorMessageGet(SCPI_VISA_Instrument SVI) { return SCPI_VISA_Instrument.GetInfo(SVI, $"SCPI VISA Instrument Address '{SVI.Address}' failed.{Environment.NewLine}"); }
+        internal static String ErrorMessageGet(SCPI_VISA_InstrumentOld SVI) { return SCPI_VISA_InstrumentOld.GetInfo(SVI, $"SCPI VISA Instrument Address '{SVI.Address}' failed.{Environment.NewLine}"); }
 
-        internal static String ErrorMessageGet(SCPI_VISA_Instrument SVI, String errorMessage) { return $"{ErrorMessageGet(SVI)}{errorMessage}{Environment.NewLine}"; }
+        internal static String ErrorMessageGet(SCPI_VISA_InstrumentOld SVI, String errorMessage) { return $"{ErrorMessageGet(SVI)}{errorMessage}{Environment.NewLine}"; }
 
-        public static Boolean Are(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs, STATE State) {
+        public static Boolean Are(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs, STATE State) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Boolean Are = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) if (kvp.Value.LoadOrStimulus) Are &= Is(kvp.Value, State);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) if (kvp.Value.LoadOrStimulus) Are &= Is(kvp.Value, State);
             return Are;
         }
         
-        public static STATE Get(SCPI_VISA_Instrument SVI) {
+        public static STATE Get(SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return (String.Equals(Query(SVI, ":OUTPUT?"), "0")) ? STATE.off : STATE.ON;
         }
 
-        public static Boolean Is(SCPI_VISA_Instrument SVI, STATE State) {
+        public static Boolean Is(SCPI_VISA_InstrumentOld SVI, STATE State) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return (Get(SVI) == State);
         }
      
-        public static String IdentityGet(SCPI_VISA_Instrument SVI) {
+        public static String IdentityGet(SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return IdentityGet(SVI.Address);
         }
@@ -93,7 +93,7 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
             return Identity;
         }
 
-        public static String IdentityGet(SCPI_VISA_Instrument SVI, SCPI_IDENTITY Property) {
+        public static String IdentityGet(SCPI_VISA_InstrumentOld SVI, SCPI_IDENTITY Property) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return IdentityGet(SVI).Split(IDENTITY_SEPARATOR)[(Int32)Property];
         }
@@ -103,19 +103,19 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
             return IdentityGet(Address).Split(IDENTITY_SEPARATOR)[(Int32)Property];
         }
 
-        public static void Initialize(SCPI_VISA_Instrument SVI) {
+        public static void Initialize(SCPI_VISA_InstrumentOld SVI) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
             Reset(SVI); // Reset SVI to default power-on states.  Powers off power supplies.
             Clear(SVI); // Clear all event registers & the Status Byte register.
         }
 
-        public static void Initialize(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static void Initialize(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
             Reset(SVIs); // Invoking Reset(SVIs) first ensures all SCPI_VISA_Instruments are reset as quickly as possible, handy for Emergency Stopping.
             Clear(SVIs); 
         }
 
-        public static Boolean Initialized(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static Boolean Initialized(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             return Are(SVIs, STATE.off) && Cleared(SVIs);
         }
@@ -123,30 +123,30 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
         internal static Boolean IsCloseEnough(Double D1, Double D2, Double Delta) { return Math.Abs(D1 - D2) <= Delta; }
         // Close is good enough for horseshoes, hand grenades, nuclear weapons, and Doubles!  Shamelessly plagiarized from the Internet!
 
-        public static void Reset(SCPI_VISA_Instrument SVI) {
+        public static void Reset(SCPI_VISA_InstrumentOld SVI) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
              new AgSCPI99(SVI.Address).SCPI.RST.Command();
         }
 
-        public static void Reset(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static void Reset(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             // NOTE:  Mustn't invoke TestExec.CT_EmergencyStop.ThrowIfCancellationRequested(); on Initialize() or it's invoked methods Reset() & Clear().
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) Reset(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) Reset(kvp.Value);
         }
 
-        public static Int32 SelfTest(SCPI_VISA_Instrument SVI) {
+        public static Int32 SelfTest(SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             new AgSCPI99(SVI.Address).SCPI.TST.Query(out Int32 selfTestResult);
             return selfTestResult; // 0 == passed, 1 == failed.
         }
 
-        public static Int32 SelfTestFailures(Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static Int32 SelfTestFailures(Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Int32 selfTestFailures = 0;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestFailures += SelfTest(kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) selfTestFailures += SelfTest(kvp.Value);
             return selfTestFailures;
         }
 
-        public static Boolean SelfTestPassed(Form CurrentForm, SCPI_VISA_Instrument SVI) {
+        public static Boolean SelfTestPassed(Form CurrentForm, SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Int32 selfTestResult;
             try {
@@ -164,25 +164,25 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
             return true; // selfTestResult == 0.
         }
 
-        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs) {
+        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             Boolean selfTestsPassed = true;
-            foreach (KeyValuePair<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestsPassed &= SelfTestPassed(CurrentForm, kvp.Value);
+            foreach (KeyValuePair<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) selfTestsPassed &= SelfTestPassed(CurrentForm, kvp.Value);
             return selfTestsPassed;
         }
 
-        public static void Set(SCPI_VISA_Instrument SVI, STATE State) {
+        public static void Set(SCPI_VISA_InstrumentOld SVI, STATE State) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             if(!Is(SVI, State)) Command(SVI, (State is STATE.off) ? ":OUTPUT 0" : ":OUTPUT 1");
         }
 
-        public static String Query(SCPI_VISA_Instrument SVI, String SCPI_Query) {
+        public static String Query(SCPI_VISA_InstrumentOld SVI, String SCPI_Query) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             new AgSCPI99(SVI.Address).Transport.Query.Invoke(SCPI_Query, out String response);
             return response;
         }
 
-        public static Int32 QuestionCondition(SCPI_VISA_Instrument SVI) {
+        public static Int32 QuestionCondition(SCPI_VISA_InstrumentOld SVI) {
             TestExec.CT_EmergencyStop.ThrowIfCancellationRequested();
             new AgSCPI99(SVI.Address).SCPI.STATus.QUEStionable.CONDition.Query(out Int32 ConditionRegister);
             return ConditionRegister;

@@ -133,7 +133,7 @@ namespace ABT.Test.TestExecutive {
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<SCPI_VISA_Instrument.Alias, SCPI_VISA_Instrument> SVIs = null;
+        public readonly Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
@@ -177,7 +177,7 @@ namespace ABT.Test.TestExecutive {
             CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
-                SVIs = SCPI_VISA_Instrument.Get();
+                SVIs = SCPI_VISA_InstrumentOld.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
                 UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
                 UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...

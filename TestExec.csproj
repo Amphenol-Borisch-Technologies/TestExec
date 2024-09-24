@@ -78,8 +78,12 @@
     </Compile>
     <Compile Include="Miscellaneous\Miscellaneous.cs" />
     <Compile Include="Processes\ProcessExternal.cs" />
-    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_Instrument.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PS_E3610xB.cs" />
+    <Compile Include="SCPI_VISA_Instruments\Multifunction\MF_34980A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\Multifunction\MSMU_34980A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
+    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E36XXA.cs" />
+    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_InstrumentOld.cs" />
     <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
     <Compile Include="SCPI_VISA_Instruments\SCPI99.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -88,6 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_Instrument.cs" />
     <Compile Include="Switching\RelayForms.cs" />
     <Compile Include="Switching\USB_ERB24\UE24_RelayClasses.cs" />
     <Compile Include="Switching\USB_ERB24\UE24.cs" />
@@ -105,10 +110,6 @@
       <DependentUpon>SelectTests.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\AppConfigTests.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PS_E36234A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\EL_34143A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\WG_33509B.cs" />
-    <Compile Include="SCPI_VISA_Instruments\MM_34461A.cs" />
     <Compile Include="Logging\RTFSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -134,27 +135,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Ag33500B_33600A_2_09">
-      <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag33500B_33600A_2_09.dll</HintPath>
-    </Reference>
-    <Reference Include="Ag3446x_2_08">
-      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag3446x_2_08.dll</HintPath>
-    </Reference>
-    <Reference Include="AgE3610XB_1_0_0_1_00">
-      <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE3610XB_1_0_0_1_00.dll</HintPath>
-    </Reference>
-    <Reference Include="AgE36200_1_0_0_1_0_2_1_00">
-      <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE36200_1_0_0_1_0_2_1_00.dll</HintPath>
-    </Reference>
-    <Reference Include="AgEL30000_1_2_5_1_0_6_17_114">
-      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgEL30000_1_2_5_1_0_6_17_114.dll</HintPath>
-    </Reference>
     <Reference Include="AgSCPI99_1_0">
       <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
-    </Reference>
-    <Reference Include="MccDaq, Version=2.9.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files (x86)\Measurement Computing\DAQ\MccDaq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
