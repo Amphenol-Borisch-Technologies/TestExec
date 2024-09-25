@@ -83,9 +83,7 @@
     <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
     <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
     <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E36XXA.cs" />
-    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_InstrumentOld.cs" />
     <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
-    <Compile Include="SCPI_VISA_Instruments\SCPI99.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -144,11 +142,20 @@
     <Reference Include="AgE364xD_1_7">
       <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE364xD_1_7.dll</HintPath>
     </Reference>
-    <Reference Include="AgSCPI99_1_0">
-      <HintPath>C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
+    <Reference Include="Ivi.Visa, Version=7.2.0.0, Culture=neutral, PublicKeyToken=a128c98f1d7717c1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\IVI Foundation\VISA\Microsoft.NET\Framework64\v2.0.50727\VISA.NET Shared Components 7.2.0\Ivi.Visa.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NationalInstruments.Common, Version=19.0.40.49152, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\National Instruments\Measurement Studio\DotNET\v4.0\AnyCPU\NationalInstruments.Common 19.0.40\NationalInstruments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.Visa, Version=24.5.0.49303, Culture=neutral, PublicKeyToken=2eaa5af0834e221d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\IVI Foundation\VISA\Microsoft.NET\Framework64\v4.0.30319\NI VISA.NET 24.5\NationalInstruments.Visa.dll</HintPath>
+    </Reference>
     <Reference Include="Serilog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>packages\Serilog.4.0.1\lib\net471\Serilog.dll</HintPath>
     </Reference>

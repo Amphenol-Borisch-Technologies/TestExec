@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+
 using NationalInstruments.Visa;
 using ABT.Test.TestExecutive.Logging;
 
@@ -15,6 +16,11 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
         public enum QUERIES { ESE, ESR, IDN, OPC, SRE, STB, TST }   // https://www.ivifoundation.org/downloads/SCPI/scpi-99.pdf
         public enum IDN_FIELDS { Manufacturer, Model, SerialNumber, FirmwareRevision } // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".  
         public enum STATES { off=0, ON=1 }
+        public enum PS_DC { Amps, Volts }
+        public enum PS_AC { Amps, Volts }
+        public enum SENSE_MODE { EXTernal, INTernal }
+        public enum STATE { off, ON }
+        // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
         public readonly Alias ID;
         public readonly String Description;
         public readonly String Address;
@@ -23,14 +29,14 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
         public abstract String MODEL { get; }
         public const String LF = "\n"; // Line Feed.
         public Boolean Is() { return String.Equals(IDN(IDN_FIELDS.Model), MODEL); }
-        public StringBuilder SCPI = new();
+        public StringBuilder SCPI = new StringBuilder();
 
         public SCPI_VISA_Instrument(Alias id, String description, String address, String className) {
             ID = id;
             Description = description;
             Address = address;
             ClassName = className;
-            using ResourceManager rm = new();
+            ResourceManager rm = new ResourceManager();
             // NOTE:  Must copy C:\Program Files (x86)\National Instruments\Measurement Studio\DotNET\v4.0\AnyCPU\NationalInstruments.Common 19.0.40\NationalInstruments.Common.dll to the output directory.
             // Referenced in TestExec project, and implicitly copied locally into output directory.
             // https://forums.ni.com/t5/Measurement-Studio-for-NET/Could-not-load-NationalInstruments-common/td-p/3265218
@@ -64,9 +70,9 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
 
         public void Command(COMMANDS C) { Write($"*{C}"); }
 
-        public static void Command(Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs, String C) { foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) kvp.Value.Command(C); }
+        public static void Command(Dictionary<Alias, SCPI_VISA_Instrument> SVIs, String C) { foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) kvp.Value.Command(C); }
 
-        public static void Command(Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs, COMMANDS C) { foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) kvp.Value.Command(C); }
+        public static void Command(Dictionary<Alias, SCPI_VISA_Instrument> SVIs, COMMANDS C) { foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) kvp.Value.Command(C); }
 
         public String Query(String Q) {
             Write(Q);
@@ -81,15 +87,15 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
 
         public String Query(QUERIES Q) { return Query($"*{Q}?"); }
 
-        public static Dictionary<Alias, String> Query(Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs, String Q) {
-            Dictionary<Alias, String> q = [];
-            foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) q.Add(kvp.Key, kvp.Value.Query(Q));
+        public static Dictionary<Alias, String> Query(Dictionary<Alias, SCPI_VISA_Instrument> SVIs, String Q) {
+            Dictionary<Alias, String> q = new Dictionary<Alias, String>();
+            foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) q.Add(kvp.Key, kvp.Value.Query(Q));
             return q;
         }
 
-        public static Dictionary<Alias, String> Query(Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs, QUERIES Q) {
-            Dictionary<Alias, String> q = [];
-            foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) q.Add(kvp.Key, kvp.Value.Query(Q));
+        public static Dictionary<Alias, String> Query(Dictionary<Alias, SCPI_VISA_Instrument> SVIs, QUERIES Q) {
+            Dictionary<Alias, String> q = new Dictionary<Alias, String>();
+            foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) q.Add(kvp.Key, kvp.Value.Query(Q));
             return q;
         }
 
@@ -98,17 +104,17 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
             Command(COMMANDS.CLS);
         }
 
-        public static void Initialize(Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs) { foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) kvp.Value.Initialize(); }
+        public static void Initialize(Dictionary<Alias, SCPI_VISA_Instrument> SVIs) { foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) kvp.Value.Initialize(); }
 
-        public static Dictionary<Alias, SCPI_VISA_InstrumentOld> Get() {
+        public static Dictionary<Alias, SCPI_VISA_Instrument> Get() {
             Type type;
             Alias alias;
-            SCPI_VISA_InstrumentOld svi;
-            Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs = [];
+            SCPI_VISA_Instrument svi;
+            Dictionary<Alias, SCPI_VISA_Instrument> SVIs =  new Dictionary<Alias, SCPI_VISA_Instrument>();
             foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("SCPI_VISA_Instruments").Elements("SVI")) {
                 type = Type.GetType("ABT.Test.TestExecutive.SCPI_VISA_Instruments." + xe.Element("ClassName").Value);
                 alias = new Alias(xe.Element("ID").Value);
-                svi = (SCPI_VISA_InstrumentOld)Activator.CreateInstance(type, [alias, xe.Element("Description").Value, xe.Element("Address").Value, xe.Element("ClassName").Value]);
+                svi = (SCPI_VISA_Instrument)Activator.CreateInstance(type, new Object[] { alias, xe.Element("Description").Value, xe.Element("Address").Value, xe.Element("ClassName").Value });
                 SVIs.Add(alias, svi);
             }
             return SVIs;
@@ -143,14 +149,16 @@ namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
             return true;
         }
 
-        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<Alias, SCPI_VISA_InstrumentOld> SVIs) {
+        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<Alias, SCPI_VISA_Instrument> SVIs) {
             Boolean selfTestsPassed = true;
-            foreach (KeyValuePair<Alias, SCPI_VISA_InstrumentOld> kvp in SVIs) selfTestsPassed &= kvp.Value.SelfTestPassed(CurrentForm);
+            foreach (KeyValuePair<Alias, SCPI_VISA_Instrument> kvp in SVIs) selfTestsPassed &= kvp.Value.SelfTestPassed(CurrentForm);
             return selfTestsPassed;
         }
 
-        public class Alias(String name) {
-            public readonly String ID = name;
+        public class Alias {
+            public readonly String ID;
+
+            public Alias(String name) {  this.ID = name; }
 
             public override Boolean Equals(Object obj) {
                 Alias a = obj as Alias;
