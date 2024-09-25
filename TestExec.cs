@@ -29,7 +29,7 @@ using static ABT.Test.TestExecutive.Switching.RelayForms;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
-//          - That is, it's excellent for non-GUI (WinForms/WPF/UWP/WinUI 3) C# development.
+//          - That is, it's excellent for non-GUI (WinForms/WPF/WinUI) C# development.
 //          - VS Code is free for both private & commercial use:
 //            - https://code.visualstudio.com/docs/supporting/FAQ
 //            - https://code.visualstudio.com/license
@@ -41,18 +41,21 @@ using static ABT.Test.TestExecutive.Switching.RelayForms;
 //          - https://visualstudio.microsoft.com/vs/community/
 //          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
 // NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
-//          - If not developing GUI code (WinForms/WPF/UWP/WinUI 3), then VS Code is entirely sufficient & potentially preferable.
+//          - If not developing GUI code (WinForms/WPF/WinUI), then VS Code is entirely sufficient & potentially preferable.
 // TODO:  Eventually; refactor TestExec to Microsoft's C# Coding Conventions, https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions.
 // NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 //        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
 // TODO:  Soon; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
-// TODO:  Eventually; update to .Net 8.0 & C# 12.0 instead of .Net FrameWork 4.8 & C# 7.3 when possible.
-// NOTE:  Used .Net FrameWork 4.8 instead of .Net 8.0 because required Texas instruments' TIDP.SAA Fusion API targets
-//        .Net FrameWork 4.5, incompatible with .Net 8.0, C# 12.0 & WinUI 3.
-//        - https://www.ti.com/tool/FUSION_USB_ADAPTER_API
-// TODO:  Eventually; update to WinUI 3 or WPF instead of WinForms when possible.
-// NOTE:  Chose WinForms due to incompatibility of WinUI 3 with .Net Framework, and unfamiliarity with WPF.
+// TODO:  Eventually; update to .Net 8.0 & C# 12.0 instead of .Net FrameWork 4.8 & C# 7.3.
+//        - Currently cannot because all provider VISA.Net implementations are only compatible with the IVI Foundation's VISA.Net shared component versions 7.2 or lower.
+//          - https://github.com/vnau/IviVisaNetSample.
+//          - The IVI Foundation's VISA.NET shared components version 7.2 are .Net Framework versions that target .NET 2.0.
+//          - The IVI Foundation's VISA.NET shared components version 7.3 are available in both .Net Framework versions that target .Net 4.5, and .NET versions that target .Net 6.0 or higher.
+//          - https://www.ivifoundation.org/downloads/VISA/vpp436_2024-02-08.pdf
+//        - National Instruments is considering .Net support for their NI-VISA; https://forums.ni.com/t5/Instrument-Control-GPIB-Serial/Will-NI-release-a-NET-Standard-version-of-the-NI-VISA-NET/td-p/4115465
+//        - Keysight hasn't yet for their IO Libraries VISA implementation; https://community.keysight.com/forums/s/question/0D55a00009FHEIzCAP/are-the-keysight-io-libraries-compatible-with-net-or-net-core.
+// TODO:  Eventually; consider updating to WinUI or WPF instead of WinForms if beneficial.
 // NOTE:  With deep appreciation for https://learn.microsoft.com/en-us/docs/ & https://stackoverflow.com/!
 // NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 //        TestExec's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExec:
