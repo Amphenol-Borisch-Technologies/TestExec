@@ -152,10 +152,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\National Instruments\Measurement Studio\DotNET\v4.0\AnyCPU\NationalInstruments.Common 19.0.40\NationalInstruments.Common.dll</HintPath>
     </Reference>
-    <Reference Include="NationalInstruments.Visa, Version=24.5.0.49303, Culture=neutral, PublicKeyToken=2eaa5af0834e221d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\IVI Foundation\VISA\Microsoft.NET\Framework64\v4.0.30319\NI VISA.NET 24.5\NationalInstruments.Visa.dll</HintPath>
-    </Reference>
     <Reference Include="Serilog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>packages\Serilog.4.0.1\lib\net471\Serilog.dll</HintPath>
     </Reference>
