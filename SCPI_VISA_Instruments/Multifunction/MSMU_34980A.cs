@@ -10,7 +10,7 @@ using static ABT.Test.TestExecutive.SCPI_VISA_Instruments.Multifunction.MSMU_349
 
 namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments.Multifunction {
 
-    public class MSMU_34980A : SCPI_VISA_InstrumentOld {
+    public class MSMU_34980A : SCPI_VISA_Instrument {
         public override String MODEL { get { return "34980A"; } }
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { Slot1 = 1, Slot2 = 2, Slot3 = 3, Slot4 = 4, Slot5 = 5, Slot6 = 6, Slot7 = 7, Slot8 = 8 }

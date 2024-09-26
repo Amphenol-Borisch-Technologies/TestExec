@@ -7,7 +7,7 @@
     <ProjectGuid>{314614CB-6E17-4B74-A9F9-CE4699F78C9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ABT.TestSpace</RootNamespace>
+    <RootNamespace>ABT.Test</RootNamespace>
     <AssemblyName>TestExec</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -78,11 +78,7 @@
     </Compile>
     <Compile Include="Miscellaneous\Miscellaneous.cs" />
     <Compile Include="Processes\ProcessExternal.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Multifunction\MF_34980A.cs" />
     <Compile Include="SCPI_VISA_Instruments\Multifunction\MSMU_34980A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E36XXA.cs" />
     <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -236,6 +232,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SCPI_VISA_Instruments\PowerSupplies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
