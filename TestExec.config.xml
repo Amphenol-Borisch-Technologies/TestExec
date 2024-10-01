@@ -12,19 +12,19 @@
 			      internal static readonly Alias P3V3      = new Alias("PS2");   // Single output Power Supply 2
 			      internal static readonly Alias P5V       = new Alias("PS3");   // Single output Power Supply 3
 			      internal static readonly Alias P12V_N12V = new Alias("PS4ε5"); // Dual-output Power Supplies 4 & 5.
-			      internal static readonly Alias VOUT			 = new Alias("EL1");   // Electrical Load 1.
+			      internal static readonly Alias VOUT = new Alias("EL1");   // Electrical Load 1.
 			      internal static readonly Alias MM        = new Alias("MM1");   // Multi-Meter 1.
 			      internal static readonly Alias CLK       = new Alias("WG1");   // WaveGenerator 1.
 			  }
 
-			- Include only required/utilized Instruments:
+			- Include only required/utilized SCPI VISA Instruments:
 				- That is, if this TestExec.GlobalConfigurationFile contains elements for 10 power supplies, but a TestPlan program
 				  only requires & utilizes 2, simply don't alias the unused 8 in class 'SVIA'.
-			- This documents the minimum necessary Instrument configuration for the TestPlan's program.
+			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestPlan's program.
 			- Allows a TestPlan program to be most easily ported to different Test Systems having different TestExec.GlobalConfigurationFile configurations.
-				- If Test System #1 with it's specific Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
-					with different Instruments.
-				- If all TestPlan.cs files list only their necessary Instruments, quite easy to determine which are 
+				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
+					with different SCPI VISA Instruments.
+				- If all TestPlan.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
 					compatible subsets of the Test Systems' TestExec.GlobalConfigurationFile configurations.
 			- This approach is similar to the Keysight i3070's Board config files:
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
@@ -33,19 +33,17 @@
 	ID:			- Required element.
 					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
 					- Recommend following naming conventions:
-						- CT1, CT2, CT3ε4...	Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
-						- MM1, MM2, MM3...		Single-input MultiMeters 1, 2 & 3.
-						- OS1, OS2, OS3ε4...	Single-input Oscilloscopes 1 & 2 and Dual-input 3ε4.
-						- LCR1, LCR2, LCR3...	Single-input LCR Meters 1, 2 & 3.
-						- EL1, EL2, EL3ε4...	Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
-						- PS1, PS2, PS4ε5...	Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
-						- WG1, WG2, WG3ε4...	Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
-						- MF1, MF2, MF3...      MainFrames 1, 2 & 3.
-                                  MainFrames can contain multiple dissimilar and/or similar instruments.
-                                  - Keysight's HP34970A accomodates multiple heterogenous modules; switching, multi-function (digital IO, totalizer & analog output) & multiplexing.
-                                    Or it can be configured with multiple homogenous modules; all switching for example.
-                                  - Chroma's 6314 Electronic Load accomodates multiple homogenous load modules.
-						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
+						- CT1, CT2, CT3ε4...	      Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
+						- EL1, EL2, EL3ε4...	      Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
+						- LCR1, LCR2, LCR3...	      Single-input LCR Meters 1, 2 & 3.
+            - MM1, MM2, MM3...		      Single-input MultiMeters 1, 2 & 3.
+						- MSO1, MSO, MSO3...			  Mixed-Signal Oscilloscopes 1, 2 & 3; single & multiple channels.
+						- MSMU1, MSMU2, MSMU3...    Multifunction Switch/Measuring Units 1, 2 & 3.
+            - OS1, OS2, OS3...	        Oscilloscopes 1, 2 & 3; single & multiple channels.
+						- PS1, PS2, PS4ε5...	      Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
+
+            - WG1, WG2, WG3ε4...	      Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
+
 	Description:	- Required element.
 						- Concise description of Instrument.
 						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
@@ -65,11 +63,11 @@
 <Configuration>
 	<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->
   <!-- BarCodeScannerID is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
-        When a TestPlan's App.config LOGGER_SerialNumberDialogEnabled = true:
+        When a TestExec's App.config LOGGER_SerialNumberDialogEnabled = true:
 				- Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
 				- SerialNumberDialog exclusively enforces Serial Number entry via Barcode Scanning of ABT's official Code39 encoded Serial Number.
           - This enforces correct Barcode Scanning of ABT Serial Numbers, unlike hand-typing them, with it's substantially higher error rates..
-				When a TestPlan's App.config LOGGER_SerialNumberDialogEnabled = false:
+				When a TestExec's App.config LOGGER_SerialNumberDialogEnabled = false:
 				- An Interaction.InputBox prompts test operator to enter ABT Serial Numbers.
           - This permits both Barcode Scanning *and* manual keyboard entry of Serial Numbers (hand typing), with its concommitant high rate of typographic errors.
            
@@ -84,7 +82,7 @@
   <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
   <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExec.
                 
-         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestPlan App.config's UUT_SerialNumberRegExCustom key/value pair.
+         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExec App.config's UUT_SerialNumberRegExCustom key/value pair.
          - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
            SerialNumberRegExDefault is customizable to any/every UUT tested.
          - When not overridden by an App.config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
@@ -127,46 +125,46 @@
 
   <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExec\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
-    <Instruments>P:\Test\Engineers\Equipment Manuals\</Instruments>
+    <Instruments>P:\Test\Engineers\Equipment Manuals\TestExec\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
     <Relays>P:\Test\Engineers\Equipment Manuals\TestExec\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
  
-	<Instruments>
-    <Instrument>
+	<SCPI_VISA_Instruments>  
+		<SVI>
 			<ID>PS1</ID>
 			<Description>Keysight E36103B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>PS2</ID>
 			<Description>Keysight E36103B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>PS3</ID>
 			<Description>Keysight E36105B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>PS4ε5</ID>
 			<Description>Keysight E36234A Dual-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x3402::MY61004438::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>EL1</ID>
 			<Description>Keysight EL34143A Single-channel Electronic Load</Description>
 			<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>WG1</ID>
 			<Description>Keysight 33509B Single-output Waveform Generator</Description>
 			<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
-		</Instrument>
-    <Instrument>
+		</SVI>
+		<SVI>
 			<ID>MM1</ID>
 			<Description>Keysight 34461A Multi-Meter</Description>
 			<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
-		</Instrument>
-	</Instruments>
+		</SVI>
+	</SCPI_VISA_Instruments>
 </Configuration>
