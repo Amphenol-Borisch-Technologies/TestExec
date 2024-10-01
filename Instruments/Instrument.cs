@@ -44,13 +44,13 @@ namespace ABT.Test.TestExecutive.Instruments {
             try {
                 selfTestResult = SelfTest(Instrument);
             } catch (Exception) {
-                _ = MessageBox.Show(CurrentForm, $"Instrument:'{Instrument.Description}'{Environment.NewLine}Address: '{SVI.Address}'{Environment.NewLine}likely unpowered or not communicating.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(CurrentForm, $"Instrument:'{Instrument.Description}'{Environment.NewLine}Address: '{Instrument.Address}'{Environment.NewLine}likely unpowered or not communicating.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // If unpowered, SelfTest throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return false;
             }
             if (selfTestResult == 1) {
-                _ = MessageBox.Show(CurrentForm, $"Instrument:'{SVI.Description}'{Environment.NewLine}Address: '{SVI.Address}'{Environment.NewLine}failed Self-Test.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _ = MessageBox.Show(CurrentForm, $"Instrument:'{Instrument.Description}'{Environment.NewLine}Address: '{Instrument.Address}'{Environment.NewLine}failed Self-Test.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true; // selfTestResult == 0.
