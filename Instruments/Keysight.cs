@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// All Agilent.CommandExpert.ScpiNet drivers are procured by adding new SCPI VISA Instruments in Keysight's Command Expert app software.
-//  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new SVIs are added.
+// All Agilent.CommandExpert.ScpiNet drivers are procured by adding new Instruments in Keysight's Command Expert app software.
+//  - Command Expert literally downloads & installs Agilent.CommandExpert.ScpiNet drivers when new Instruments are added.
 //  - The Agilent.CommandExpert.ScpiNet drivers are installed into folder C:\ProgramData\Keysight\Command Expert\ScpiNetDrivers.
 // https://www.keysight.com/us/en/lib/software-detail/computer-software/command-expert-downloads-2151326.html
 //
 // Enthusiastically recommend using Command Expert to generate SCPI commands, which are directly exportable as .Net statements.
 // https://www.keysight.com/us/en/search.html/command+expert
 //
-// NOTE:  Unlike all other classes in namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments, classes in SCPI_VISA utilize only VISA Addresses,
-// not Instrument objects contained in their SCPI_VISA_Instrument objects.
-namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments {
+// NOTE:  Unlike all other classes in namespace ABT.Test.TestExecutive.Instruments, classes in Instruments utilize only VISA Addresses,
+// not Instrument objects contained in their Instrument objects.
+namespace ABT.Test.TestExecutive.Instruments {
     public enum CHANNEL { C1, C2 }
     public enum MMD { MINimum, MAXimum, DEFault }
     public enum TERMINAL { Front, Rear };

@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ABT.Test.TestExecutive.Switching;
-using Windows.ApplicationModel.VoiceCommands;
-using static ABT.Test.TestExecutive.SCPI_VISA_Instruments.Multifunction.MSMU_34980A;
+using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 
-namespace ABT.Test.TestExecutive.SCPI_VISA_Instruments.Multifunction {
+namespace ABT.Test.TestExecutive.Instruments.Multifunction {
 
-    public class MSMU_34980A : SCPI_VISA_InstrumentOld {
-        public override String MODEL { get { return "34980A"; } }
+    public class MSMU_34980A : Ag34980 {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { Slot1 = 1, Slot2 = 2, Slot3 = 3, Slot4 = 4, Slot5 = 5, Slot6 = 6, Slot7 = 7, Slot8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
 
-        public MSMU_34980A(Alias id, String description, String address, String className) : base(id, description, address, className) {
+        public MSMU_34980A(Instrument.Alias id, String description, String address, String className) : base(address) {
             SystemDateSet(new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day));
             SystemTimeSet(new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second));
             UnitsSet(TEMPERATURE_UNITS.F);

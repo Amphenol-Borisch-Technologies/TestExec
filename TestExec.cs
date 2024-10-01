@@ -22,9 +22,8 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
-using ABT.Test.TestExecutive.SCPI_VISA_Instruments;
+using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
-using ABT.Test.TestExecutive.Switching.USB_ERB24;
 using static ABT.Test.TestExecutive.Switching.RelayForms;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
@@ -136,7 +135,7 @@ namespace ABT.Test.TestExecutive {
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<SCPI_VISA_InstrumentOld.Alias, SCPI_VISA_InstrumentOld> SVIs = null;
+        public readonly Dictionary<Instrument.Alias, Object> Instruments = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
@@ -180,10 +179,8 @@ namespace ABT.Test.TestExecutive {
             CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
-                SVIs = SCPI_VISA_InstrumentOld.Get();
+                Instruments = Instrument.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
-                UE24.Set(C.S.NO); // Relays should be de-energized/re-energized occasionally as preventative maintenance.  Regular exercise is good for relays, as well as people!
-                UE24.Set(C.S.NC); // Besides, having 48 relays go "clack-clack" nearly simultaneously sounds awesome...
             }
         }
 
@@ -263,13 +260,10 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            SCPI99.Initialize(SVIs);
-            UE24.Initialize();
         }
 
         public virtual Boolean Initialized() {
             if (ConfigUUT.Simulate) return true;
-            return SCPI99.Initialized(SVIs) && UE24.Initialized();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -542,7 +536,7 @@ namespace ABT.Test.TestExecutive {
         }
         private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
-            if (SCPI99.SelfTestsPassed(ActiveForm, SVIs)) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (Instrument.SelfTestsPassed(ActiveForm, Instruments)) _ = MessageBox.Show(ActiveForm, "Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }

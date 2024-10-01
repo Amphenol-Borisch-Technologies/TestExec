@@ -7,7 +7,7 @@
     <ProjectGuid>{314614CB-6E17-4B74-A9F9-CE4699F78C9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ABT.TestSpace</RootNamespace>
+    <RootNamespace>ABT.Test</RootNamespace>
     <AssemblyName>TestExec</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -78,22 +78,18 @@
     </Compile>
     <Compile Include="Miscellaneous\Miscellaneous.cs" />
     <Compile Include="Processes\ProcessExternal.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Multifunction\MF_34980A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Multifunction\MSMU_34980A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E36XXA.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
+    <Compile Include="Instruments\Multifunction\MSMU_34980A.cs" />
+    <Compile Include="Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
+    <Compile Include="Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
+    <Compile Include="Instruments\Keysight.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SCPI_VISA_Instruments\SCPI_VISA_Instrument.cs" />
+    <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Switching\RelayForms.cs" />
-    <Compile Include="Switching\USB_ERB24\UE24_RelayClasses.cs" />
-    <Compile Include="Switching\USB_ERB24\UE24.cs" />
     <Compile Include="TestExec.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +137,9 @@
     </Reference>
     <Reference Include="AgE364xD_1_7">
       <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgE364xD_1_7.dll</HintPath>
+    </Reference>
+    <Reference Include="AgSCPI99_1_0">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\AgSCPI99_1_0.dll</HintPath>
     </Reference>
     <Reference Include="Ivi.Visa, Version=7.2.0.0, Culture=neutral, PublicKeyToken=a128c98f1d7717c1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

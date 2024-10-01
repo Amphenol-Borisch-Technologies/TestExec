@@ -1,31 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
 	This TestExec.GlobalConfigurationFile file allows configuring TestExec settings easily:
-	SCPI VISA instruments:
-	- For calibration or replacement, swap identical SCPI VISA Instruments with others, then update Addresses.
-	- For additions/deletions, add/remove SCPI_VISA_Instruments.  Update TestExec if needed.
+	Iinstruments:
+	- For calibration or replacement, swap identical  Instruments with others, then update Addresses.
+	- For additions/deletions, add/remove SCPI_Instruments.  Update TestExec if needed.
 
-	NOTE:  Each TestPlan must utilize sealed class 'SVIA' in file TestPlan.cs to map generic SCPI VISA
-	      Instrument IDs to, optimally, more meaningful domain specific aliases:
+	NOTE:  Each TestPlan must utilize static class 'SVIA' in file TestPlan.cs to map generic Instrument IDs to, optimally, more meaningful domain specific aliases:
 		  
 			  internal static class SVIA {
 			      internal static readonly Alias P2V5      = new Alias("PS1");   // Single output Power Supply 1
 			      internal static readonly Alias P3V3      = new Alias("PS2");   // Single output Power Supply 2
 			      internal static readonly Alias P5V       = new Alias("PS3");   // Single output Power Supply 3
 			      internal static readonly Alias P12V_N12V = new Alias("PS4ε5"); // Dual-output Power Supplies 4 & 5.
-			      internal static readonly Alias VOUT = new Alias("EL1");   // Electrical Load 1.
+			      internal static readonly Alias VOUT			 = new Alias("EL1");   // Electrical Load 1.
 			      internal static readonly Alias MM        = new Alias("MM1");   // Multi-Meter 1.
 			      internal static readonly Alias CLK       = new Alias("WG1");   // WaveGenerator 1.
 			  }
 
-			- Include only required/utilized SCPI VISA Instruments:
+			- Include only required/utilized Instruments:
 				- That is, if this TestExec.GlobalConfigurationFile contains elements for 10 power supplies, but a TestPlan program
 				  only requires & utilizes 2, simply don't alias the unused 8 in class 'SVIA'.
-			- This documents the minimum necessary SCPI VISA Instrument configuration for the TestPlan's program.
+			- This documents the minimum necessary Instrument configuration for the TestPlan's program.
 			- Allows a TestPlan program to be most easily ported to different Test Systems having different TestExec.GlobalConfigurationFile configurations.
-				- If Test System #1 with it's specific SCPI VISA Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
-					with different SCPI VISA Instruments.
-				- If all TestPlan.cs files list only their necessary SCPI VISA Instruments, quite easy to determine which are 
+				- If Test System #1 with it's specific Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
+					with different Instruments.
+				- If all TestPlan.cs files list only their necessary Instruments, quite easy to determine which are 
 					compatible subsets of the Test Systems' TestExec.GlobalConfigurationFile configurations.
 			- This approach is similar to the Keysight i3070's Board config files:
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
@@ -48,7 +47,7 @@
                                   - Chroma's 6314 Electronic Load accomodates multiple homogenous load modules.
 						- SM1, SM2, SM3...		Switching Modules 1, 2 & 3.
 	Description:	- Required element.
-						- Concise description of SCPI VISA Instrument.
+						- Concise description of Instrument.
 						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
 							- Keysight E36103B Single-output Power Supply
 							- Keysight E36234A Dual-output Power Supply
@@ -128,46 +127,46 @@
 
   <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExec\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
-    <Instruments>P:\Test\Engineers\Equipment Manuals\TestExec\Keysight</Instruments>												<!-- Keysight SCPI VISA -->
+    <Instruments>P:\Test\Engineers\Equipment Manuals\</Instruments>
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
     <Relays>P:\Test\Engineers\Equipment Manuals\TestExec\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
  
-	<SCPI_VISA_Instruments>  
-		<SVI>
+	<Instruments>
+    <Instrument>
 			<ID>PS1</ID>
 			<Description>Keysight E36103B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>PS2</ID>
 			<Description>Keysight E36103B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>PS3</ID>
 			<Description>Keysight E36105B Single-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>PS4ε5</ID>
 			<Description>Keysight E36234A Dual-output Power Supply</Description>
 			<Address>USB0::0x2A8D::0x3402::MY61004438::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>EL1</ID>
 			<Description>Keysight EL34143A Single-channel Electronic Load</Description>
 			<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>WG1</ID>
 			<Description>Keysight 33509B Single-output Waveform Generator</Description>
 			<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
-		</SVI>
-		<SVI>
+		</Instrument>
+    <Instrument>
 			<ID>MM1</ID>
 			<Description>Keysight 34461A Multi-Meter</Description>
 			<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
-		</SVI>
-	</SCPI_VISA_Instruments>
+		</Instrument>
+	</Instruments>
 </Configuration>
