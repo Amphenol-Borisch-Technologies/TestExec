@@ -129,42 +129,46 @@
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
     <Relays>P:\Test\Engineers\Equipment Manuals\TestExec\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
- 
-	<Instruments>  
-		<Instrument>
-			<ID>PS1</ID>
-			<Description>Keysight E36103B Single-output Power Supply</Description>
-			<Address>USB0::0x2A8D::0x1602::MY61001983::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>PS2</ID>
-			<Description>Keysight E36103B Single-output Power Supply</Description>
-			<Address>USB0::0x2A8D::0x1602::MY61001958::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>PS3</ID>
-			<Description>Keysight E36105B Single-output Power Supply</Description>
-			<Address>USB0::0x2A8D::0x1802::MY61001696::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>PS4ε5</ID>
-			<Description>Keysight E36234A Dual-output Power Supply</Description>
-			<Address>USB0::0x2A8D::0x3402::MY61004438::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>EL1</ID>
-			<Description>Keysight EL34143A Single-channel Electronic Load</Description>
-			<Address>USB0::0x2A8D::0x3802::MY61001295::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>WG1</ID>
-			<Description>Keysight 33509B Single-output Waveform Generator</Description>
-			<Address>USB0::0x0957::0x2507::MY59003604::0::INSTR</Address>
-		</Instrument>
-		<Instrument>
-			<ID>MM1</ID>
-			<Description>Keysight 34461A Multi-Meter</Description>
-			<Address>USB0::0x2A8D::0x1301::MY60049978::0::INSTR</Address>
-		</Instrument>
-	</Instruments>
+
+
+  <Instruments>
+    <Instrument>
+      <ID>MM1</ID>
+      <Description>Agilent 34401A Digital Multimeter</Description>
+      <Address>GPIB0::4::INSTR</Address>
+      <ClassName>Ag34401</ClassName>
+    </Instrument>
+    <Instrument>
+      <ID>MSMU1</ID>
+      <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
+      <Address>GPIB0::2::INSTR</Address>
+      <ClassName>Ag34980</ClassName>
+    </Instrument>
+    <Instrument>
+      <ID>PS1ε2</ID>
+      <Description>Agilent E3649A Dual Output DC Power Supply</Description>
+      <Address>GPIB0::1::INSTR</Address>
+      <ClassName>AgE364xD</ClassName>
+    </Instrument>
+    <Instrument>
+      <ID>PS3</ID>
+      <Description>Keysight E3634A Single Ouput Dual Range DC Power Supply</Description>
+      <Address>GPIB0::3::INSTR</Address>
+      <ClassName>AgE363x</ClassName>
+    </Instrument>
+    <Instrument>
+      <ID>WG1ε2</ID>
+      <Description>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Description>
+      <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
+      <ClassName>WG_3162</ClassName>
+    </Instrument>
+    <!--
+      <Instrument>
+        <ID>MSO1</ID>
+			  <Description>Tektronix MSO3014 Mixed Signal Oscilloscope</Description>
+			  <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
+        <ClassName>MSO_MSO3014</ClassName>
+      </Instrument>
+      -->
+  </Instruments>
 </Configuration>

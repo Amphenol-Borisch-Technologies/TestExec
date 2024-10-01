@@ -62,6 +62,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Instruments\Keysight.cs" />
+    <Compile Include="Instruments\Multifunction\MSMU_34980A.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,12 +80,6 @@
     </Compile>
     <Compile Include="Miscellaneous\Miscellaneous.cs" />
     <Compile Include="Processes\ProcessExternal.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Multifunction\MF_34980A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Multifunction\MSMU_34980A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3634A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E3649A.cs" />
-    <Compile Include="SCPI_VISA_Instruments\PowerSupplies\Keysight\PS_E36XXA.cs" />
-    <Compile Include="SCPI_VISA_Instruments\Keysight.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -131,6 +127,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Ag34401_11">
+      <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag34401_11.dll</HintPath>
+    </Reference>
     <Reference Include="Ag34980_2_43">
       <HintPath>..\..\..\..\..\ProgramData\Keysight\Command Expert\ScpiNetDrivers\Ag34980_2_43.dll</HintPath>
     </Reference>
@@ -238,8 +237,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SCPI_VISA_Instruments\PowerSupplies\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

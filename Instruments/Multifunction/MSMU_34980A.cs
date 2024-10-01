@@ -7,8 +7,7 @@ using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
 
-    public class MSMU_34980A : ScpiNet {
-        public override String MODEL { get { return "34980A"; } }
+    public class MSMU_34980A {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { Slot1 = 1, Slot2 = 2, Slot3 = 3, Slot4 = 4, Slot5 = 5, Slot6 = 6, Slot7 = 7, Slot8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
