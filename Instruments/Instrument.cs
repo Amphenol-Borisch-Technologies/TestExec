@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Agilent.CommandExpert.ScpiNet.Ag34401_11;
-using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
-using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
-using Agilent.CommandExpert.ScpiNet.AgE364xD_1_7;
 
 namespace ABT.Test.TestExecutive.Instruments {
 
@@ -17,11 +13,10 @@ namespace ABT.Test.TestExecutive.Instruments {
         // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
         public static Dictionary<Alias, Object> Get() {
-            Ag34401 a;
             Type type;
             Dictionary<Alias, Object> Instruments =  new Dictionary<Alias, Object>();
             foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("Instruments").Elements("Instrument")) {
-                type = Type.GetType("ABT.Test.TestExecutive.Instruments." + xe.Element("ClassName").Value);
+                type = Type.GetType(xe.Element("AssemblyQualifiedName").Value);
                 Instruments.Add(new Alias(xe.Element("ID").Value), Activator.CreateInstance(type, new Object[] { xe.Element("Address").Value }));
             }
             return Instruments;

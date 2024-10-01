@@ -12,7 +12,7 @@
 			      internal static readonly Alias P3V3      = new Alias("PS2");   // Single output Power Supply 2
 			      internal static readonly Alias P5V       = new Alias("PS3");   // Single output Power Supply 3
 			      internal static readonly Alias P12V_N12V = new Alias("PS4ε5"); // Dual-output Power Supplies 4 & 5.
-			      internal static readonly Alias VOUT = new Alias("EL1");   // Electrical Load 1.
+			      internal static readonly Alias VOUT      = new Alias("EL1");   // Electrical Load 1.
 			      internal static readonly Alias MM        = new Alias("MM1");   // Multi-Meter 1.
 			      internal static readonly Alias CLK       = new Alias("WG1");   // WaveGenerator 1.
 			  }
@@ -127,7 +127,6 @@
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExec\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals</Instruments>
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
-    <Relays>P:\Test\Engineers\Equipment Manuals\TestExec\Measurement Computing</Relays>											<!-- MCC USB-ERB24, ULI & InstaCal -->
   </Folders>
 
 
@@ -136,38 +135,38 @@
       <ID>MM1</ID>
       <Description>Agilent 34401A Digital Multimeter</Description>
       <Address>GPIB0::4::INSTR</Address>
-      <ClassName>Ag34401</ClassName>
+      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34401_11.Ag34401, Ag34401_11, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>MSMU1</ID>
       <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
       <Address>GPIB0::2::INSTR</Address>
-      <ClassName>Ag34980</ClassName>
+      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34980_2_43.Ag34980, Ag34980_2_43, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2</ID>
       <Description>Agilent E3649A Dual Output DC Power Supply</Description>
       <Address>GPIB0::1::INSTR</Address>
-      <ClassName>AgE364xD</ClassName>
+      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE364xD_1_7.AgE364xD, AgE364xD_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>PS3</ID>
       <Description>Keysight E3634A Single Ouput Dual Range DC Power Supply</Description>
       <Address>GPIB0::3::INSTR</Address>
-      <ClassName>AgE363x</ClassName>
+      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE363x_1_7.AgE363x, AgE363x_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>WG1ε2</ID>
       <Description>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Description>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
-      <ClassName>WG_3162</ClassName>
+      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <!--
       <Instrument>
         <ID>MSO1</ID>
 			  <Description>Tektronix MSO3014 Mixed Signal Oscilloscope</Description>
 			  <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
-        <ClassName>MSO_MSO3014</ClassName>
+        <AssemblyQualifiedName>MSO_3014</AssemblyQualifiedName>
       </Instrument>
       -->
   </Instruments>
