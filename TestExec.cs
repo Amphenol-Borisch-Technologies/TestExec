@@ -24,7 +24,6 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
 using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
-using static ABT.Test.TestExecutive.Switching.RelayForms;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -135,7 +134,7 @@ namespace ABT.Test.TestExecutive {
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<Instrument.Alias, Object> Instruments = null;
+        public readonly Dictionary<Instrumentation.Alias, Instrumentation.Instrument> Instruments = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
@@ -179,7 +178,7 @@ namespace ABT.Test.TestExecutive {
             CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
-                Instruments = Instrument.Get();
+                Instruments = Instrumentation.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             }
         }
@@ -534,10 +533,8 @@ namespace ABT.Test.TestExecutive {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_System_DiagnosticsSCPI_VISA_Instruments_Click(Object sender, EventArgs e) {
-            UseWaitCursor = true;
-            if (Instrument.SelfTestsPassed(ActiveForm, Instruments)) _ = MessageBox.Show(ActiveForm, "Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            UseWaitCursor = false;
+        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) {
+
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
