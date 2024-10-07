@@ -44,7 +44,7 @@
 
             - WG1, WG2, WG3ε4...	      Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
 
-	Description:	- Required element.
+	Detail:	- Required element.
 						- Concise description of Instrument.
 						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
 							- Keysight E36103B Single-output Power Supply
@@ -133,38 +133,38 @@
   <Instruments>
     <Instrument>
       <ID>MM1</ID>
-      <Description>Agilent 34401A Digital Multimeter</Description>
+      <Detail>Agilent 34401A Digital Multimeter</Detail>
       <Address>GPIB0::4::INSTR</Address>
       <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34401_11.Ag34401, Ag34401_11, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>MSMU1</ID>
-      <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
+      <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
       <Address>GPIB0::2::INSTR</Address>
       <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34980_2_43.Ag34980, Ag34980_2_43, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2</ID>
-      <Description>Agilent E3649A Dual Output DC Power Supply</Description>
+      <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
       <Address>GPIB0::1::INSTR</Address>
       <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE364xD_1_7.AgE364xD, AgE364xD_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>PS3</ID>
-      <Description>Keysight E3634A Single Ouput Dual Range DC Power Supply</Description>
+      <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
       <Address>GPIB0::3::INSTR</Address>
       <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE363x_1_7.AgE363x, AgE363x_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <Instrument>
       <ID>WG1ε2</ID>
-      <Description>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Description>
+      <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
       <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
     </Instrument>
     <!--
       <Instrument>
         <ID>MSO1</ID>
-			  <Description>Tektronix MSO3014 Mixed Signal Oscilloscope</Description>
+			  <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
 			  <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
         <AssemblyQualifiedName>MSO_3014</AssemblyQualifiedName>
       </Instrument>

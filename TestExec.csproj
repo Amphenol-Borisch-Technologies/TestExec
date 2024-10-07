@@ -7,7 +7,7 @@
     <ProjectGuid>{314614CB-6E17-4B74-A9F9-CE4699F78C9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ABT.Test</RootNamespace>
+    <RootNamespace>ABT.Test.TestExecutive</RootNamespace>
     <AssemblyName>TestExec</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -62,9 +62,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Instruments\Keysight.cs" />
     <Compile Include="Instruments\MSO_3014.cs" />
     <Compile Include="Instruments\Multifunction\MSMU_34980A.cs" />
+    <Compile Include="Instruments\PowerSupplies\PS_E3634A.cs" />
+    <Compile Include="Instruments\PowerSupplies\PS_E3649A.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
