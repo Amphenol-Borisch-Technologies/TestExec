@@ -135,38 +135,38 @@
       <ID>MM1</ID>
       <Detail>Agilent 34401A Digital Multimeter</Detail>
       <Address>GPIB0::4::INSTR</Address>
-      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34401_11.Ag34401, Ag34401_11, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
+      <ClassName>Agilent.CommandExpert.ScpiNet.Ag34401_11.Ag34401, Ag34401_11, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</ClassName>
     </Instrument>
     <Instrument>
       <ID>MSMU1</ID>
       <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
       <Address>GPIB0::2::INSTR</Address>
-      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.Ag34980_2_43.Ag34980, Ag34980_2_43, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
+      <ClassName>MSMU_34980A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2</ID>
       <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
       <Address>GPIB0::1::INSTR</Address>
-      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE364xD_1_7.AgE364xD, AgE364xD_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
+      <ClassName>PS_E3649A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS3</ID>
       <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
       <Address>GPIB0::3::INSTR</Address>
-      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgE363x_1_7.AgE363x, AgE363x_1_7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
+      <ClassName>PS_E3634A</ClassName>
     </Instrument>
     <Instrument>
       <ID>WG1ε2</ID>
       <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
-      <AssemblyQualifiedName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</AssemblyQualifiedName>
+      <ClassName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</ClassName>
     </Instrument>
     <!--
       <Instrument>
         <ID>MSO1</ID>
 			  <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
 			  <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
-        <AssemblyQualifiedName>MSO_3014</AssemblyQualifiedName>
+        <ClassName>MSO_3014</ClassName>
       </Instrument>
       -->
   </Instruments>

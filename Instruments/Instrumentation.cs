@@ -11,10 +11,14 @@ namespace ABT.Test.TestExecutive.Instruments {
         public enum SENSE_MODE { EXTernal, INTernal }
         // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
-        public static Dictionary<Alias, Instrument> Get() {
-            Dictionary<Alias, Instrument> Instruments =  new Dictionary<Alias, Instrument>();
-            foreach (XElement instrumentElement in XElement.Load(TestExec.GlobalConfigurationFile).Elements("Instruments").Elements("Instrument")) {
-                Instruments.Add(new Alias(instrumentElement.Element("ID").Value), new Instrument(instrumentElement));
+        public static Dictionary<Alias, Object> Get() {
+            Dictionary<Alias, Object> Instruments =  new Dictionary<Alias, Object>();
+            foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("Instruments").Elements("Instrument")) {
+                String ID = xe.Attribute("ID").Value;
+                String Detail = xe.Attribute("Detail").Value;
+                String Address = xe.Attribute("Address").Value;
+                String ClassName = xe.Attribute("ClassName").Value;
+                Instruments.Add(new Alias(ID), Activator.CreateInstance(Type.GetType(ClassName), new Object[] { ID, Detail, Address }));
             }
             return Instruments;
         }
@@ -32,36 +36,6 @@ namespace ABT.Test.TestExecutive.Instruments {
             public override Int32 GetHashCode() { return 3 * ID.GetHashCode(); }
 
             public override String ToString() { return ID; }
-        }
-
-        public sealed class Instrument {
-            public readonly String ID;
-            public readonly String Detail;
-            public readonly String Address;
-            public readonly String AssemblyQualifiedName;
-            public readonly Object Instance;
-
-            internal Instrument(XElement instrumentElement) {
-                // NOTE: Utilized by ABT.Test.TestExecutive.Instruments.Instrumentation.Get() method to add all permanent instruments.
-                // Permanent instruments are those that are never removed from the test system; they'll always be available to the system.
-                ID = instrumentElement.Attribute("ID").Value;
-                Detail = instrumentElement.Attribute("Detail").Value;
-                Address = instrumentElement.Attribute("Address").Value;
-                AssemblyQualifiedName = instrumentElement.Attribute("AssemblyQualifiedName").Value;
-                Instance = Activator.CreateInstance(Type.GetType(AssemblyQualifiedName), new Object[] { Address });
-            }
-
-            public Instrument(String ID, String Detail, String Address, String AssemblyQualifiedName, Object Instance) {
-                // NOTE: Utilized by ABT.Test.TestPlan to add temporary instruments needed only by specific TestPlans.
-                // Temporary instruments are added/removed as needed to test specific UUTs.
-                // - We likely have few to 1 of such temporay instruments at ABT, due to high expen$e and/or low usage.
-                // - Such can move from production test stations to troubleshooting benches to lab use as needed.
-                this.ID = ID;
-                this.Detail = Detail;
-                this.Address = Address;
-                this.AssemblyQualifiedName = AssemblyQualifiedName;
-                this.Instance = Instance;
-            }
         }
     }
 }

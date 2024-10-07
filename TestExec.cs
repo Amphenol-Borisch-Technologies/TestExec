@@ -134,7 +134,7 @@ namespace ABT.Test.TestExecutive {
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<Instrumentation.Alias, Instrumentation.Instrument> Instruments = null;
+        public readonly Dictionary<Instrumentation.Alias, Object> Instruments = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
