@@ -24,6 +24,12 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
 using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
+using static ABT.Test.TestExecutive.Instruments.Instrumentation;
+using ABT.Test.TestExecutive.Instruments.Oscilloscopes;
+using ABT.Test.TestExecutive.Instruments.MultiMeters;
+using static ABT.Test.TestExecutive.Instruments.MultiMeters.MM_34401A;
+using ABT.Test.TestExecutive.Instruments.PowerSupplies;
+using ABT.Test.TestExecutive.Instruments.Multifunction;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -134,7 +140,7 @@ namespace ABT.Test.TestExecutive {
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
         public readonly AppConfigLogger ConfigLogger = AppConfigLogger.Get();
-        public readonly Dictionary<Instrumentation.Alias, Object> Instruments = null;
+        public readonly Dictionary<Alias, Object> Instruments = null;
         public static AppConfigUUT ConfigUUT = AppConfigUUT.Get();
         public AppConfigTest ConfigTest { get; private set; } = null; // Requires form; instantiated by ButtonSelectTests_Click method.
         private CancellationTokenSource CTS_Cancel;
@@ -259,10 +265,32 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-        }
-
-        public virtual Boolean Initialized() {
-            if (ConfigUUT.Simulate) return true;
+            foreach (KeyValuePair<Alias,Object> kvp in Instruments) {
+                switch (kvp.Value.GetType().Name) {
+                    case nameof(MM_34401A):
+                        ((MM_34401A)kvp.Value).SCPI.RST.Command();
+                        ((MM_34401A)kvp.Value).SCPI.CLS.Command();
+                        break;
+                    case nameof(MSMU_34980A):
+                        ((MSMU_34980A)kvp.Value).SCPI.RST.Command();
+                        ((MSMU_34980A)kvp.Value).SCPI.CLS.Command();
+                        break;
+                    case nameof(MSO_3014):
+                        ((MSO_3014)kvp.Value).InstrumentIO.WriteString("*RST");
+                        ((MSO_3014)kvp.Value).InstrumentIO.WriteString("*CLS");
+                        break;
+                    case nameof(PS_E3634A):
+                        ((PS_E3634A)kvp.Value).SCPI.RST.Command();
+                        ((PS_E3634A)kvp.Value).SCPI.CLS.Command();
+                        break;
+                    case nameof(PS_E3649A):
+                        ((PS_E3649A)kvp.Value).SCPI.RST.Command();
+                        ((PS_E3649A)kvp.Value).SCPI.CLS.Command();
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unimplemented Instrument; switch/case doesn't support type '{kvp.Value.GetType().Name}' for ID '{kvp.Key.ID}'.");
+                }
+            }
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
