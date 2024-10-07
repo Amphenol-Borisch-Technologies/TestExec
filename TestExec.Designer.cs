@@ -182,7 +182,7 @@ namespace ABT.Test.TestExecutive {
             // 
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonEmergencyStop.Image = global::ABT.Test.Properties.Resources.EmergencyStop;
+            this.ButtonEmergencyStop.Image = global::ABT.Test.TestExecutive.Properties.Resources.EmergencyStop;
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(1433, 654);
             this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
