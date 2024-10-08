@@ -5,26 +5,33 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
+using static ABT.Test.TestExecutive.Instruments.Multifunction.MSMU_34980A;
 
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
 
     public class MSMU_34980A : Ag34980 {
 
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
-        public enum SLOTS { Slot1 = 1, Slot2 = 2, Slot3 = 3, Slot4 = 4, Slot5 = 5, Slot6 = 6, Slot7 = 7, Slot8 = 8 }
+        public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
         public enum RELAY_STATES { opened, CLOSED }
 
         public MSMU_34980A(String Address) : base(Address) {
-            DateTime dt = DateTime.Now;
-            Transport.Command.Invoke($":SYSTem:DATE {dt.Year},{dt.Month},{dt.Day}"); 
-            Transport.Command.Invoke($":SYSTem:TIME {dt.Hour},{dt.Minute},{dt.Second}");
+            DateTime now = DateTime.Now;
+            SCPI.SYSTem.DATE.Command(now.Year,now.Month,now.Day);
+            SCPI.SYSTem.TIME.Command(now.Hour,now.Minute,Convert.ToDouble(now.Second));
             UnitsSet(TEMPERATURE_UNITS.F);
         }
 
-        public Boolean InstrumentDMM_Installed() { return Query(":INSTrument:DMM:INSTalled?") == "1"; }
-        public STATES InstrumentDMM_Get() { return Query($":INSTrument:DMM?") == "1" ? STATES.ON : STATES.off; }
-        public void InstrumentDMM_Set(STATES State) { Transport.Command.Invoke($":INSTrument:DMM {(Int32)State}"); }
+        public Boolean InstrumentDMM_Installed() { 
+            SCPI.INSTrument.DMM.INSTalled.Query(out Boolean installed);
+            return installed;
+        }
+        public STATES InstrumentDMM_Get() {
+            SCPI.INSTrument.DMM.STATe.Query(out Boolean mode);
+            return mode ? STATES.ON : STATES.off;
+        }
+        public void InstrumentDMM_Set(STATES State) { SCPI.INSTrument.DMM.STATe.Command(State == STATES.ON); }
         public (Int32 Min, Int32 Max) ModuleChannels(SLOTS Slot) {
             switch (SystemType(Slot)) {
                 case "34921A": return (Min: 1, Max: 44);
@@ -35,14 +42,19 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
         }
         public void RouteCloseExclusive(String Channels) {
             ValidateChannelS(Channels);
-            Transport.Command.Invoke($":ROUTe:CLOSe:EXCLusive ({Channels})");
+            SCPI.ROUTe.CLOSe.EXCLusive.Command($"({Channels})");
         }
-        public void RouteOpenABUS(ABUS ABus) { Transport.Command.Invoke($":ROUTe:OPEN:ABUS {ABus}"); }
-        public void RouteOpenAllSlot(SLOTS Slot) { Transport.Command.Invoke($":ROUTe:OPEN:ALL {(Int32)Slot}"); }
-        public void RouteOpenAll() { Transport.Command.Invoke($":ROUTe:OPEN:ALL ALL"); }
+        public void RouteOpenABUS(ABUS ABus) { SCPI.ROUTe.OPEN.ABUS.Command($"{ABus}"); }
+        public void RouteOpenSlot(SLOTS Slot) { SCPI.ROUTe.OPEN.ALL.Command($"{Slot}"); }
+        public void RouteOpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
         public Boolean RouteGet(String Channels, RELAY_STATES State) {
             ValidateChannelS(Channels);
-            String s = Query(State is RELAY_STATES.opened ? $":ROUTe:OPEN? ({Channels})" : $":ROUTe:CLOSe? ({Channels})");
+
+            SCPI.ROUTe.OPEN.Query(Channels, out Boolean[] states);
+
+            (State is RELAY_STATES.opened ? $":ROUTe:OPEN? ({Channels})" : $":ROUTe:CLOSe? ({Channels})");
+
+
             List<String> ls = s.Replace("[", "").Replace("]", "").Replace("0", Boolean.FalseString).Replace("1", Boolean.TrueString).Split(',').ToList();
             List<Boolean> lb = ls.Select(b => Boolean.TryParse(b, out Boolean result) && result).ToList();
             return lb.TrueForAll(b => b == true);
@@ -51,15 +63,25 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             ValidateChannelS(Channels);
             Transport.Command.Invoke(State is RELAY_STATES.opened ? $":ROUTe:OPEN ({Channels})" : $":ROUTe:CLOSe ({Channels})");
         }
-        public STATES SystemABusInterlockSimulateGet() { return Query(":SYSTem:ABUS:INTerlock:SIMulate?") == "1" ? STATES.ON : STATES.off; }
-        public void SystemABusInterlockSimulateSet(STATES State) { Transport.Command.Invoke($":SYSTem:ABUS:INTerlock:SIMulate {(Int32)State}"); }
-        public String SystemDescriptionLong(SLOTS Slot) { return Query($":SYSTem:CDEScription:LONG? {(Int32)Slot}").Replace("\"", ""); }
-        public Double SystemModuleTemperature(SLOTS Slot) { return Convert.ToDouble(Query($":SYSTem:MODule:TEMPerature? TRANsducer,{(Int32)Slot}")); }
-        public void SystemPreset() { Transport.Command.Invoke(":SYSTem:PRESet"); }
 
-        public String SystemType(SLOTS Slot) { return Query($":SYSTem:CTYPe? {(Int32)Slot}").Replace("\"", "").Split(',')[(Int32)IDN_FIELDS.Model]; }
-        public TEMPERATURE_UNITS UnitsGet() { return (TEMPERATURE_UNITS)Enum.Parse(typeof(TEMPERATURE_UNITS), Query($":UNIT:TEMPerature?").Replace("[", "").Replace("]", "")); }
-        public void UnitsSet(TEMPERATURE_UNITS Temperature_Units) { Transport.Command.Invoke($":UNIT:TEMPerature {Temperature_Units}"); }
+        public String SystemDescriptionLong(SLOTS Slot) {
+            SCPI.SYSTem.CDEScription.LONG.Query((Int32)Slot, out String description);
+            return description;
+        }
+        public Double SystemModuleTemperature(SLOTS Slot) {
+            SCPI.SYSTem.MODule.TEMPerature.Query("TRANsducer", (Int32)Slot, out Double temperature);
+            return temperature;
+        }
+        public void SystemPreset() { SCPI.SYSTem.PRESet.Command(); }
+
+        public String SystemType(SLOTS Slot) {
+            SCPI.SYSTem.CTYPe.Query((Int32)Slot, out String identity);
+            return identity.Split(',')[(Int32)IDN_FIELDS.Model];
+        }
+        public TEMPERATURE_UNITS UnitsGet() {
+            SCPI.UNIT.TEMPerature.Query(out String[] units);
+            return (TEMPERATURE_UNITS)Enum.Parse(typeof(TEMPERATURE_UNITS), String.Join("", units).Replace("[", "").Replace("]", "")); }
+        public void UnitsSet(TEMPERATURE_UNITS Temperature_Units) { SCPI.UNIT.TEMPerature.Command($"{TEMPERATURE_UNITS.F}"); }
 
         private String Query(String Q) {
             Transport.Query.Invoke(Q, out String RetVal);

@@ -25,11 +25,6 @@ using ABT.Test.TestExecutive.AppConfig;
 using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
-using ABT.Test.TestExecutive.Instruments.Oscilloscopes;
-using ABT.Test.TestExecutive.Instruments.MultiMeters;
-using static ABT.Test.TestExecutive.Instruments.MultiMeters.MM_34401A;
-using ABT.Test.TestExecutive.Instruments.PowerSupplies;
-using ABT.Test.TestExecutive.Instruments.Multifunction;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -266,6 +261,11 @@ namespace ABT.Test.TestExecutive {
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
             Instrumentation.Initialize(Instruments);
+        }
+
+        public virtual Boolean Initialized() {
+            if (ConfigUUT.Simulate) return true;
+            return false;
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }

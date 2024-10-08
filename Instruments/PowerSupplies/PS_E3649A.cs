@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Agilent.CommandExpert.ScpiNet.AgE364xD_1_7;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
@@ -8,35 +7,32 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies {
 
         public PS_E3649A(String Address) : base(Address) { }
 
-        public enum OUTPUTS { OUTPut1, OUTPut2 };
+        public enum OUTPUTS { OUTput1, OUTput2 };
+        public enum MMD { MINimum, MAXimum, DEFault }
 
-        public OUTPUTS InstrumentGet() { return Query(":INSTrument:SELect?") == "OUTP1" ? OUTPUTS.OUTPut1 : OUTPUTS.OUTPut2; }
+        public OUTPUTS Selected() {
+            SCPI.INSTrument.SELect.Query(out String select);
+            return select == "OUTP1" ? OUTPUTS.OUTput1 : OUTPUTS.OUTput2;
+        }
 
-        public void InstrumentSet(OUTPUTS Output) { Transport.Command.Invoke($":INSTrument:SELect {Enum.GetName(typeof(OUTPUTS), Output)}"); }
+        public void Select(OUTPUTS Output) { SCPI.INSTrument.SELect.Command($"{Output}"); }
 
         public void Set(OUTPUTS Output, Single Volts, Single Amps, Single OVP, STATES State) {
-            InstrumentSet(Output);
-            Set(Volts, Amps, OVP, State);
+            Select(Output);
+            SCPI.OUTPut.STATe.Command(false);
+            SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
+            SCPI.SOURce.VOLTage.PROTection.LEVel.Command($"{MMD.MAXimum}");
+            SCPI.SOURce.VOLTage.LEVel.IMMediate.AMPLitude.Command($"{Volts}");
+            SCPI.SOURce.CURRent.LEVel.IMMediate.AMPLitude.Command($"{Amps}");
+            SCPI.SOURce.VOLTage.PROTection.LEVel.Command($"{OVP}");
+            SCPI.OUTPut.STATe.Command(State == STATES.ON);
         }
 
-        private String Query(String Q) {
-            Transport.Query.Invoke(Q, out String RetVal);
-            return RetVal;
+        public STATES StateGet() {
+            SCPI.OUTPut.STATe.Query(out Boolean state);
+            return state ? STATES.ON : STATES.off;
         }
 
-        public void Set(Single Volts, Single Amps, Single OVP, STATES State) {
-            StringBuilder scpi = new StringBuilder();
-            scpi.AppendLine($":OUTPut:STATe 0");
-            scpi.AppendLine($":SOURce:VOLTage:PROTection:LEVel {OVP}");
-            scpi.AppendLine($":SOURce:VOLTage:LEVel:IMMediate:AMPLitude {Volts}");
-            scpi.AppendLine($":SOURce:CURRent:LEVel:IMMediate:AMPLitude {Amps}");
-            scpi.AppendLine($":OUTPut:STATe {((Int32)State)}");
-            Transport.Command.Invoke(scpi.ToString());
-        }
-
-        public STATES StateGet() { return Query(":OUTPut:STATe?") == "0" ? STATES.off : STATES.ON; }
-
-        public void StateSet(STATES State) { Transport.Command.Invoke($":OUTPut:STATe {(Int32)State}"); }
-
+        public void StateSet(STATES State) { SCPI.OUTPut.STATe.Command(State == STATES.ON); }
     }
 }

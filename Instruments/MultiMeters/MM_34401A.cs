@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34401_11;
-using Agilent.CommandExpert.ScpiNet.Ag34401_11.SCPI;
 
 namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
     public class MM_34401A : Ag34401 {
 
         public enum MMD { MIN, MAX, DEF }
-        public enum TERMINAL { Front, Rear };
+        public enum TERMINALS { Front, Rear };
         public enum PROPERTY { AmperageAC, AmperageDC, Continuity, Frequency, Fresistance, Period, Resistance, VoltageAC, VoltageDC, VoltageDiodic }
 
         public MM_34401A(String Address) : base(Address) { }
@@ -67,19 +66,14 @@ namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
         }
 
         public void TerminalsSetRear() {
-            if (TerminalsGet() == TERMINAL.Front) _ = MessageBox.Show("Please depress Keysight 34401A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (TerminalsGet() == TERMINALS.Front) _ = MessageBox.Show("Please depress Keysight 34401A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), $"{MMD.DEF}"));
             SCPI.TRIGger.DELay.AUTO.Command(true);
         }
 
-        public TERMINAL TerminalsGet() {
+        public TERMINALS TerminalsGet() {
             SCPI.ROUTe.TERMinals.Query(out String terminals);
-            return String.Equals(terminals, "REAR") ? TERMINAL.Rear : TERMINAL.Front;
-        }
-
-        private String Query(String Q) {
-            Transport.Query.Invoke(Q, out String RetVal);
-            return RetVal;
+            return String.Equals(terminals, "REAR") ? TERMINALS.Rear : TERMINALS.Front;
         }
     }
 }

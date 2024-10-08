@@ -129,7 +129,6 @@
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
   </Folders>
 
-
   <Instruments>
     <Instrument>
       <ID>MM1</ID>
