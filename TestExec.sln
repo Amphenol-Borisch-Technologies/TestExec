@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExec", "TestExec.csproj", "{314614CB-6E17-4B74-A9F9-CE4699F78C9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExecTests", "..\TestExecTests\TestExecTests.csproj", "{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,14 @@ Global
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|x64.ActiveCfg = Release|x64
 		{314614CB-6E17-4B74-A9F9-CE4699F78C9B}.Release|x64.Build.0 = Release|x64
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B1F5EC4-C35F-4223-9405-0CE40A4E970F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

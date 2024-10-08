@@ -5,15 +5,8 @@ using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
 namespace ABT.Test.TestExecutive.Instruments.PowerSupplies {
     public class PS_E3649A : AgE364xD {
-        public readonly String ID;
-        public readonly String Detail;
-        public readonly String Address;
 
-        public PS_E3649A(String ID, String Detail, String Address) : base(Address) {
-            this.ID = ID;
-            this.Detail = Detail;
-            this.Address = Address;
-        }
+        public PS_E3649A(String Address) : base(Address) { }
 
         public enum OUTPUTS { OUTPut1, OUTPut2 };
 

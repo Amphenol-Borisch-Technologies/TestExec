@@ -9,19 +9,13 @@ using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
 
     public class MSMU_34980A : Ag34980 {
-        public readonly String ID;
-        public readonly String Detail;
-        public readonly String Address;
 
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { Slot1 = 1, Slot2 = 2, Slot3 = 3, Slot4 = 4, Slot5 = 5, Slot6 = 6, Slot7 = 7, Slot8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
         public enum RELAY_STATES { opened, CLOSED }
 
-        public MSMU_34980A(String ID, String Detail, String Address) : base(Address) {
-            this.ID = ID;
-            this.Detail = Detail;
-            this.Address = Address;
+        public MSMU_34980A(String Address) : base(Address) {
             DateTime dt = DateTime.Now;
             Transport.Command.Invoke($":SYSTem:DATE {dt.Year},{dt.Month},{dt.Day}"); 
             Transport.Command.Invoke($":SYSTem:TIME {dt.Hour},{dt.Minute},{dt.Second}");

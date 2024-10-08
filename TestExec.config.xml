@@ -133,41 +133,41 @@
   <Instruments>
     <Instrument>
       <ID>MM1</ID>
-      <Detail>Agilent 34401A Digital Multimeter</Detail>
+      <Description>Agilent 34401A Digital Multimeter</Description>
       <Address>GPIB0::4::INSTR</Address>
-      <ClassName>Agilent.CommandExpert.ScpiNet.Ag34401_11.Ag34401, Ag34401_11, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</ClassName>
+      <ClassName>MM_34401A</ClassName>
     </Instrument>
     <Instrument>
       <ID>MSMU1</ID>
-      <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
+      <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
       <Address>GPIB0::2::INSTR</Address>
       <ClassName>MSMU_34980A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2</ID>
-      <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
+      <Description>Agilent E3649A Dual Output DC Power Supply</Description>
       <Address>GPIB0::1::INSTR</Address>
       <ClassName>PS_E3649A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS3</ID>
-      <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
+      <Description>Keysight E3634A Single Ouput Dual Range DC Power Supply</Description>
       <Address>GPIB0::3::INSTR</Address>
       <ClassName>PS_E3634A</ClassName>
     </Instrument>
     <Instrument>
       <ID>WG1ε2</ID>
-      <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
+      <Description>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Description>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
       <ClassName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</ClassName>
     </Instrument>
-    <!--
-      <Instrument>
-        <ID>MSO1</ID>
-			  <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
-			  <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
-        <ClassName>MSO_3014</ClassName>
-      </Instrument>
-      -->
+  <!--
+    <Instrument>
+      <ID>MSO1</ID>
+      <Description>Tektronix MSO3014 Mixed Signal Oscilloscope</Description>
+      <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
+      <ClassName>MSO_3014</ClassName>
+    </Instrument>
+  -->
   </Instruments>
 </Configuration>

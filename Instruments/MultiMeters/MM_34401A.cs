@@ -5,19 +5,12 @@ using Agilent.CommandExpert.ScpiNet.Ag34401_11.SCPI;
 
 namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
     public class MM_34401A : Ag34401 {
-        public readonly String ID;
-        public readonly String Detail;
-        public readonly String Address;
 
         public enum MMD { MIN, MAX, DEF }
         public enum TERMINAL { Front, Rear };
         public enum PROPERTY { AmperageAC, AmperageDC, Continuity, Frequency, Fresistance, Period, Resistance, VoltageAC, VoltageDC, VoltageDiodic }
 
-        public MM_34401A(String ID, String Detail, String Address) : base(Address) {
-            this.ID = ID;
-            this.Detail = Detail;
-            this.Address = Address;
-        }
+        public MM_34401A(String Address) : base(Address) { }
 
         public void DelayAutoSet(Boolean state) { SCPI.TRIGger.DELay.AUTO.Command(state); }
 

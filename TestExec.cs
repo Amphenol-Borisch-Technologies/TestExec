@@ -265,32 +265,7 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<Alias,Object> kvp in Instruments) {
-                switch (kvp.Value.GetType().Name) {
-                    case nameof(MM_34401A):
-                        ((MM_34401A)kvp.Value).SCPI.RST.Command();
-                        ((MM_34401A)kvp.Value).SCPI.CLS.Command();
-                        break;
-                    case nameof(MSMU_34980A):
-                        ((MSMU_34980A)kvp.Value).SCPI.RST.Command();
-                        ((MSMU_34980A)kvp.Value).SCPI.CLS.Command();
-                        break;
-                    case nameof(MSO_3014):
-                        ((MSO_3014)kvp.Value).InstrumentIO.WriteString("*RST");
-                        ((MSO_3014)kvp.Value).InstrumentIO.WriteString("*CLS");
-                        break;
-                    case nameof(PS_E3634A):
-                        ((PS_E3634A)kvp.Value).SCPI.RST.Command();
-                        ((PS_E3634A)kvp.Value).SCPI.CLS.Command();
-                        break;
-                    case nameof(PS_E3649A):
-                        ((PS_E3649A)kvp.Value).SCPI.RST.Command();
-                        ((PS_E3649A)kvp.Value).SCPI.CLS.Command();
-                        break;
-                    default:
-                        throw new NotImplementedException($"Unimplemented Instrument; switch/case doesn't support type '{kvp.Value.GetType().Name}' for ID '{kvp.Key.ID}'.");
-                }
-            }
+            Instrumentation.Initialize(Instruments);
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
