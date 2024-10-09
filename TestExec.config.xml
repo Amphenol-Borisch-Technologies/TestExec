@@ -140,7 +140,7 @@
       <ID>MSMU1</ID>
       <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
       <Address>GPIB0::2::INSTR</Address>
-      <ClassName>MSMU_34980A</ClassName>
+      <ClassName>MF_34980A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2</ID>

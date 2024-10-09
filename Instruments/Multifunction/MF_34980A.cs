@@ -5,18 +5,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
-using static ABT.Test.TestExecutive.Instruments.Multifunction.MSMU_34980A;
 
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
-
-    public class MSMU_34980A : Ag34980 {
-
+    public class MF_34980A : Ag34980 {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
         public enum RELAY_STATES { opened, CLOSED }
 
-        public MSMU_34980A(String Address) : base(Address) {
+        public MF_34980A(String Address) : base(Address) {
             DateTime now = DateTime.Now;
             SCPI.SYSTem.DATE.Command(now.Year,now.Month,now.Day);
             SCPI.SYSTem.TIME.Command(now.Hour,now.Minute,Convert.ToDouble(now.Second));
@@ -49,19 +46,16 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
         public void RouteOpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
         public Boolean RouteGet(String Channels, RELAY_STATES State) {
             ValidateChannelS(Channels);
-
-            SCPI.ROUTe.OPEN.Query(Channels, out Boolean[] states);
-
-            (State is RELAY_STATES.opened ? $":ROUTe:OPEN? ({Channels})" : $":ROUTe:CLOSe? ({Channels})");
-
-
-            List<String> ls = s.Replace("[", "").Replace("]", "").Replace("0", Boolean.FalseString).Replace("1", Boolean.TrueString).Split(',').ToList();
-            List<Boolean> lb = ls.Select(b => Boolean.TryParse(b, out Boolean result) && result).ToList();
+            Boolean[] states;
+            if (State is RELAY_STATES.opened) SCPI.ROUTe.OPEN.Query(Channels, out states);
+            else SCPI.ROUTe.CLOSe.Query(Channels, out states);
+            List<Boolean> lb = states.ToList();
             return lb.TrueForAll(b => b == true);
         }
         public void RouteSet(String Channels, RELAY_STATES State) {
             ValidateChannelS(Channels);
-            Transport.Command.Invoke(State is RELAY_STATES.opened ? $":ROUTe:OPEN ({Channels})" : $":ROUTe:CLOSe ({Channels})");
+            if (State is RELAY_STATES.opened) SCPI.ROUTe.OPEN.Command(Channels);
+            else SCPI.ROUTe.CLOSe.Command(Channels);
         }
 
         public String SystemDescriptionLong(SLOTS Slot) {
@@ -82,11 +76,6 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             SCPI.UNIT.TEMPerature.Query(out String[] units);
             return (TEMPERATURE_UNITS)Enum.Parse(typeof(TEMPERATURE_UNITS), String.Join("", units).Replace("[", "").Replace("]", "")); }
         public void UnitsSet(TEMPERATURE_UNITS Temperature_Units) { SCPI.UNIT.TEMPerature.Command($"{TEMPERATURE_UNITS.F}"); }
-
-        private String Query(String Q) {
-            Transport.Query.Invoke(Q, out String RetVal);
-            return RetVal;
-        }
 
         public void ValidateChannelS(String Channels) {
             // TODO: Debug.Print($"ChannelS: '{Channels}'.");
@@ -123,7 +112,7 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             // TODO: Debug.Print($"Channel: '{Channel}'.");
             Int32 slotNumber = Int32.Parse(Channel.Substring(0, 2));
             // TODO: Debug.Print($"Slot Number: '{slotNumber}'.");
-            if (!Enum.IsDefined(typeof(SLOTS), (SLOTS)slotNumber)) throw new ArgumentException($"Channel '{Channel}' must have valid integer Slot in interval [{(Int32)SLOTS.Slot1}..{(Int32)SLOTS.Slot8}].");
+            if (!Enum.IsDefined(typeof(SLOTS), (SLOTS)slotNumber)) throw new ArgumentException($"Channel '{Channel}' must have valid integer Slot in interval [{(Int32)SLOTS.SLOT1}..{(Int32)SLOTS.SLOT8}].");
             Int32 channel = Int32.Parse(Channel.Substring(2));
             // TODO: Debug.Print($"Channel: '{channel}'.");
             (Int32 min, Int32 max) = ModuleChannels((SLOTS)slotNumber);

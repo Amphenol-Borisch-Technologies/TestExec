@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="Instruments\MultiMeters\MM_34401A.cs" />
     <Compile Include="Instruments\Oscilloscopes\MSO_3014.cs" />
-    <Compile Include="Instruments\Multifunction\MSMU_34980A.cs" />
+    <Compile Include="Instruments\Multifunction\MF_34980A.cs" />
     <Compile Include="Instruments\PowerSupplies\PS_E3634A.cs" />
     <Compile Include="Instruments\PowerSupplies\PS_E3649A.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
