@@ -62,11 +62,12 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Instruments\MultiMeters\MM_34401A.cs" />
-    <Compile Include="Instruments\Oscilloscopes\MSO_3014.cs" />
-    <Compile Include="Instruments\Multifunction\MF_34980A.cs" />
-    <Compile Include="Instruments\PowerSupplies\PS_E3634A.cs" />
-    <Compile Include="Instruments\PowerSupplies\PS_E3649A.cs" />
+    <Compile Include="Instruments\MultiMeters\SCPI_MM_34401A.cs" />
+    <Compile Include="Instruments\Oscilloscopes\IVI-COM_MSO_3014.cs" />
+    <Compile Include="Instruments\Multifunction\SCPI_MF_34980A.cs" />
+    <Compile Include="Instruments\MultiMeters\IVI-COM_MM_34401A.cs" />
+    <Compile Include="Instruments\PowerSupplies\SCPI_PS_E3634A.cs" />
+    <Compile Include="Instruments\PowerSupplies\SCPI_PS_E3649A.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,22 +145,22 @@
     </Reference>
     <Reference Include="Agilent.Agilent34401.Interop, Version=1.3.0.0, Culture=neutral, PublicKeyToken=ced78d295d1e0f2b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\Program Files\IVI Foundation\IVI\Bin\Primary Interop Assemblies\Agilent.Agilent34401.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Agilent.Agilent34952A.Interop, Version=1.6.0.0, Culture=neutral, PublicKeyToken=ced78d295d1e0f2b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\Program Files\IVI Foundation\IVI\Bin\Primary Interop Assemblies\Agilent.Agilent34952A.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Agilent.Agilent34980A.Interop, Version=1.6.0.0, Culture=neutral, PublicKeyToken=ced78d295d1e0f2b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\Program Files\IVI Foundation\IVI\Bin\Primary Interop Assemblies\Agilent.Agilent34980A.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Agilent.AgilentE36xx.Interop, Version=1.8.0.0, Culture=neutral, PublicKeyToken=ced78d295d1e0f2b, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\Program Files\IVI Foundation\IVI\Bin\Primary Interop Assemblies\Agilent.AgilentE36xx.Interop.dll</HintPath>
     </Reference>
     <Reference Include="AgSCPI99_1_0">
@@ -206,24 +207,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Agilent34401Lib">
-      <Guid>{1FB24FDD-0C4B-4940-AF0A-793714343AEE}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="AgilentE36xxLib">
-      <Guid>{CB6931FD-857F-4A8A-8F32-DEC3FF69ADA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>8</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="IviDCPwrLib">
       <Guid>{47ED5121-A398-11D4-BA58-000064657374}</Guid>
       <VersionMajor>2</VersionMajor>

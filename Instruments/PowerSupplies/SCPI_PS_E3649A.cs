@@ -3,9 +3,9 @@ using Agilent.CommandExpert.ScpiNet.AgE364xD_1_7;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
 namespace ABT.Test.TestExecutive.Instruments.PowerSupplies {
-    public class PS_E3649A : AgE364xD {
+    public class SCPI_PS_E3649A : AgE364xD {
 
-        public PS_E3649A(String Address) : base(Address) { }
+        public SCPI_PS_E3649A(String Address) : base(Address) { }
 
         public enum OUTPUTS { OUTput1, OUTput2 };
         public enum MMD { MINimum, MAXimum, DEFault }
