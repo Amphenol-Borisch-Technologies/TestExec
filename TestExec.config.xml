@@ -8,13 +8,13 @@
 	NOTE:  Each TestPlan must utilize static class 'InstrumentA' in file TestPlan.cs to map generic Instrument IDs to, optimally, more meaningful domain specific aliases:
 		  
 			  internal static class InstrumentA {
-			      internal static readonly Alias P2V5      = new Alias("PS1");   // Single output Power Supply 1
-			      internal static readonly Alias P3V3      = new Alias("PS2");   // Single output Power Supply 2
-			      internal static readonly Alias P5V       = new Alias("PS3");   // Single output Power Supply 3
-			      internal static readonly Alias P12V_N12V = new Alias("PS4ε5"); // Dual-output Power Supplies 4 & 5.
-			      internal static readonly Alias VOUT      = new Alias("EL1");   // Electrical Load 1.
-			      internal static readonly Alias MM        = new Alias("MM1");   // Multi-Meter 1.
-			      internal static readonly Alias CLK       = new Alias("WG1");   // WaveGenerator 1.
+			      internal static readonly String P2V5      = "PS1";   // Single output Power Supply 1
+			      internal static readonly String P3V3      = "PS2";   // Single output Power Supply 2
+			      internal static readonly String P5V       = "PS3";   // Single output Power Supply 3
+			      internal static readonly String P12V_N12V = "PS4ε5"; // Dual-output Power Supplies 4 & 5.
+			      internal static readonly String VOUT      = "EL1";   // Electrical Load 1.
+			      internal static readonly String MM        = "MM1";   // Multi-Meter 1.
+			      internal static readonly String CLK       = "WG1";   // WaveGenerator 1.
 			  }
 
 			- Include only required/utilized Instruments:
