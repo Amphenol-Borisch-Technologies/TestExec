@@ -132,38 +132,38 @@
   <Instruments>
     <Instrument>
       <ID>MM1_34401A</ID>
-      <Description>Agilent 34401A Digital Multimeter</Description>
+      <Detail>Agilent 34401A Digital Multimeter</Detail>
       <Address>GPIB0::4::INSTR</Address>
       <ClassName>MM_34401A</ClassName>
     </Instrument>
     <Instrument>
       <ID>MF1_34980A</ID>
-      <Description>Agilent 34980A Multifunction Switch/Measure Unit</Description>
+      <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
       <Address>GPIB0::2::INSTR</Address>
       <ClassName>MF_34980A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS1ε2_E3649A</ID>
-      <Description>Agilent E3649A Dual Output DC Power Supply</Description>
+      <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
       <Address>GPIB0::1::INSTR</Address>
       <ClassName>PS_E3649A</ClassName>
     </Instrument>
     <Instrument>
       <ID>PS3_E3634A</ID>
-      <Description>Keysight E3634A Single Ouput Dual Range DC Power Supply</Description>
+      <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
       <Address>GPIB0::3::INSTR</Address>
       <ClassName>PS_E3634A</ClassName>
     </Instrument>
     <Instrument>
       <ID>WG1ε2_3162</ID>
-      <Description>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Description>
+      <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
-      <ClassName>Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0.AgSCPI99, AgSCPI99_1_0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=344b812ea93ad2d2</ClassName>
+      <ClassName>SCPI99</ClassName>
     </Instrument>
   <!--
     <Instrument>
       <ID>MSO1</ID>
-      <Description>Tektronix MSO3014 Mixed Signal Oscilloscope</Description>
+      <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
       <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
       <ClassName>MSO_3014</ClassName>
     </Instrument>

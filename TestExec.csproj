@@ -62,12 +62,13 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Instruments\MultiMeters\SCPI_MM_34401A.cs" />
-    <Compile Include="Instruments\Oscilloscopes\IVI-COM_MSO_3014.cs" />
-    <Compile Include="Instruments\Multifunction\SCPI_MF_34980A.cs" />
-    <Compile Include="Instruments\MultiMeters\IVI-COM_MM_34401A.cs" />
-    <Compile Include="Instruments\PowerSupplies\SCPI_PS_E3634A.cs" />
-    <Compile Include="Instruments\PowerSupplies\SCPI_PS_E3649A.cs" />
+    <Compile Include="Instruments\Generic\SCPI99.cs" />
+    <Compile Include="Instruments\MultiMeters\MM_34401A_SCPI.cs" />
+    <Compile Include="Instruments\Oscilloscopes\MSO_3014_IVI-COM.cs" />
+    <Compile Include="Instruments\Multifunction\MF_34980A-SCPI.cs" />
+    <Compile Include="Instruments\MultiMeters\MM_34401A_IVI-COM.cs" />
+    <Compile Include="Instruments\PowerSupplies\PS_E3634A_SCPI.cs" />
+    <Compile Include="Instruments\PowerSupplies\PS_E3649A_SCPI.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,36 +208,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="IviDCPwrLib">
-      <Guid>{47ED5121-A398-11D4-BA58-000064657374}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="IviDmmLib">
-      <Guid>{47ED5122-A398-11D4-BA58-000064657374}</Guid>
-      <VersionMajor>3</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="IviDriverLib">
       <Guid>{47ED5120-A398-11D4-BA58-000064657374}</Guid>
       <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="IviSwtchLib">
-      <Guid>{47ED5125-A398-11D4-BA58-000064657374}</Guid>
-      <VersionMajor>3</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>

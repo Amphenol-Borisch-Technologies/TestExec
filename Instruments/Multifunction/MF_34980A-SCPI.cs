@@ -7,16 +7,21 @@ using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
-    public class SCPI_MF_34980A : Ag34980 {
+    public class MF_34980A_SCPI : Ag34980 {
+        public String Address;
+        public String Detail;
+
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
         public enum RELAY_STATES { opened, CLOSED }
 
-        public SCPI_MF_34980A(String Address) : base(Address) {
+        public MF_34980A_SCPI(String Address, String Detail) : base(Address) {
+            this.Address = Address;
+            this.Detail = Detail;
             DateTime now = DateTime.Now;
-            SCPI.SYSTem.DATE.Command(now.Year,now.Month,now.Day);
-            SCPI.SYSTem.TIME.Command(now.Hour,now.Minute,Convert.ToDouble(now.Second));
+            SCPI.SYSTem.DATE.Command(now.Year, now.Month, now.Day);
+            SCPI.SYSTem.TIME.Command(now.Hour, now.Minute, Convert.ToDouble(now.Second));
             UnitsSet(TEMPERATURE_UNITS.F);
         }
 

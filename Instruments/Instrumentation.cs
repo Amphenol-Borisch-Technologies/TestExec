@@ -18,6 +18,7 @@ namespace ABT.Test.TestExecutive.Instruments {
             Dictionary<Alias, Object> Instruments = new Dictionary<Alias, Object>();
             foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("Instruments").Elements("Instrument")) {
                 String ID = xe.Attribute("ID").Value;
+                String Detail = xe.Attribute("Detail").Value;
                 String Address = xe.Attribute("Address").Value;
                 String ClassName = xe.Attribute("ClassName").Value;
                 Instruments.Add(new Alias(ID), Activator.CreateInstance(Type.GetType(ClassName), new Object[] { Address }));
@@ -27,7 +28,7 @@ namespace ABT.Test.TestExecutive.Instruments {
 
         public static (String Description, String Address, String ClassName) Get(Alias alias) {
             XElement Instrument = XElement.Load(TestExec.GlobalConfigurationFile).Element("Instruments").Elements("Instrument").FirstOrDefault(x => x.Element("ID").Value == alias.ID);
-            if (Instrument != null) return (Instrument.Element("Description").Value, Instrument.Element("Address").Value, Instrument.Element("ClassName").Value);
+            if (Instrument != null) return (Instrument.Element("Detail").Value, Instrument.Element("Address").Value, Instrument.Element("ClassName").Value);
             throw new ArgumentException($"Instrument with ID '{alias.ID}' not present in file '{TestExec.GlobalConfigurationFile}'.");
         }
 

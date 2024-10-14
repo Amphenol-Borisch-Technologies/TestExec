@@ -3,13 +3,18 @@ using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34401_11;
 
 namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
-    public class SCPI_MM_34401A : Ag34401 {
+    public class MM_34401A_SCPI : Ag34401 {
+        public String Address;
+        public String Detail;
 
         public enum MMD { MIN, MAX, DEF }
         public enum TERMINALS { Front, Rear };
         public enum PROPERTY { AmperageAC, AmperageDC, Continuity, Frequency, Fresistance, Period, Resistance, VoltageAC, VoltageDC, VoltageDiodic }
 
-        public SCPI_MM_34401A(String Address) : base(Address) { }
+        public MM_34401A_SCPI(String Address, String Detail) : base(Address) {
+            this.Address = Address;
+            this.Detail = Detail;
+        }
 
         public void DelayAutoSet(Boolean state) { SCPI.TRIGger.DELay.AUTO.Command(state); }
 
