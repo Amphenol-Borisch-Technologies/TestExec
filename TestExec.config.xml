@@ -30,8 +30,8 @@
 				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
 				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
 		
-	ID:			- Required element.
-					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
+	ID_System:			- Required element.
+					- Unique Identifier; no 2 can be identical, as ID_System is unique key in a Dictionary object.
 					- Recommend following naming conventions:
 						- CT1, CT2, CT3ε4...	      Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
 						- EL1, EL2, EL3ε4...	      Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
@@ -131,38 +131,38 @@
 
   <Instruments>
     <Instrument>
-      <ID>MM1_34401A</ID>
+      <ID_System>MM1_34401A</ID_System>
       <Detail>Agilent 34401A Digital Multimeter</Detail>
       <Address>GPIB0::4::INSTR</Address>
       <ClassName>MM_34401A</ClassName>
     </Instrument>
     <Instrument>
-      <ID>MF1_34980A</ID>
+      <ID_System>MF1_34980A</ID_System>
       <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
       <Address>GPIB0::2::INSTR</Address>
       <ClassName>MF_34980A</ClassName>
     </Instrument>
     <Instrument>
-      <ID>PS1ε2_E3649A</ID>
+      <ID_System>PS1ε2_E3649A</ID_System>
       <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
       <Address>GPIB0::1::INSTR</Address>
       <ClassName>PS_E3649A</ClassName>
     </Instrument>
     <Instrument>
-      <ID>PS3_E3634A</ID>
+      <ID_System>PS3_E3634A</ID_System>
       <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
       <Address>GPIB0::3::INSTR</Address>
       <ClassName>PS_E3634A</ClassName>
     </Instrument>
     <Instrument>
-      <ID>WG1ε2_3162</ID>
+      <ID_System>WG1ε2_3162</ID_System>
       <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
       <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
       <ClassName>SCPI99</ClassName>
     </Instrument>
   <!--
     <Instrument>
-      <ID>MSO1</ID>
+      <ID_System>MSO1_3014</ID_System>
       <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
       <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
       <ClassName>MSO_3014</ClassName>
