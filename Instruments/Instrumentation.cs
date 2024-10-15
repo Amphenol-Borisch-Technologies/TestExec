@@ -16,84 +16,50 @@ namespace ABT.Test.TestExecutive.Instruments {
 
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = new Dictionary<String, Object>();
-            foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("Instruments").Elements("Instrument")) {
-                String ID_System = xe.Attribute("ID_System").Value;
+            foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("InstrumentsSystem").Elements("Instrument")) {
+                String ID = xe.Attribute("ID").Value;
                 String Detail = xe.Attribute("Detail").Value;
                 String Address = xe.Attribute("Address").Value;
                 String ClassName = xe.Attribute("ClassName").Value;
-                Instruments.Add(ID_System, Activator.CreateInstance(Type.GetType(ClassName), new Object[] { ID_System, Address, Detail }));
+                Instruments.Add(ID, Activator.CreateInstance(Type.GetType(ClassName), new Object[] { ID, Address, Detail }));
             }
             return Instruments;
         }
 
         public static (String Detail, String Address, String ClassName) Get(String ID) {
-            XElement Instrument = XElement.Load(TestExec.GlobalConfigurationFile).Element("Instruments").Elements("Instrument").FirstOrDefault(x => x.Element("ID_System").Value == ID);
+            XElement Instrument = XElement.Load(TestExec.GlobalConfigurationFile).Element("Instruments").Elements("Instrument").FirstOrDefault(x => x.Element("ID").Value == ID);
             if (Instrument != null) return (Instrument.Element("Detail").Value, Instrument.Element("Address").Value, Instrument.Element("ClassName").Value);
-            throw new ArgumentException($"Instrument with ID_System '{ID}' not present in file '{TestExec.GlobalConfigurationFile}'.");
+            throw new ArgumentException($"Instrument with ID '{ID}' not present in file '{TestExec.GlobalConfigurationFile}'.");
         }
 
-        public static void Clear(Dictionary<String, Object> Instruments) {
-            foreach (KeyValuePair<String, Object> kvp in Instruments) { new AgSCPI99(Get(kvp.Key).Address).SCPI.CLS.Command(); }
-        }
-
-        public static void Initialize(Dictionary<String, Object> Instruments) {
-            Reset(Instruments);
-            Clear(Instruments);
-        }
-
-        public static void Reset(Dictionary<String, Object> Instruments) {
-            foreach (KeyValuePair<String, Object> kvp in Instruments) { new AgSCPI99(Get(kvp.Key).Address).SCPI.RST.Command(); }
-        }
-
-        public static String IdentityGet(String ID) {
-            new AgSCPI99(Get(ID).Address).SCPI.IDN.Query(out String Identity);
-            return Identity;
-        }
-
-        public static String IdentityGet(String ID, IDN_FIELDS idn_field) {
-            return IdentityGet(ID).Split(IDENTITY_SEPARATOR)[(Int32)idn_field];
-        }
-
-        public static Int32 SelfTest(String ID) {
-            new AgSCPI99(Get(ID).Address).SCPI.TST.Query(out Int32 selfTestResult);
-            return selfTestResult; // 0 == passed, 1 == failed.
-        }
-
-        public static Int32 SelfTestFailures(Dictionary<String, Object> Instruments)  {
-            Int32 selfTestFailures = 0;
-            foreach (KeyValuePair<String, Object> kvp in Instruments) selfTestFailures += SelfTest(kvp.Key);
-            return selfTestFailures;
-        }
-
-        public static Boolean SelfTestPassed(Form CurrentForm, String ID) {
-            Int32 selfTestResult;
-            try {
-                selfTestResult = SelfTest(ID);
-            } catch (Exception) {
-                (String Detail, String Address, String ClassName) = Get(ID);
-                _ = MessageBox.Show(CurrentForm, $"Instrument:'{ID}'{Environment.NewLine}" +
-                    $"Address: '{Address}'{Environment.NewLine}" +
-                    $"Detail:  '{Detail}'{Environment.NewLine}" +
-                    $"likely unpowered or not communicating.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // If unpowered, SelfTest throws a Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
-                // which requires an apparently unavailable Keysight library to explicitly catch.
-                return false;
+        public static void Reinitialize(Dictionary<String, Object> Instruments) {
+            foreach (KeyValuePair<String, Object> kvp in Instruments) {
+                switch (kvp.Value) {
+                    case Generic.SCPI i:
+                        ((Generic.SCPI)kvp.Value).Reinitialize();
+                        break;
+                    case Multifunction.MF_34980A_SCPI i:
+                        ((Multifunction.MF_34980A_SCPI)kvp.Value).Reinitialize();
+                        break;
+                    case MultiMeters.MM_34401A_IVI_COM i:
+                        ((MultiMeters.MM_34401A_IVI_COM)kvp.Value).Reinitialize();
+                        break;
+                    case MultiMeters.MM_34401A_SCPI i:
+                        ((MultiMeters.MM_34401A_SCPI)kvp.Value).Reinitialize();
+                        break;
+                    case Oscilloscopes.MSO_3014_IVI_COM i:
+                        ((Oscilloscopes.MSO_3014_IVI_COM)kvp.Value).Reinitialize();
+                        break;
+                    case PowerSupplies.PS_E3634A_SCPI i:
+                        ((PowerSupplies.PS_E3634A_SCPI)kvp.Value).Reinitialize();
+                        break;
+                    case PowerSupplies.PS_E3649A_SCPI i:
+                        ((PowerSupplies.PS_E3649A_SCPI)kvp.Value).Reinitialize();
+                        break;
+                    default:
+                        throw new ArgumentException($"Unknow Instrument: Alias '{kvp.Key}', Type '{kvp.Value.GetType()}'.");
+                }
             }
-            if (selfTestResult == 1) {
-                (String Detail, String Address, String ClassName) = Get(ID);
-                _ = MessageBox.Show(CurrentForm, $"Instrument:'{ID}'{Environment.NewLine}" +
-                    $"Address: '{Address}'{Environment.NewLine}" +
-                    $"Detail:  '{Detail}'{Environment.NewLine}" +
-                    $"failed Self-Test.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true; // selfTestResult == 0.
-        }
-
-        public static Boolean SelfTestsPassed(Form CurrentForm, Dictionary<String, Object> Instruments) {
-            Boolean selfTestsPassed = true;
-            foreach (KeyValuePair<String, Object> kvp in Instruments) selfTestsPassed &= SelfTestPassed(CurrentForm, kvp.Key);
-            return selfTestsPassed;
         }
     }
 }

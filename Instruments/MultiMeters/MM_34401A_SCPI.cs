@@ -16,6 +16,11 @@ namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
             this.Detail = Detail;
         }
 
+        public void Reinitialize() {
+            SCPI.RST.Command();
+            SCPI.CLS.Command();
+        }
+
         public void DelayAutoSet(Boolean state) { SCPI.TRIGger.DELay.AUTO.Command(state); }
 
         public Boolean DelayAutoIs() {

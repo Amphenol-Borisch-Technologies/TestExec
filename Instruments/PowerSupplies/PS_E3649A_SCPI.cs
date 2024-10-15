@@ -7,13 +7,18 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies {
         public String Address;
         public String Detail;
 
+        public enum OUTPUTS { OUTput1, OUTput2 };
+        public enum MMD { MINimum, MAXimum, DEFault }
+
         public PS_E3649A_SCPI(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
         }
 
-        public enum OUTPUTS { OUTput1, OUTput2 };
-        public enum MMD { MINimum, MAXimum, DEFault }
+        public void Reinitialize() {
+            SCPI.RST.Command();
+            SCPI.CLS.Command();
+        }
 
         public OUTPUTS Selected() {
             SCPI.INSTrument.SELect.Query(out String select);

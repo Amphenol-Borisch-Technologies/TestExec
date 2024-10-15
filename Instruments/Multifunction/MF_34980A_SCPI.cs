@@ -25,6 +25,11 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             UnitsSet(TEMPERATURE_UNITS.F);
         }
 
+        public void Reinitialize() {
+            SCPI.RST.Command();
+            SCPI.CLS.Command();
+        }
+
         public Boolean InstrumentDMM_Installed() { 
             SCPI.INSTrument.DMM.INSTalled.Query(out Boolean installed);
             return installed;

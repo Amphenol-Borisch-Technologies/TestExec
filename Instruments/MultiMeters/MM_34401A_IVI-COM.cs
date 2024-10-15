@@ -11,5 +11,10 @@ namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
             this.Detail = Detail;
             Initialize(ResourceName: Address, IdQuery: false, Reset: false, OptionString: String.Empty);
         }
+
+        public void Reinitialize() {
+            Utility.Reset();
+            Clear();
+        }
     }
 }

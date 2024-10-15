@@ -15,6 +15,11 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
             this.Detail = Detail;
         }
 
+        public void Reinitialize() {
+            SCPI.RST.Command();
+            SCPI.CLS.Command();
+        }
+
         public RANGE RangeGet() { 
             SCPI.SOURce.VOLTage.RANGe.Query(out String range);
             return (RANGE)Enum.Parse(typeof(RANGE), range);
