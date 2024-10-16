@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
-using static ABT.Test.TestExecutive.Instruments.Instrumentation;
+using static ABT.Test.TestExecutive.Instruments.Instruments;
 
 namespace ABT.Test.TestExecutive.Instruments.Multifunction {
     public class MF_34980A_SCPI : Ag34980, IInstruments {

@@ -6,11 +6,17 @@ using System.Xml.Linq;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 namespace ABT.Test.TestExecutive.Instruments {
-    public static class Instrumentation {
-        public enum SENSE_MODE { EXTernal, INTernal }
+    public enum STATES { off = 0, ON = 1 } // NOTE: To Command an instrument off or ON, and Query it's STATE, again off or ON.
+    public enum SENSE_MODE { EXTernal, INTernal }
+    // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
 
-        // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
+    public interface IInstruments {
+        String Address { get; } // NOTE: Store in instrument objects for easy error reporting of addresses.  Not easily gotten otherwise.
+        String Detail { get; }  // NOTE: Store in instrument objects for easy error reporting of detailed descriptions, similar but more useful than SCPI's *IDN query.
+        void Reinitialize();    // NOTE: After each test run, reinitialize instrument.  Typically performs SCPI's *RST & *CLS commands.
+    }
 
+    public static class Instruments {
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = new Dictionary<String, Object>();
             foreach (XElement xe in XElement.Load(TestExec.GlobalConfigurationFile).Elements("InstrumentsSystem").Elements("Instrument")) {

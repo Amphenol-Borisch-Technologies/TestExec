@@ -24,7 +24,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
 using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
-using static ABT.Test.TestExecutive.Instruments.Instrumentation;
+using static ABT.Test.TestExecutive.Instruments.Instruments;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -179,7 +179,7 @@ namespace ABT.Test.TestExecutive {
             CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
-                Instruments = Instrumentation.Get();
+                Instruments = TestExecutive.Instruments.Instruments.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             }
         }
@@ -260,7 +260,7 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            Instrumentation.Reinitialize(Instruments);
+            TestExecutive.Instruments.Instruments.Reinitialize(Instruments);
         }
 
         public virtual Boolean Initialized() {

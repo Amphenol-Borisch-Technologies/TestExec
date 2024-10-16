@@ -50,12 +50,16 @@
 							- Keysight E36103B Single-output Power Supply
 							- Keysight E36234A Dual-output Power Supply
 							- Keysight 34461A Multi-Meter
-	Address:		-Required element.
+	Address: - Required element.
 						- Address elements must also all be unique, no duplicates.
 						- They must also be valid VISA instrument addresses.
 						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
 							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
 							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
+  ClassName: - Required element.
+             - Class name from ABT.Test.TestExecutive.InstrumentDrivers.*
+             - This is the instrument driver, typically inherited from a manufacturer provided SCPI or IVI driver.
+             - The inheritance permits adding custom methods and interfaces, most quite simple, but useful.
 	NOTE:  VISA addresses (AKA VISA Resource Names) are explained at:
 	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
@@ -129,38 +133,14 @@
     <TestPlans>C:\Program Files\ABT</TestPlans>																															<!-- TestPlan executables. -->
   </Folders>
 
-  <Instruments>
-    <Instrument>
-      <ID>MM1_34401A</ID>
-      <Detail>Agilent 34401A Digital Multimeter</Detail>
-      <Address>GPIB0::4::INSTR</Address>
-    </Instrument>
-    <Instrument>
-      <ID>MF1_34980A</ID>
-      <Detail>Agilent 34980A Multifunction Switch/Measure Unit</Detail>
-      <Address>GPIB0::2::INSTR</Address>
-    </Instrument>
-    <Instrument>
-      <ID>PS1ε2_E3649A</ID>
-      <Detail>Agilent E3649A Dual Output DC Power Supply</Detail>
-      <Address>GPIB0::1::INSTR</Address>
-    </Instrument>
-    <Instrument>
-      <ID>PS3_E3634A</ID>
-      <Detail>Keysight E3634A Single Ouput Dual Range DC Power Supply</Detail>
-      <Address>GPIB0::3::INSTR</Address>
-    </Instrument>
-    <Instrument>
-      <ID>WG1ε2_3162</ID>
-      <Detail>Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator</Detail>
-      <Address>USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR</Address>
-    </Instrument>
-  <!--
-    <Instrument>
-      <ID>MSO1_3014</ID>
-      <Detail>Tektronix MSO3014 Mixed Signal Oscilloscope</Detail>
-      <Address>USB0::0x0699::0x0421::C021373::INSTR</Address>
-    </Instrument>
+  <InstrumentsStationary>
+    <Stationary ID="MM1_34401A"   Detail="Agilent 34401A Digital Multimeter"                               Address="GPIB0::4::INSTR"                                ClassName="MM_34401A_SCPI"/>
+    <Stationary ID="MF1_34980A"   Detail="Agilent 34980A Multifunction Switch/Measure Unit"                Address="GPIB0::2::INSTR"                                ClassName="MF_34980A_SCPI"/>
+    <Stationary ID="PS1ε2_E3649A" Detail="Agilent E3649A Dual Output DC Power Supply"                      Address="GPIB0::1::INSTR"                                ClassName="PS_E3649A_SCPI"/>
+    <Stationary ID="PS3_E3634A"   Detail="Keysight E3634A Single Ouput Dual Range DC Power Supply"         Address="GPIB0::3::INSTR"                                ClassName="PS_E3634A_SCPI"/>
+    <Stationary ID="WG1ε2_3162"   Detail="Teledyne LeCroy WaveStation 3162 Two Channel Waveform Generator" Address="USB0::0x05FF::0x0A21::LCRY3602C00333::0::INSTR" ClassName="SCPI99"/>
+  <!--    
+    <Stationary ID="MSO1_3014"    Detail="Tektronix MSO3014 Mixed Signal Oscilloscope"                     Address="USB0::0x0699::0x0421::C021373::INSTR"           ClassName="MSO_3014_IVI_COM"/>
   -->
-  </Instruments>
+  </InstrumentsStationary>
 </Configuration>
