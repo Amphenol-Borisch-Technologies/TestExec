@@ -7,8 +7,6 @@ using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 namespace ABT.Test.TestExecutive.Instruments {
     public static class Instrumentation {
-        public enum STATES { off = 0, ON = 1 }
-        public enum PS { Amps, Volts }
         public enum SENSE_MODE { EXTernal, INTernal }
 
         // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.

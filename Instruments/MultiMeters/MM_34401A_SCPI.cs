@@ -22,20 +22,9 @@ namespace ABT.Test.TestExecutive.Instruments.MultiMeters {
             this.Detail = Detail;
         }
 
-        public void DelayAutoSet(Boolean state) { SCPI.TRIGger.DELay.AUTO.Command(state); }
-
         public Boolean DelayAutoIs() {
             SCPI.TRIGger.DELay.AUTO.Query(out Boolean state);
             return state;
-        }
-
-        public void DelaySet(MMD mmd) { SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), mmd)); }
-
-        public void DelaySet(Double Seconds) { SCPI.TRIGger.DELay.Command(Seconds); }
-
-        public Double DelayGet() {
-            SCPI.TRIGger.DELay.Query($"{MMD.MIN}", out Double seconds);
-            return seconds;
         }
 
         public Double Get(PROPERTY property) {

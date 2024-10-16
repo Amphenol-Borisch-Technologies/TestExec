@@ -68,6 +68,7 @@
     <Compile Include="Instruments\Oscilloscopes\MSO_3014_IVI-COM.cs" />
     <Compile Include="Instruments\Multifunction\MF_34980A_SCPI.cs" />
     <Compile Include="Instruments\MultiMeters\MM_34401A_IVI-COM.cs" />
+    <Compile Include="Instruments\PowerSupplies\IPowerSupplies.cs" />
     <Compile Include="Instruments\PowerSupplies\PS_E3634A_SCPI.cs" />
     <Compile Include="Instruments\PowerSupplies\PS_E3649A_SCPI.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
@@ -171,7 +172,7 @@
     </Reference>
     <Reference Include="Ivi.Driver.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a128c98f1d7717c1, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\Program Files\IVI Foundation\IVI\Bin\Primary Interop Assemblies\Ivi.Driver.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Ivi.Visa, Version=7.2.0.0, Culture=neutral, PublicKeyToken=a128c98f1d7717c1, processorArchitecture=MSIL">
@@ -210,15 +211,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="IviDriverLib">
-      <Guid>{47ED5120-A398-11D4-BA58-000064657374}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>

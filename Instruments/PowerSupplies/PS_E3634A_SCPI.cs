@@ -1,9 +1,10 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
-using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
 namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
-    public class PS_E3634A_SCPI : AgE363x, IInstruments {
+    public class PS_E3634A_SCPI : AgE363x, IInstruments, IPowerSupplyOutputs1 {
+        public enum RANGE { P25V, P50V }
+
         public String Address { get; }
         public String Detail { get; }
 
@@ -11,9 +12,6 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
-
-        public enum RANGE { P25V, P50V }
-        public enum MMD { MINimum, MAXimum, DEFault }
 
         public PS_E3634A_SCPI(String Address, String Detail) : base(Address) {
             this.Address = Address;
@@ -24,10 +22,15 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
             SCPI.SOURce.VOLTage.RANGe.Query(out String range);
             return (RANGE)Enum.Parse(typeof(RANGE), range);
         }
-
         public void RangeSet(RANGE Range) { SCPI.SOURce.VOLTage.RANGe.Command($"{Range}"); }
 
-        public void Set(Single Volts, Single Amps, Single OVP, STATES State) {
+        public (Double AmpsDC, Double VoltsDC) Get(DC DC) {
+            SCPI.MEASure.CURRent.DC.Query(out Double AmpsDC);
+            SCPI.MEASure.VOLTage.DC.Query(out Double VoltsDC);
+            return (AmpsDC, VoltsDC);
+        }
+
+        public void Set(Double Volts, Double Amps, Double OVP, STATES State) {
             SCPI.OUTPut.STATe.Command(false);
             SCPI.SOURce.VOLTage.PROTection.CLEar.Command();
             SCPI.SOURce.VOLTage.PROTection.LEVel.Command($"{MMD.MAXimum}");

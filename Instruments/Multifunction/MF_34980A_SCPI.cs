@@ -27,7 +27,7 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             DateTime now = DateTime.Now;
             SCPI.SYSTem.DATE.Command(now.Year, now.Month, now.Day);
             SCPI.SYSTem.TIME.Command(now.Hour, now.Minute, Convert.ToDouble(now.Second));
-            UnitsSet(TEMPERATURE_UNITS.F);
+            SCPI.UNIT.TEMPerature.Command($"{TEMPERATURE_UNITS.F}");
         }
 
         public Boolean InstrumentDMM_Installed() { 
@@ -51,9 +51,6 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             ValidateChannelS(Channels);
             SCPI.ROUTe.CLOSe.EXCLusive.Command($"({Channels})");
         }
-        public void RouteOpenABUS(ABUS ABus) { SCPI.ROUTe.OPEN.ABUS.Command($"{ABus}"); }
-        public void RouteOpenSlot(SLOTS Slot) { SCPI.ROUTe.OPEN.ALL.Command($"{Slot}"); }
-        public void RouteOpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
         public Boolean RouteGet(String Channels, RELAY_STATES State) {
             ValidateChannelS(Channels);
             Boolean[] states;
@@ -76,7 +73,6 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
             SCPI.SYSTem.MODule.TEMPerature.Query("TRANsducer", (Int32)Slot, out Double temperature);
             return temperature;
         }
-        public void SystemPreset() { SCPI.SYSTem.PRESet.Command(); }
 
         public String SystemType(SLOTS Slot) {
             SCPI.SYSTem.CTYPe.Query((Int32)Slot, out String identity);
@@ -85,7 +81,6 @@ namespace ABT.Test.TestExecutive.Instruments.Multifunction {
         public TEMPERATURE_UNITS UnitsGet() {
             SCPI.UNIT.TEMPerature.Query(out String[] units);
             return (TEMPERATURE_UNITS)Enum.Parse(typeof(TEMPERATURE_UNITS), String.Join("", units).Replace("[", "").Replace("]", "")); }
-        public void UnitsSet(TEMPERATURE_UNITS Temperature_Units) { SCPI.UNIT.TEMPerature.Command($"{TEMPERATURE_UNITS.F}"); }
 
         public void ValidateChannelS(String Channels) {
             // TODO: Debug.Print($"ChannelS: '{Channels}'.");
