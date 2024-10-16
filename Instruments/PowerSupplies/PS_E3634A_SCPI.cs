@@ -3,9 +3,14 @@ using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
 using static ABT.Test.TestExecutive.Instruments.Instrumentation;
 
 namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
-    public class PS_E3634A_SCPI : AgE363x {
-        public String Address;
-        public String Detail;
+    public class PS_E3634A_SCPI : AgE363x, IInstruments {
+        public String Address { get; }
+        public String Detail { get; }
+
+        public void Reinitialize() {
+            SCPI.RST.Command();
+            SCPI.CLS.Command();
+        }
 
         public enum RANGE { P25V, P50V }
         public enum MMD { MINimum, MAXimum, DEFault }
@@ -13,11 +18,6 @@ namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
         public PS_E3634A_SCPI(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
-        }
-
-        public void Reinitialize() {
-            SCPI.RST.Command();
-            SCPI.CLS.Command();
         }
 
         public RANGE RangeGet() { 

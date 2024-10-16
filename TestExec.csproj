@@ -62,7 +62,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Instruments\Generic\SCPI.cs" />
+    <Compile Include="Instruments\Generic\SCPI99.cs" />
+    <Compile Include="Instruments\IInstruments.cs" />
     <Compile Include="Instruments\MultiMeters\MM_34401A_SCPI.cs" />
     <Compile Include="Instruments\Oscilloscopes\MSO_3014_IVI-COM.cs" />
     <Compile Include="Instruments\Multifunction\MF_34980A_SCPI.cs" />

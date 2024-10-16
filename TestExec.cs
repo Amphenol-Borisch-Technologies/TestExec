@@ -260,7 +260,7 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            Instrumentation.Initialize(Instruments);
+            Instrumentation.Reinitialize(Instruments);
         }
 
         public virtual Boolean Initialized() {
