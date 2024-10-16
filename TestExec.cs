@@ -22,9 +22,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
-using ABT.Test.TestExecutive.Instruments;
 using ABT.Test.TestExecutive.Logging;
-using static ABT.Test.TestExecutive.Instruments.Instruments;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.

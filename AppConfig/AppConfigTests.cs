@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 
 namespace ABT.Test.TestExecutive.AppConfig {
-    public enum SI_UNITS { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
-    public enum SI_UNITS_MODIFIER { AC, DC, Peak, PP, NotApplicable, RMS }
+    public enum UNITS_SI { amperes, celcius, farads, henries, hertz, NotApplicable, ohms, seconds, siemens, volt_amperes, volts, watts }
+    public enum UNITS_SI_MODIFIER { AC, DC, Peak, PP, NotApplicable, RMS }
 
     public abstract class MeasurementAbstract {
         public const String ClassName = nameof(MeasurementAbstract);
@@ -43,7 +43,7 @@ namespace ABT.Test.TestExecutive.AppConfig {
     public class MeasurementCustom : MeasurementAbstract {
         public new const String ClassName = nameof(MeasurementCustom);
         public readonly String Arguments;
-        public static readonly String NOT_APPLICABLE = Enum.GetName(typeof(SI_UNITS), SI_UNITS.NotApplicable);
+        public static readonly String NOT_APPLICABLE = Enum.GetName(typeof(UNITS_SI), UNITS_SI.NotApplicable);
 
         public MeasurementCustom(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -68,8 +68,8 @@ namespace ABT.Test.TestExecutive.AppConfig {
         public new const String ClassName = nameof(MeasurementNumeric);
         public readonly Double Low;                                                                   private const String _LOW = nameof(Low);
         public readonly Double High;                                                                  private const String _HIGH = nameof(High);
-        public readonly SI_UNITS SI_Units = SI_UNITS.NotApplicable;                                   private const String _SI_UNITS = nameof(SI_Units);
-        public readonly SI_UNITS_MODIFIER SI_Units_Modifier = SI_UNITS_MODIFIER.NotApplicable;        private const String _SI_UNITS_MODIFIER = nameof(SI_Units_Modifier);
+        public readonly UNITS_SI Units_SI = UNITS_SI.NotApplicable;                                   private const String _UNITS_SI = nameof(Units_SI);
+        public readonly UNITS_SI_MODIFIER Units_SI_Modifier = UNITS_SI_MODIFIER.NotApplicable;        private const String _Units_SI_Modifier = nameof(Units_SI_Modifier);
 
         public MeasurementNumeric(String ID, String Arguments) {
             Dictionary<String, String> argsDict = ArgumentsSplit(Arguments);
@@ -77,36 +77,36 @@ namespace ABT.Test.TestExecutive.AppConfig {
             High = Double.Parse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture);
             Low = Double.Parse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture);
 
-            String[] si_units = Enum.GetNames(typeof(SI_UNITS)).Select(s => s.ToLower()).ToArray();
-            if (si_units.Any(argsDict[_SI_UNITS].ToLower().Contains)) {
-                SI_Units = (SI_UNITS)Enum.Parse(typeof(SI_UNITS), argsDict[_SI_UNITS], ignoreCase: true);
-                String[] si_units_modifiers = Enum.GetNames(typeof(SI_UNITS_MODIFIER)).Select(s => s.ToLower()).ToArray();
-                if (si_units_modifiers.Any(argsDict[_SI_UNITS_MODIFIER].ToLower().Contains)) {
-                    SI_Units_Modifier = (SI_UNITS_MODIFIER)Enum.Parse(typeof(SI_UNITS_MODIFIER), argsDict[_SI_UNITS_MODIFIER], ignoreCase: true);
+            String[] units_si = Enum.GetNames(typeof(UNITS_SI)).Select(s => s.ToLower()).ToArray();
+            if (units_si.Any(argsDict[_UNITS_SI].ToLower().Contains)) {
+                Units_SI = (UNITS_SI)Enum.Parse(typeof(UNITS_SI), argsDict[_UNITS_SI], ignoreCase: true);
+                String[] Units_SI_Modifiers = Enum.GetNames(typeof(UNITS_SI_MODIFIER)).Select(s => s.ToLower()).ToArray();
+                if (Units_SI_Modifiers.Any(argsDict[_Units_SI_Modifier].ToLower().Contains)) {
+                    Units_SI_Modifier = (UNITS_SI_MODIFIER)Enum.Parse(typeof(UNITS_SI_MODIFIER), argsDict[_Units_SI_Modifier], ignoreCase: true);
                 }
             }
         }
 
         public static MeasurementNumeric Get(String MeasurementCustomArgs) {
             Dictionary<String, String> args = ArgumentsSplit(MeasurementCustomArgs);
-            List<String> keys = new List<String> { _HIGH, _LOW, _SI_UNITS, _SI_UNITS_MODIFIER };
+            List<String> keys = new List<String> { _HIGH, _LOW, _UNITS_SI, _Units_SI_Modifier };
             Dictionary<String, String> argsNumeric = args.Where(kvp => keys.Contains(kvp.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             return new MeasurementNumeric("MN", ArgumentsJoin(argsNumeric));
         }
 
-        public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_SI_UNITS}{SK}{SI_Units}{SA}{_SI_UNITS_MODIFIER}{SK}{SI_Units_Modifier}"; }
+        public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_UNITS_SI}{SK}{Units_SI}{SA}{_Units_SI_Modifier}{SK}{Units_SI_Modifier}"; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{_HIGH}{SK}0.004{SA}{Environment.NewLine}" +
                 $"             {_LOW}{SK}0.002{SA}{Environment.NewLine}" +
-                $"             {_SI_UNITS}{SK}volts{SA}{Environment.NewLine}" +
-                $"             {_SI_UNITS_MODIFIER}{SK}DC'{Environment.NewLine}" +
+                $"             {_UNITS_SI}{SK}volts{SA}{Environment.NewLine}" +
+                $"             {_Units_SI_Modifier}{SK}DC'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
             if (!argsDict.ContainsKey(_HIGH)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_HIGH}' key-value pair.");
             if (!argsDict.ContainsKey(_LOW)) throw new ArgumentException($"{ClassName} ID '{id  }' does not contain '{_LOW}' key-value pair.");
-            if (!argsDict.ContainsKey(_SI_UNITS)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_SI_UNITS}' key-value pair.");
-            if (!argsDict.ContainsKey(_SI_UNITS_MODIFIER)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_SI_UNITS_MODIFIER}' key-value pair.");
+            if (!argsDict.ContainsKey(_UNITS_SI)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_UNITS_SI}' key-value pair.");
+            if (!argsDict.ContainsKey(_Units_SI_Modifier)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_Units_SI_Modifier}' key-value pair.");
             if (!Double.TryParse(argsDict[_HIGH], NumberStyles.Float, CultureInfo.CurrentCulture, out Double high)) throw new ArgumentException($"{ClassName} ID '{id}' {_HIGH} '{argsDict[_HIGH]}' ≠ System.Double.");
             if (!Double.TryParse(argsDict[_LOW], NumberStyles.Float, CultureInfo.CurrentCulture, out Double low)) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{argsDict[_LOW]}' ≠ System.Double.");
             if (low > high) throw new ArgumentException($"{ClassName} ID '{id}' {_LOW} '{low}' > {_HIGH} '{high}'.");

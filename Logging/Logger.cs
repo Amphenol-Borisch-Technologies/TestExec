@@ -35,9 +35,9 @@ namespace ABT.Test.TestExecutive.Logging {
             sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
             sb.AppendLine(FormatMessage("Measured", $"{Value:G}"));
             sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
-            String si_units = $"{Enum.GetName(typeof(SI_UNITS), MN.SI_Units)}";
-            if (MN.SI_Units_Modifier != SI_UNITS_MODIFIER.NotApplicable) si_units += $" {Enum.GetName(typeof(SI_UNITS_MODIFIER), MN.SI_Units_Modifier)}";
-            sb.Append(FormatMessage("SI Units", si_units));
+            String units_si = $"{Enum.GetName(typeof(UNITS_SI), MN.Units_SI)}";
+            if (MN.Units_SI_Modifier != UNITS_SI_MODIFIER.NotApplicable) units_si += $" {Enum.GetName(typeof(UNITS_SI_MODIFIER), MN.Units_SI_Modifier)}";
+            sb.Append(FormatMessage("SI Units", units_si));
             return sb.ToString();
         }
 
