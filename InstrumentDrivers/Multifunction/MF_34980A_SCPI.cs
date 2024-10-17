@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
-using static ABT.Test.TestExecutive.Instruments.Instruments;
+using static ABT.Test.TestExecutive.InstrumentDrivers.Instruments;
 
-namespace ABT.Test.TestExecutive.Instruments.Multifunction {
-    public class MF_34980A_SCPI : Ag34980, IInstruments {
+namespace ABT.Test.TestExecutive.InstrumentDrivers.Multifunction {
+    public class MF_34980A_SCPI : Ag34980, IInstrumentDrivers {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }

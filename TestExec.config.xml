@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
-	This TestExec.GlobalConfigurationFile file allows configuring TestExec settings easily, without need for recompilation.
+	This TestExec.ConfigurationTestExec file allows configuring TestExec settings easily, without need for recompilation.
 -->
 <Configuration>
 	<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->

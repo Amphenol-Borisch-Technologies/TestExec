@@ -18,11 +18,14 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.Test.TestExecutive.AppConfig;
 using ABT.Test.TestExecutive.Logging;
+using ABT.Test.TestExecutive.InstrumentDrivers;
+using System.Configuration;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -128,7 +131,7 @@ namespace ABT.Test.TestExecutive {
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
-        public const String GlobalConfigurationFile = @"C:\Program Files\ABT\TestExec\TestExec.config.xml"; // NOTE:  Update this path if installed into another folder.
+        public static readonly String ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
         public const String MutexTestPlanName = "MutexTestPlan";
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
@@ -148,19 +151,24 @@ namespace ABT.Test.TestExecutive {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
+        private String TestPlanFolder;
 
         protected TestExec(Icon icon) {
             InitializeComponent();
             Icon = icon;
             // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-
-            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(GlobalConfigurationFile).Element("SerialNumberRegExDefault").Value;
+            TestPlanFolder = GetTestPlanFolder();
+            // TODO:
+//ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+//configMap.ExeConfigFilename = @"d:\test\justAConfigFile.config.whateverYouLikeExtension";
+//Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
-                sb.AppendLine($"   Check {GlobalConfigurationFile}/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
+                sb.AppendLine($"   Check {ConfigurationTestExec}/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
                 sb.AppendLine($"   Thank you & have a nice day {UserPrincipal.Current.DisplayName}!");
                 throw new ArgumentException(sb.ToString());
             }
@@ -177,7 +185,7 @@ namespace ABT.Test.TestExecutive {
             CT_EmergencyStop = CTS_EmergencyStop.Token;
 
             if (!ConfigUUT.Simulate) {
-                Instruments = TestExecutive.Instruments.Instruments.Get();
+                Instruments = AppConfig.Instruments.Get();
                 if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx);
             }
         }
@@ -235,7 +243,7 @@ namespace ABT.Test.TestExecutive {
             StatusModeUpdate(MODES.Selecting);
         }
 
-        private String GetFolder(String FolderID) { return XElement.Load(GlobalConfigurationFile).Element("Folders").Element(FolderID).Value; }
+        private String GetFolder(String FolderID) { return XElement.Load(ConfigurationTestExec).Element("Folders").Element(FolderID).Value; }
 
         private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
@@ -258,7 +266,7 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            TestExecutive.Instruments.Instruments.Reinitialize(Instruments);
+            foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstrumentDrivers)kvp.Value).Reinitialize();
         }
 
         public virtual Boolean Initialized() {
@@ -271,7 +279,7 @@ namespace ABT.Test.TestExecutive {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         private void OpenApp(String CompanyID, String AppID, String Arguments = "") {
-            String app = XElement.Load(GlobalConfigurationFile).Element("Apps").Element(CompanyID).Element(AppID).Value;
+            String app = XElement.Load(ConfigurationTestExec).Element("Apps").Element(CompanyID).Element(AppID).Value;
 
             if (File.Exists(app)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -442,32 +450,17 @@ namespace ABT.Test.TestExecutive {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        // NOTE:  TSMI_File_Change_Click() simulates stand-alone application behavior by TestExec, despite TestExec being a DLL library:
-        // - Suspect the standard way to implement TestExec as an independent application capable of opening &
-        //   executing client UUT TestPlan.exe/executables is to reverse their architecture:
-        //   - TestExec compiled into an independent .exe/executable instead of a .dll/library.
-        //   - TestPlans compiled into .dll/libraries instead of independent .exe/executables.
-        //   - However, upgrades/bug-fixes to TestExec would then forcibly be applied to all a Test System's TestPlans:
-        //     - There should be only one TestExec app per Test System PC.
-        //     - Like current DLL based TestExec, an .exe based TestExec would also permit fragmentation of TestExecs,
-        //       albeit on a PC to PC basis, rather than a TestPlan to TestPlan basis.
-        // - TestExec currently being a DLL accentuates fragmentation; each TestPlan app can potentially have a unique TestExec version.
-        //   - Advantageously though, needn't apply upgrades/bug-fixes to TestPlans if concerned about breaking functionality.
-        //     - Simply don't copy the new TestExec.dll file into TestPlan folders of concern.
         private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            using (OpenFileDialog ofd = new OpenFileDialog()) {
-                ofd.InitialDirectory = XElement.Load(GlobalConfigurationFile).Element("Folders").Element("TestPlans").Value;
-                ofd.Filter = "TestPlan Programs|*.exe";
-                ofd.DereferenceLinks = true;
-                ofd.RestoreDirectory = true;
-
-                if (ofd.ShowDialog() == DialogResult.OK) {
-                    PreApplicationExit();
-                    ProcessStartInfo psi = new ProcessStartInfo(ofd.FileName);
-                    Process.Start(psi);
-                    System.Windows.Forms.Application.Exit();
-                }
-            }
+            if (GetTestPlanFolder() != String.Empty) { }
+            // TODO: "Restart" TestExec with new TestPlanFolder.
+        }
+        private String GetTestPlanFolder() {
+            CommonOpenFileDialog cofd = new CommonOpenFileDialog {
+                InitialDirectory = XElement.Load(ConfigurationTestExec).Element("Folders").Element("TestPlans").Value,
+                IsFolderPicker = true,
+                Title= "Select a TestPlan Folder"
+            };
+            return (cofd.ShowDialog() == CommonFileDialogResult.Ok) ? cofd.FileName : String.Empty;
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();
@@ -513,7 +506,7 @@ namespace ABT.Test.TestExecutive {
             StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
             sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
             sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
-            sb.AppendLine($"  - Modify GlobalConfigurationFile to use a discovered Barcode Scanner.");
+            sb.AppendLine($"  - Modify ConfigurationTestExec to use a discovered Barcode Scanner.");
             sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
             sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExec/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
             sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");

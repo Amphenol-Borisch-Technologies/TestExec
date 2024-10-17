@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ABT.Test.TestExecutive.Instruments.PowerSupplies {
+namespace ABT.Test.TestExecutive.InstrumentDrivers.PowerSupplies {
     public enum AC { Amps, Volts }
     public enum DC { Amps, Volts }
     public enum OUTPUTS2 { OUTput1, OUTput2 };

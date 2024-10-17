@@ -1,8 +1,8 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
-namespace ABT.Test.TestExecutive.Instruments.Generic {
-    public class SCPI99 : AgSCPI99, IInstruments {
+namespace ABT.Test.TestExecutive.InstrumentDrivers.Generic {
+    public class SCPI99 : AgSCPI99, IInstrumentDrivers {
         public enum IDN_FIELDS { Manufacturer, Model, SerialNumber, FirmwareRevision } // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".  
         public const Char IDENTITY_SEPARATOR = ',';
 
@@ -30,7 +30,7 @@ namespace ABT.Test.TestExecutive.Instruments.Generic {
         }
 
         public static String Identity(Object Instrument, IDN_FIELDS Property) {
-            String Address = ((IInstruments)Instrument).Address;
+            String Address = ((IInstrumentDrivers)Instrument).Address;
             return Identity(Address, Property);
         }
     }

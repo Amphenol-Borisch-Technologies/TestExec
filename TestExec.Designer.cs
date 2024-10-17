@@ -534,7 +534,7 @@ namespace ABT.Test.TestExecutive {
             // 
             this.TSMI_System_TestExecConfigXML.Name = "TSMI_System_TestExecConfigXML";
             this.TSMI_System_TestExecConfigXML.Size = new System.Drawing.Size(309, 26);
-            this.TSMI_System_TestExecConfigXML.Text = "&TestExec.GlobalConfigurationFile";
+            this.TSMI_System_TestExecConfigXML.Text = "&TestExec.ConfigurationTestExec";
             this.TSMI_System_TestExecConfigXML.ToolTipText = "Test System\'s configuration.";
             this.TSMI_System_TestExecConfigXML.Click += new System.EventHandler(this.TSMI_System_TestExecConfigXML_Click);
             // 

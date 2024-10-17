@@ -4,36 +4,21 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using ABT.Test.TestExecutive.AppConfig;
 
-namespace ABT.Test.TestExecutive.Instruments {
-    public enum STATES { off = 0, ON = 1 } // NOTE: To Command an instrument off or ON, and Query it's STATE, again off or ON.
-    public enum SENSE_MODE { EXTernal, INTernal }
-    // Consistent convention for lower-cased inactive states off/low/zero as 1st states in enums, UPPER-CASED active ON/HIGH/ONE as 2nd states.
-
-    public interface IInstruments {
-        String Address { get; } // NOTE: Store in instrument objects for easy error reporting of addresses.  Not easily gotten otherwise.
-        String Detail { get; }  // NOTE: Store in instrument objects for easy error reporting of detailed descriptions, similar but more useful than SCPI's *IDN query.
-        void Reinitialize();    // NOTE: After each test run, reinitialize instrument.  Typically performs SCPI's *RST & *CLS commands.
-    }
-
+namespace ABT.Test.TestExecutive.AppConfig {
     public static class Instruments {
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = GetInstrumentsPortable();
             Dictionary<String, String> InstrumentsStationary = GetInstrumentsStationary();
-            IEnumerable<XElement> IS = XElement.Load(TestExec.GlobalConfigurationFile).Elements("InstrumentsStationary").Elements("InstrumentStationary");
+            IEnumerable<XElement> IS = XElement.Load(TestExec.ConfigurationTestExec).Elements("InstrumentsStationary").Elements("InstrumentStationary");
             XElement I;
-            // Now add InstrumentsStationary listed in app.config, but must first read their Address, Detail & ClassName from TestExec.GlobalConfigurationFile.
+            // Now add InstrumentsStationary listed in app.config, but must first read their Address, Detail & ClassName from TestExec.ConfigurationTestExec.
             foreach (KeyValuePair<String, String> kvp in InstrumentsStationary) {
                 I = IS.FirstOrDefault(x => x.Element("ID").Value == kvp.Key);
-                if (I == null) throw new ArgumentException($"Instrument with ID '{kvp.Key}' not present in file '{TestExec.GlobalConfigurationFile}'.");
+                if (I == null) throw new ArgumentException($"Instrument with ID '{kvp.Key}' not present in file '{TestExec.ConfigurationTestExec}'.");
                 Instruments.Add(kvp.Key, Activator.CreateInstance(Type.GetType(I.Element("ClassName").Value), new Object[] { I.Element("Address").Value, I.Element("Detail").Value }));
             }
             return Instruments;
-        }
-
-        public static void Reinitialize(Dictionary<String, Object> Instruments) {
-            foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).Reinitialize();
         }
 
         private static Dictionary<String, String> GetInstrumentsStationary() {

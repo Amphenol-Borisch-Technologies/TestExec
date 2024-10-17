@@ -1,8 +1,8 @@
 ﻿using System;
 using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
 
-namespace ABT.Test.TestExecutive.Instruments.PowerSupplies  {
-    public class PS_E3634A_SCPI : AgE363x, IInstruments, IPowerSupplyOutputs1 {
+namespace ABT.Test.TestExecutive.InstrumentDrivers.PowerSupplies  {
+    public class PS_E3634A_SCPI : AgE363x, IInstrumentDrivers, IPowerSupplyOutputs1 {
         public enum RANGE { P25V, P50V }
 
         public String Address { get; }

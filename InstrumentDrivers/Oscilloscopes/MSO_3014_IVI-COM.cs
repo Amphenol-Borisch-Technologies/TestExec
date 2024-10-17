@@ -1,9 +1,9 @@
-﻿using ABT.Test.TestExecutive.Instruments.Generic;
+﻿using ABT.Test.TestExecutive.InstrumentDrivers.Generic;
 using System;
 using Tektronix.Tkdpo2k3k4k.Interop;
 
-namespace ABT.Test.TestExecutive.Instruments.Oscilloscopes {
-    public class MSO_3014_IVI_COM : Tkdpo2k3k4kClass, IInstruments {
+namespace ABT.Test.TestExecutive.InstrumentDrivers.Oscilloscopes {
+    public class MSO_3014_IVI_COM : Tkdpo2k3k4kClass, IInstrumentDrivers {
         public String Address { get; }
         public String Detail { get; }
 
