@@ -1,68 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
-	This TestExec.GlobalConfigurationFile file allows configuring TestExec settings easily:
-	Iinstruments:
-	- For calibration or replacement, swap identical  Instruments with others, then update Addresses.
-	- For additions/deletions, add/remove Instruments.  Update TestExec if needed.
-
-	NOTE:  Each TestPlan must utilize static class 'InstrumentA' in file TestPlan.cs to map generic Instrument IDs to, optimally, more meaningful domain specific aliases:
-		  
-			  internal static class InstrumentA {
-			      internal static readonly String P2V5      = "PS1";   // Single output Power Supply 1
-			      internal static readonly String P3V3      = "PS2";   // Single output Power Supply 2
-			      internal static readonly String P5V       = "PS3";   // Single output Power Supply 3
-			      internal static readonly String P12V_N12V = "PS4ε5"; // Dual-output Power Supplies 4 & 5.
-			      internal static readonly String VOUT      = "EL1";   // Electrical Load 1.
-			      internal static readonly String MM        = "MM1";   // Multi-Meter 1.
-			      internal static readonly String CLK       = "WG1";   // WaveGenerator 1.
-			  }
-
-			- Include only required/utilized Instruments:
-				- That is, if this TestExec.GlobalConfigurationFile contains elements for 10 power supplies, but a TestPlan program
-				  only requires & utilizes 2, simply don't alias the unused 8 in class 'InstrumentA'.
-			- This documents the minimum necessary Instrument configuration for the TestPlan's program.
-			- Allows a TestPlan program to be most easily ported to different Test Systems having different TestExec.GlobalConfigurationFile configurations.
-				- If Test System #1 with it's specific Instruments dies suddenly, may need to run its TestPlan programs on Test System #2
-					with different Instruments.
-				- If all TestPlan.cs files list only their necessary Instruments, quite easy to determine which are 
-					compatible subsets of the Test Systems' TestExec.GlobalConfigurationFile configurations.
-			- This approach is similar to the Keysight i3070's Board config files:
-				- i3070 Board config files specify only the subset of i3070 cards used by their test programs.
-				- This makes porting a Keysight i3070 In-Circuit Test program to a differently configured i3070 as easy as possible, though not necessarily easy.
-		
-	ID:			- Required element.
-					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
-					- Recommend following naming conventions:
-						- CT1, CT2, CT3ε4...	      Single-input Counter Timers 1 & 2 and Dual-input 3ε4.
-						- EL1, EL2, EL3ε4...	      Single-channel Electronic Loads 1 & 2 and Dual-channel 3ε4.
-						- LCR1, LCR2, LCR3...	      Single-input LCR Meters 1, 2 & 3.
-            - MM1, MM2, MM3...		      Single-input MultiMeters 1, 2 & 3.
-						- MSO1, MSO, MSO3...			  Mixed-Signal Oscilloscopes 1, 2 & 3; single & multiple channels.
-						- MSMU1, MSMU2, MSMU3...    Multifunction Switch/Measuring Units 1, 2 & 3.
-            - OS1, OS2, OS3...	        Oscilloscopes 1, 2 & 3; single & multiple channels.
-						- PS1, PS2, PS4ε5...	      Single-output Power Supplies 1 & 2 and Dual-output 3ε4.
-
-            - WG1, WG2, WG3ε4...	      Single-output Waveform Generators 1 & 2 and Dual-output 3ε4.
-
-	Detail:	- Required element.
-						- Concise description of Instrument.
-						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
-							- Keysight E36103B Single Output DC Power Supply
-							- Keysight E36234A Dual Output DC Power Supply
-							- Keysight 34461A Digital Multi-Meter
-	Address: - Required element.
-						- Address elements must also all be unique, no duplicates.
-						- They must also be valid VISA instrument addresses.
-						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
-							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
-							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
-  ClassName: - Required element.
-             - Class name from ABT.Test.TestExecutive.InstrumentDrivers.*
-             - This is the instrument driver, typically inherited from a manufacturer provided SCPI or IVI driver.
-             - The inheritance permits adding custom methods and interfaces, most quite simple, but useful.
-	NOTE:  VISA addresses (AKA VISA Resource Names) are explained at:
-	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
-	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
+	This TestExec.GlobalConfigurationFile file allows configuring TestExec settings easily, without need for recompilation.
 -->
 <Configuration>
 	<BarCodeScannerID>\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner</BarCodeScannerID> <!-- Honeywell Voyager USB 1200g -->
@@ -134,6 +72,46 @@
   </Folders>
 
   <InstrumentsStationary>
+    <!--
+	InstrumentsStationary:
+  - List all stationary/permanently installed instruments for this test system.
+    - Each TestPlan's app.config file lists its necessary/required instruments.
+    - These can be instruments listed in below InstrumentsStationary element.
+    - TestPlans also allow for portable/temporarily installed instruments if necessary/required.
+	- For instrument calibration or replacement, swap identical InstrumentStationary with others, then update Address.
+	- For deletions, remove InstrumentStationary element.
+  - For additions, add InstrumentStationary element.
+    - Add a new driver to ABT.Test.TestExecutive.InstrumentDrivers.* if needed.
+
+	ID:			- Required element.
+					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
+	Detail:	- Required element.
+						- Concise description of Instrument.
+						- Recommend convention of Manufacturer, Model, Input/Output quantity if applicable, and Instrument type.
+							- Keysight E36103B Single Output DC Power Supply
+							- Keysight E36234A Dual Output DC Power Supply
+							- Keysight 34461A Digital Multi-Meter
+	Address: - Required element.
+						- Address elements must also all be unique, no duplicates.
+						- They must also be valid VISA instrument addresses.
+						- VISA instrument addresses are easily determined using Keysight's Connection Expert app
+							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
+							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
+	ClassName:  Required element.
+							- Class name from ABT.Test.TestExecutive.InstrumentDrivers.*
+							- This is the instrument driver, typically inherited from a manufacturer provided SCPI or IVI driver.
+							- The inheritance permits adding custom methods and interfaces, most quite simple, but useful.
+              - Note that instruments may have multiple drivers; SCPI, IVI-C, IVI-COM & IVI.Net are common Keysight provided drivers.
+                - SCPI drivers are likely more familiar, being very similar to native SCPI, but IVI drivers be advantageous.
+                - Regardless which, TestPlan developers should utilize their preferred instrument driver.
+                - If absent from TestExec's ABT.Test.TestExecutive.InstrumentDrivers.*, can utilize preferred drivers 
+                  as InstrumentPortableRequired, with driver being installed locally with the TestPlan.
+                  - Consider adding to TestExec's ABT.Test.TestExecutive.InstrumentDrivers.* when convenient.
+                        
+	NOTE:  VISA addresses (AKA VISA Resource Names) are explained at:
+	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
+	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
+  -->    
     <InstrumentStationary ID="MM1_34401A"   Detail="Agilent 34401A Digital Multimeter"                               Address="GPIB0::4::INSTR" />
     <InstrumentStationary ID="MF1_34980A"   Detail="Agilent 34980A Multifunction Switch/Measure Unit"                Address="GPIB0::2::INSTR" />
     <InstrumentStationary ID="PS1ε2_E3649A" Detail="Agilent E3649A Dual Output DC Power Supply"                      Address="GPIB0::1::INSTR" />

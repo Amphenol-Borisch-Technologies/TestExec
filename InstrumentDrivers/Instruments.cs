@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Text;
-using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Linq;
 using ABT.Test.TestExecutive.AppConfig;
 
@@ -24,9 +20,10 @@ namespace ABT.Test.TestExecutive.Instruments {
     public static class Instruments {
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = GetInstrumentsPortable();
-            Dictionary<String, String> InstrumentsStationary =GetInstrumentsStationary();
+            Dictionary<String, String> InstrumentsStationary = GetInstrumentsStationary();
             IEnumerable<XElement> IS = XElement.Load(TestExec.GlobalConfigurationFile).Elements("InstrumentsStationary").Elements("InstrumentStationary");
             XElement I;
+            // Now add InstrumentsStationary listed in app.config, but must first read their Address, Detail & ClassName from TestExec.GlobalConfigurationFile.
             foreach (KeyValuePair<String, String> kvp in InstrumentsStationary) {
                 I = IS.FirstOrDefault(x => x.Element("ID").Value == kvp.Key);
                 if (I == null) throw new ArgumentException($"Instrument with ID '{kvp.Key}' not present in file '{TestExec.GlobalConfigurationFile}'.");
@@ -39,12 +36,12 @@ namespace ABT.Test.TestExecutive.Instruments {
             foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).Reinitialize();
         }
 
-        public static Dictionary<String, String> GetInstrumentsStationary() {
+        private static Dictionary<String, String> GetInstrumentsStationary() {
             InstrumentsStationaryRequiredSection ISRSs = (InstrumentsStationaryRequiredSection)ConfigurationManager.GetSection(InstrumentsStationaryRequiredSection.ClassName);
             InstrumentsStationaryRequired ISRs = ISRSs.InstrumentsStationaryRequired;
-            Dictionary<String, String> dictionary = new Dictionary<String, String>();
+            Dictionary<String, String> InstrumentsStationary = new Dictionary<String, String>();
             foreach (InstrumentStationaryRequired ISR in ISRs) try {
-                dictionary.Add(ISR.ID, ISR.ClassName);
+                InstrumentsStationary.Add(ISR.ID, ISR.ClassName);
             } catch (Exception e) {
                 StringBuilder sb = new StringBuilder().AppendLine();
                 sb.AppendLine($"App.config issue with InstrumentStationaryRequired:");
@@ -54,15 +51,15 @@ namespace ABT.Test.TestExecutive.Instruments {
                 sb.AppendLine($"{e}{Environment.NewLine}");
                 throw new ArgumentException(sb.ToString());
             }
-            return dictionary;
+            return InstrumentsStationary;
         }
 
-        public static Dictionary<String, Object> GetInstrumentsPortable() {
+        private static Dictionary<String, Object> GetInstrumentsPortable() {
             InstrumentsPortableRequiredSection IPRSs = (InstrumentsPortableRequiredSection)ConfigurationManager.GetSection(InstrumentsPortableRequiredSection.ClassName);
             InstrumentsPortableRequired IPRs = IPRSs.InstrumentsPortableRequired;
-            Dictionary<String, Object> dictionary = new Dictionary<String, Object>();
+            Dictionary<String, Object> Instruments = new Dictionary<String, Object>();
             foreach (InstrumentPortableRequired IPR in IPRs) try {
-                dictionary.Add(IPR.ID, Activator.CreateInstance(Type.GetType(IPR.ClassName), new Object[] { IPR.Address, IPR.Detail }));
+                Instruments.Add(IPR.ID, Activator.CreateInstance(Type.GetType(IPR.ClassName), new Object[] { IPR.Address, IPR.Detail }));
             } catch (Exception e) {
                 StringBuilder sb = new StringBuilder().AppendLine();
                 sb.AppendLine($"App.config issue with InstrumentPortableRequired:");
@@ -74,7 +71,7 @@ namespace ABT.Test.TestExecutive.Instruments {
                 sb.AppendLine($"{e}{Environment.NewLine}");
                 throw new ArgumentException(sb.ToString());
             }
-            return dictionary;
+            return Instruments;
         }
     }
 }
