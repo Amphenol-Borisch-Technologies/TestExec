@@ -92,7 +92,6 @@ namespace ABT.Test.TestExecutive.AppConfig {
     }
     public class InstrumentStationaryRequired : ConfigurationElement {
         [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
-        [ConfigurationProperty("Alias", IsKey = true, IsRequired = true)] public String Alias { get { return ((String)base["Alias"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
     }
 
@@ -109,10 +108,10 @@ namespace ABT.Test.TestExecutive.AppConfig {
         protected override Boolean IsElementName(String elementName) { return elementName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase); }
         public override Boolean IsReadOnly() { return false; }
         protected override ConfigurationElement CreateNewElement() { return new InstrumentPortableRequired(); }
-        protected override Object GetElementKey(ConfigurationElement element) { return ((InstrumentPortableRequired)(element)).Alias; }
+        protected override Object GetElementKey(ConfigurationElement element) { return ((InstrumentPortableRequired)(element)).ID; }
     }
     public class InstrumentPortableRequired : ConfigurationElement {
-        [ConfigurationProperty("Alias", IsKey = true, IsRequired = true)] public String Alias { get { return ((String)base["Alias"]).Trim(); } }
+        [ConfigurationProperty("ID", IsKey = true, IsRequired = true)] public String ID { get { return ((String)base["ID"]).Trim(); } }
         [ConfigurationProperty("Detail", IsKey = false, IsRequired = true)] public String Detail { get { return ((String)base["Detail"]).Trim(); } }
         [ConfigurationProperty("Address", IsKey = true, IsRequired = true)] public String Address { get { return ((String)base["Address"]).Trim(); } }
         [ConfigurationProperty("ClassName", IsKey = false, IsRequired = true)] public String ClassName { get { return ((String)base["ClassName"]).Trim(); } }
