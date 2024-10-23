@@ -17,9 +17,22 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
-        
+
         public SELF_TEST_RESULTS SelfTest() {
-            SCPI.TST.Query(out Boolean result);
+            Boolean result;
+            try {
+                SCPI.TST.Query(out result);
+            } catch (Exception) {
+                _ = MessageBox.Show($"Instrument with driver {GetType().Name} likely unpowered or not communicating:{Environment.NewLine}" + 
+                    $"Type:      {InstrumentType}{Environment.NewLine}" +
+                    $"Detail:    {Detail}{Environment.NewLine}" +
+                    $"Address:   {Address}"
+                    , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
+                // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return SELF_TEST_RESULTS.FAIL;
+            }
             return result ? SELF_TEST_RESULTS.PASS : SELF_TEST_RESULTS.FAIL;
         }
 
@@ -27,6 +40,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
             this.Address = Address;
             this.Detail = Detail;
             InstrumentType = INSTRUMENT_TYPES.MULTI_METER;
+            TerminalsSetRear();
         }
 
         public Boolean DelayAutoIs() {

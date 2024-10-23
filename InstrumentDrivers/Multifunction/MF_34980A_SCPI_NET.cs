@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
@@ -22,7 +23,20 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
         }
         
         public SELF_TEST_RESULTS SelfTest() {
-            SCPI.TST.Query(out Int32 result);
+            Int32 result;
+            try {
+                SCPI.TST.Query(out result);
+            } catch (Exception) {
+                _ = MessageBox.Show($"Instrument with driver {GetType().Name} likely unpowered or not communicating:{Environment.NewLine}" + 
+                    $"Type:      {InstrumentType}{Environment.NewLine}" +
+                    $"Detail:    {Detail}{Environment.NewLine}" +
+                    $"Address:   {Address}"
+                    , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
+                // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return SELF_TEST_RESULTS.FAIL;
+            }
             return (SELF_TEST_RESULTS)result;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using Tektronix.Tkdpo2k3k4k.Interop;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
@@ -10,11 +11,23 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
         public void ReInitialize() {
             Utility.Reset();
         }
-        
+
         public SELF_TEST_RESULTS SelfTest() {
             Int32 TestResult = 0;
             String TestMessage = String.Empty;
-            UtilityEx.SelfTest(ref TestResult, ref TestMessage);
+            try {
+                UtilityEx.SelfTest(ref TestResult, ref TestMessage);
+            } catch (Exception) {
+                _ = MessageBox.Show($"Instrument with driver {GetType().Name} likely unpowered or not communicating:{Environment.NewLine}" + 
+                    $"Type:      {InstrumentType}{Environment.NewLine}" +
+                    $"Detail:    {Detail}{Environment.NewLine}" +
+                    $"Address:   {Address}"
+                    , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
+                // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return SELF_TEST_RESULTS.FAIL;
+            }
             return TestResult == 0 ? SELF_TEST_RESULTS.PASS : SELF_TEST_RESULTS.FAIL;
         }
 

@@ -1,7 +1,6 @@
 ﻿﻿using System;
-using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
-using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.AgE364xD_1_7;
+using System.Windows.Forms;
 
 namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
     public class PS_E3649A_SCPI_NET : AgE364xD, IInstruments, IPowerSupplyE3649A {
@@ -13,9 +12,22 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
-        
+
         public SELF_TEST_RESULTS SelfTest() {
-            SCPI.TST.Query(out Int32 result);
+            Int32 result;
+            try {
+                SCPI.TST.Query(out result);
+            } catch (Exception) {
+                _ = MessageBox.Show($"Instrument with driver {GetType().Name} likely unpowered or not communicating:{Environment.NewLine}" + 
+                    $"Type:      {InstrumentType}{Environment.NewLine}" +
+                    $"Detail:    {Detail}{Environment.NewLine}" +
+                    $"Address:   {Address}"
+                    , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
+                // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return SELF_TEST_RESULTS.FAIL;
+            }
             return (SELF_TEST_RESULTS)result;
         }
 

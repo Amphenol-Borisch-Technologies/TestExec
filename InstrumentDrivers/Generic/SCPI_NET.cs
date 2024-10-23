@@ -30,7 +30,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Generic {
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return SELF_TEST_RESULTS.FAIL;
             }
-            return (SELF_TEST_RESULTS) result;
+            return (SELF_TEST_RESULTS)result;
         }
 
         public SCPI_NET(String Address, String Detail) : base(Address) {

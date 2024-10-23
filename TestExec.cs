@@ -25,8 +25,6 @@ using Windows.Devices.PointOfService;
 using ABT.Test.Exec.AppConfig;
 using ABT.Test.Exec.Logging;
 using ABT.Test.Exec.InstrumentDrivers;
-using System.Configuration;
-using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -152,17 +150,11 @@ namespace ABT.Test.Exec {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String NOT_APPLICABLE = "NotApplicable";
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
-        private String TestPlanFolder;
 
         protected TestExec(Icon icon) {
             InitializeComponent();
             Icon = icon;
             // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            TestPlanFolder = GetTestPlanFolder();
-            // TODO:
-//ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
-//configMap.ExeConfigFilename = @"d:\test\justAConfigFile.config.whateverYouLikeExtension";
-//Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
@@ -265,15 +257,12 @@ namespace ABT.Test.Exec {
             }
         }
 
-        public virtual void Initialize() {
+        public virtual void ReInitialize() {
             if (ConfigUUT.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).ReInitialize();
         }
 
-        public virtual Boolean Initialized() {
-            if (ConfigUUT.Simulate) return true;
-            return false;
-        }
+        public abstract Boolean ReInitialized();
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
@@ -310,7 +299,7 @@ namespace ABT.Test.Exec {
         }
 
         private void PreApplicationExit() {
-            Initialize();
+            ReInitialize();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             MutexTestPlan.ReleaseMutex();
             MutexTestPlan.Dispose();
@@ -483,15 +472,11 @@ namespace ABT.Test.Exec {
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
-        private void TSMI_Apps_MeasurementComputingInstaCal_Click(Object sender, EventArgs e) { OpenApp("MeasurementComputing", "InstaCal"); }
 
-        private void TSMI_Apps_MicrochipMPLAB_IPE_Click(Object sender, EventArgs e) { OpenApp("Microchip", "MPLAB_IPE"); }
-        private void TSMI_Apps_MicrochipMPLAB_X_IDE_Click(Object sender, EventArgs e) { OpenApp("Microchip", "MPLAB_X_IDE"); }
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudio"); }
         private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudioCode"); }
         private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
-        private void TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click(Object sender, EventArgs e) { OpenApp("TexasInstruments", "SMBus_I2C_SAA_Tool", "--smbus-gui"); }
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
@@ -546,12 +531,9 @@ namespace ABT.Test.Exec {
             }
             if (!failed) _ = MessageBox.Show(ActiveForm, "Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
-
         }
-        private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
-        private void TSMI_System_ManualsRelays_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Relays")); }
         private void TSMI_System_TestExecConfigXML_Click(Object sender, EventArgs e) {
 
         }
@@ -611,7 +593,7 @@ namespace ABT.Test.Exec {
                 kvp.Value.Message.Clear();
             }
             ConfigUUT.TestEvent = TestEvents.UNSET;
-            Initialize();
+            ReInitialize();
         }
 
         private async Task MeasurementsRun() {
@@ -624,11 +606,11 @@ namespace ABT.Test.Exec {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
-                            Initialize();
+                            ReInitialize();
                             return;
                         }
                     } catch (Exception e) {
-                        Initialize();
+                        ReInitialize();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;  // NOTE:  May be altered to TestEvents.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -657,7 +639,7 @@ namespace ABT.Test.Exec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            Initialize();
+            ReInitialize();
             ConfigUUT.TestEvent = MeasurementsEvaluate(ConfigTest.Measurements);
             TextTest.Text = ConfigUUT.TestEvent;
             TextTest.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);

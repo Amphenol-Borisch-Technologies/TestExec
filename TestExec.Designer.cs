@@ -43,18 +43,11 @@ namespace ABT.Test.Exec {
             this.TSMI_Apps_KeysightBenchVue = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightCommandExpert = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightConnectionExpert = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_MeasurementComputing = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_MeasurementComputingInstaCal = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_Microchip = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_MicrohipMPLAB_IPE = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_Microsoft = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftSQLServerManagementStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftVisualStudio = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftVisualStudioCode = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_MicrosoftXML_Notepad = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_TexasInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Feedback = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Feedback_Compliments = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,11 +59,9 @@ namespace ABT.Test.Exec {
             this.TSMI_System_BarcodeScannerDiscovery = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_Diagnostics = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_DiagnosticsInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_System_DiagnosticsRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_Manuals = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_ManualsBarcodeScanner = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_System_ManualsRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_TestExecConfigXML = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_System_About = new System.Windows.Forms.ToolStripMenuItem();
@@ -252,10 +243,7 @@ namespace ABT.Test.Exec {
             // 
             this.TSMI_Apps.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Apps_Keysight,
-            this.TSMI_Apps_MeasurementComputing,
-            this.TSMI_Apps_Microchip,
-            this.TSMI_Apps_Microsoft,
-            this.TSMI_Apps_TexasInstruments});
+            this.TSMI_Apps_Microsoft});
             this.TSMI_Apps.Name = "TSMI_Apps";
             this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
@@ -293,45 +281,6 @@ namespace ABT.Test.Exec {
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
-            // 
-            // TSMI_Apps_MeasurementComputing
-            // 
-            this.TSMI_Apps_MeasurementComputing.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Apps_MeasurementComputingInstaCal});
-            this.TSMI_Apps_MeasurementComputing.Name = "TSMI_Apps_MeasurementComputing";
-            this.TSMI_Apps_MeasurementComputing.Size = new System.Drawing.Size(260, 26);
-            this.TSMI_Apps_MeasurementComputing.Text = "Measurement &Computing";
-            // 
-            // TSMI_Apps_MeasurementComputingInstaCal
-            // 
-            this.TSMI_Apps_MeasurementComputingInstaCal.Name = "TSMI_Apps_MeasurementComputingInstaCal";
-            this.TSMI_Apps_MeasurementComputingInstaCal.Size = new System.Drawing.Size(144, 26);
-            this.TSMI_Apps_MeasurementComputingInstaCal.Text = "&InstaCal";
-            this.TSMI_Apps_MeasurementComputingInstaCal.ToolTipText = "Configure & test MCC Instruments, like USB-ERB24 relays.";
-            this.TSMI_Apps_MeasurementComputingInstaCal.Click += new System.EventHandler(this.TSMI_Apps_MeasurementComputingInstaCal_Click);
-            // 
-            // TSMI_Apps_Microchip
-            // 
-            this.TSMI_Apps_Microchip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Apps_MicrohipMPLAB_IPE,
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE});
-            this.TSMI_Apps_Microchip.Name = "TSMI_Apps_Microchip";
-            this.TSMI_Apps_Microchip.Size = new System.Drawing.Size(260, 26);
-            this.TSMI_Apps_Microchip.Text = "&Microchip";
-            // 
-            // TSMI_Apps_MicrohipMPLAB_IPE
-            // 
-            this.TSMI_Apps_MicrohipMPLAB_IPE.Name = "TSMI_Apps_MicrohipMPLAB_IPE";
-            this.TSMI_Apps_MicrohipMPLAB_IPE.Size = new System.Drawing.Size(179, 26);
-            this.TSMI_Apps_MicrohipMPLAB_IPE.Text = "MPLAB &IPE";
-            this.TSMI_Apps_MicrohipMPLAB_IPE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_IPE_Click);
-            // 
-            // TSMI_Apps_MicrohipMPLAB_X_IDE
-            // 
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Name = "TSMI_Apps_MicrohipMPLAB_X_IDE";
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Size = new System.Drawing.Size(179, 26);
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Text = "MPLAB &X IDE";
-            this.TSMI_Apps_MicrohipMPLAB_X_IDE.Click += new System.EventHandler(this.TSMI_Apps_MicrochipMPLAB_X_IDE_Click);
             // 
             // TSMI_Apps_Microsoft
             // 
@@ -374,21 +323,6 @@ namespace ABT.Test.Exec {
             this.TSMI_Apps_MicrosoftXML_Notepad.Size = new System.Drawing.Size(302, 26);
             this.TSMI_Apps_MicrosoftXML_Notepad.Text = "&XML Notepad";
             this.TSMI_Apps_MicrosoftXML_Notepad.Click += new System.EventHandler(this.TSMI_Apps_MicrosoftXML_Notepad_Click);
-            // 
-            // TSMI_Apps_TexasInstruments
-            // 
-            this.TSMI_Apps_TexasInstruments.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool});
-            this.TSMI_Apps_TexasInstruments.Name = "TSMI_Apps_TexasInstruments";
-            this.TSMI_Apps_TexasInstruments.Size = new System.Drawing.Size(260, 26);
-            this.TSMI_Apps_TexasInstruments.Text = "&Texas Instruments";
-            // 
-            // TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool
-            // 
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Name = "TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Size = new System.Drawing.Size(246, 26);
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Text = "&SMBus / I2C / SAA Tool";
-            this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool.Click += new System.EventHandler(this.TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool_Click);
             // 
             // TSMI_Feedback
             // 
@@ -473,8 +407,7 @@ namespace ABT.Test.Exec {
             // TSMI_System_Diagnostics
             // 
             this.TSMI_System_Diagnostics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_System_DiagnosticsInstruments,
-            this.TSMI_System_DiagnosticsRelays});
+            this.TSMI_System_DiagnosticsInstruments});
             this.TSMI_System_Diagnostics.Name = "TSMI_System_Diagnostics";
             this.TSMI_System_Diagnostics.Size = new System.Drawing.Size(298, 26);
             this.TSMI_System_Diagnostics.Text = "&Diagnostics";
@@ -487,21 +420,11 @@ namespace ABT.Test.Exec {
             this.TSMI_System_DiagnosticsInstruments.ToolTipText = "Invoke Instruments self-tests.";
             this.TSMI_System_DiagnosticsInstruments.Click += new System.EventHandler(this.TSMI_System_DiagnosticsInstruments_Click);
             // 
-            // TSMI_System_DiagnosticsRelays
-            // 
-            this.TSMI_System_DiagnosticsRelays.Enabled = false;
-            this.TSMI_System_DiagnosticsRelays.Name = "TSMI_System_DiagnosticsRelays";
-            this.TSMI_System_DiagnosticsRelays.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_System_DiagnosticsRelays.Text = "&Relays";
-            this.TSMI_System_DiagnosticsRelays.ToolTipText = "Adapt MS-Test Unit Tests of USB-ERB24 class.";
-            this.TSMI_System_DiagnosticsRelays.Click += new System.EventHandler(this.TSMI_System_DiagnosticsRelays_Click);
-            // 
             // TSMI_System_Manuals
             // 
             this.TSMI_System_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_System_ManualsBarcodeScanner,
-            this.TSMI_System_ManualsInstruments,
-            this.TSMI_System_ManualsRelays});
+            this.TSMI_System_ManualsInstruments});
             this.TSMI_System_Manuals.Name = "TSMI_System_Manuals";
             this.TSMI_System_Manuals.Size = new System.Drawing.Size(298, 26);
             this.TSMI_System_Manuals.Text = "&Manuals";
@@ -521,14 +444,6 @@ namespace ABT.Test.Exec {
             this.TSMI_System_ManualsInstruments.Text = "&Instruments";
             this.TSMI_System_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_System_ManualsInstruments.Click += new System.EventHandler(this.TSMI_System_ManualsInstruments_Click);
-            // 
-            // TSMI_System_ManualsRelays
-            // 
-            this.TSMI_System_ManualsRelays.Name = "TSMI_System_ManualsRelays";
-            this.TSMI_System_ManualsRelays.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_System_ManualsRelays.Text = "&Relays";
-            this.TSMI_System_ManualsRelays.ToolTipText = "...zzzzzz...";
-            this.TSMI_System_ManualsRelays.Click += new System.EventHandler(this.TSMI_System_ManualsRelays_Click);
             // 
             // TSMI_System_TestExecConfigXML
             // 
@@ -751,7 +666,6 @@ namespace ABT.Test.Exec {
         private ToolStripMenuItem TSMI_Apps;
         private ToolStripMenuItem TSMI_System_Diagnostics;
         private ToolStripMenuItem TSMI_System_DiagnosticsInstruments;
-        private ToolStripMenuItem TSMI_System_DiagnosticsRelays;
         private ToolStripSeparator TSMI_System_Separator1;
         private ToolStripMenuItem TSMI_UUT;
         private ToolStripMenuItem TSMI_UUT_eDocs;
@@ -763,7 +677,6 @@ namespace ABT.Test.Exec {
         private ToolStripMenuItem TSMI_System_Manuals;
         private ToolStripMenuItem TSMI_System_ManualsBarcodeScanner;
         private ToolStripMenuItem TSMI_System_ManualsInstruments;
-        private ToolStripMenuItem TSMI_System_ManualsRelays;
         private ToolStripMenuItem TSMI_System_About;
         private ToolStripMenuItem TSMI_System_BarcodeScannerDiscovery;
         private ToolStripSeparator TSMI_UUT_Separator1;
@@ -774,8 +687,6 @@ namespace ABT.Test.Exec {
         private ToolStripMenuItem TSMI_Apps_KeysightBenchVue;
         private ToolStripMenuItem TSMI_Apps_KeysightCommandExpert;
         private ToolStripMenuItem TSMI_Apps_KeysightConnectionExpert;
-        private ToolStripMenuItem TSMI_Apps_MeasurementComputing;
-        private ToolStripMenuItem TSMI_Apps_MeasurementComputingInstaCal;
         private ToolStripMenuItem TSMI_Apps_Microsoft;
         private ToolStripMenuItem TSMI_Apps_MicrosoftSQLServerManagementStudio;
         private ToolStripMenuItem TSMI_Apps_MicrosoftVisualStudio;
@@ -787,12 +698,7 @@ namespace ABT.Test.Exec {
         private ToolStripMenuItem TSMI_Feedback_Critiques;
         private ToolStripMenuItem TSMI_Feedback_CritiquesBugReport;
         private ToolStripMenuItem TSMI_Feedback_CritiquesImprovementRequest;
-        private ToolStripMenuItem TSMI_Apps_TexasInstruments;
-        private ToolStripMenuItem TSMI_Apps_TexasInstrumentsSMBus_I2C_SAA_Tool;
         private ToolStripMenuItem TSMI_Apps_MicrosoftVisualStudioCode;
-        private ToolStripMenuItem TSMI_Apps_Microchip;
-        private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_IPE;
-        private ToolStripMenuItem TSMI_Apps_MicrohipMPLAB_X_IDE;
         private StatusStrip StatusStrip;
         private ToolStripStatusLabel StatusStatisticsLabel;
         private ToolStripStatusLabel StatusCustomLabel;
