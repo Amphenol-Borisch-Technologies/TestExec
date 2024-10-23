@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace ABT.Test.TestExecutive.AppConfig {
+namespace ABT.Test.Exec.AppConfig {
     public partial class SelectTests : Form {
         public String Selection { get; private set; }
         internal readonly Dictionary<String, Operation> Operations;

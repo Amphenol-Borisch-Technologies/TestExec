@@ -7,7 +7,7 @@
     <ProjectGuid>{314614CB-6E17-4B74-A9F9-CE4699F78C9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ABT.Test.TestExecutive</RootNamespace>
+    <RootNamespace>ABT.Test.Exec</RootNamespace>
     <AssemblyName>TestExec</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -63,14 +63,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AppConfig\AppConfigInstruments.cs" />
-    <Compile Include="InstrumentDrivers\Generic\SCPI99.cs" />
-    <Compile Include="InstrumentDrivers\IInstrumentDrivers.cs" />
-    <Compile Include="InstrumentDrivers\MultiMeters\MM_34401A_SCPI.cs" />
+    <Compile Include="InstrumentDrivers\Generic\SCPI_NET.cs" />
+    <Compile Include="InstrumentDrivers\IIinstruments.cs" />
+    <Compile Include="InstrumentDrivers\Instruments.cs" />
+    <Compile Include="InstrumentDrivers\MultiMeters\MM_34401A_SCPI_NET.cs" />
     <Compile Include="InstrumentDrivers\Oscilloscopes\MSO_3014_IVI-COM.cs" />
-    <Compile Include="InstrumentDrivers\Multifunction\MF_34980A_SCPI.cs" />
+    <Compile Include="InstrumentDrivers\Multifunction\MF_34980A_SCPI_NET.cs" />
     <Compile Include="InstrumentDrivers\PowerSupplies\IPowerSupplies.cs" />
-    <Compile Include="InstrumentDrivers\PowerSupplies\PS_E3634A_SCPI.cs" />
-    <Compile Include="InstrumentDrivers\PowerSupplies\PS_E3649A_SCPI.cs" />
+    <Compile Include="InstrumentDrivers\PowerSupplies\PS_E3634A_SCPI_NET.cs" />
+    <Compile Include="InstrumentDrivers\PowerSupplies\PS_E3649A_SCPI_NET.cs" />
     <Compile Include="MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,7 +187,7 @@
     <Content Include="Resources\EmergencyStop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestExec.config.xml">
+    <Content Include="Exec.config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,19 +1,32 @@
-﻿using System;
+﻿﻿using System;
+using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
+using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.AgE364xD_1_7;
 
-namespace ABT.Test.TestExecutive.InstrumentDrivers.PowerSupplies {
-    public class PS_E3649A_SCPI : AgE364xD, IInstrumentDrivers, IPowerSupplyE3649A {
+namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
+    public class PS_E3649A_SCPI_NET : AgE364xD, IInstruments, IPowerSupplyE3649A {
         public String Address { get; }
         public String Detail { get; }
+        public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void Reinitialize() {
+        public void ReInitialize() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
 
-        public PS_E3649A_SCPI(String Address, String Detail) : base(Address) {
+        public Boolean ReInitialized() {
+            return (StateGet(OUTPUTS2.OUTput1) == STATES.off) && (StateGet(OUTPUTS2.OUTput2) == STATES.off);
+        }
+        
+        public SELF_TEST_RESULTS SelfTest() {
+            SCPI.TST.Query(out Int32 result);
+            return (SELF_TEST_RESULTS)result;
+        }
+
+        public PS_E3649A_SCPI_NET(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
+            InstrumentType = INSTRUMENT_TYPES.POWER_SUPPLY;
         }
 
         public OUTPUTS2 Selected() {

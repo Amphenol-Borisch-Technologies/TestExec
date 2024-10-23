@@ -1,21 +1,34 @@
-﻿using System;
+﻿﻿using System;
+using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
+using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
 
-namespace ABT.Test.TestExecutive.InstrumentDrivers.PowerSupplies  {
-    public class PS_E3634A_SCPI : AgE363x, IInstrumentDrivers, IPowerSupplyOutputs1 {
+namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies  {
+    public class PS_E3634A_SCPI_NET : AgE363x, IInstruments, IPowerSupplyOutputs1 {
         public enum RANGE { P25V, P50V }
 
         public String Address { get; }
         public String Detail { get; }
+        public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void Reinitialize() {
+        public void ReInitialize() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
 
-        public PS_E3634A_SCPI(String Address, String Detail) : base(Address) {
+        public Boolean ReInitialized() {
+            return StateGet() == STATES.off;
+        }
+        
+        public SELF_TEST_RESULTS SelfTest() {
+            SCPI.TST.Query(out Int32 result);
+            return (SELF_TEST_RESULTS)result;
+        }
+
+        public PS_E3634A_SCPI_NET(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
+            InstrumentType = INSTRUMENT_TYPES.POWER_SUPPLY;
         }
 
         public RANGE RangeGet() { 

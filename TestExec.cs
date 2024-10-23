@@ -22,9 +22,9 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
-using ABT.Test.TestExecutive.AppConfig;
-using ABT.Test.TestExecutive.Logging;
-using ABT.Test.TestExecutive.InstrumentDrivers;
+using ABT.Test.Exec.AppConfig;
+using ABT.Test.Exec.Logging;
+using ABT.Test.Exec.InstrumentDrivers;
 using System.Configuration;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
@@ -71,7 +71,7 @@ using System.Configuration;
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 //        - FYI, synchronizing with TestPlan's repository doesn't error out, as it doesn't utilize a Git server.
 
-namespace ABT.Test.TestExecutive {
+namespace ABT.Test.Exec {
     /// <remarks>
     ///  <b>References:</b>
     /// <item>
@@ -131,7 +131,7 @@ namespace ABT.Test.TestExecutive {
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
-        public static readonly String ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
+        public static readonly String ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Exec.config.xml";
         public const String MutexTestPlanName = "MutexTestPlan";
         public static Mutex MutexTestPlan = null;
         public const String NONE = "NONE";
@@ -266,7 +266,7 @@ namespace ABT.Test.TestExecutive {
 
         public virtual void Initialize() {
             if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstrumentDrivers)kvp.Value).Reinitialize();
+            foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).ReInitialize();
         }
 
         public virtual Boolean Initialized() {

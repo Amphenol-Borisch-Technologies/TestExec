@@ -1,9 +1,10 @@
-﻿using System;
+﻿﻿using System;
 using System.Windows.Forms;
+using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.Ag34401_11;
 
-namespace ABT.Test.TestExecutive.InstrumentDrivers.MultiMeters {
-    public class MM_34401A_SCPI : Ag34401, IInstrumentDrivers {
+namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
+    public class MM_34401A_SCPI_NET : Ag34401, IInstruments {
         public enum MMD { MIN, MAX, DEF }
         public enum TERMINALS { Front, Rear };
         public enum PROPERTY { AmperageAC, AmperageDC, Continuity, Frequency, Fresistance, Period, Resistance, VoltageAC, VoltageDC, VoltageDiodic }
@@ -11,15 +12,26 @@ namespace ABT.Test.TestExecutive.InstrumentDrivers.MultiMeters {
 
         public String Address { get; }
         public String Detail { get; }
+        public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void Reinitialize() {
+        public void ReInitialize() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
 
-        public MM_34401A_SCPI(String Address, String Detail) : base(Address) {
+        public Boolean ReInitialized() {
+            return false;
+        }
+        
+        public SELF_TEST_RESULTS SelfTest() {
+            SCPI.TST.Query(out Boolean result);
+            return result ? SELF_TEST_RESULTS.PASS : SELF_TEST_RESULTS.FAIL;
+        }
+
+        public MM_34401A_SCPI_NET(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
+            InstrumentType = INSTRUMENT_TYPES.MULTI_METER;
         }
 
         public Boolean DelayAutoIs() {
@@ -61,7 +73,7 @@ namespace ABT.Test.TestExecutive.InstrumentDrivers.MultiMeters {
                     SCPI.MEASure.DIODe.Query(out Double diodeVoltage);
                     return diodeVoltage;
                 default:
-                    throw new NotImplementedException(TestExec.NotImplementedMessageEnum(typeof(PROPERTY)));
+                    throw new NotImplementedException($"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(typeof(PROPERTY)))}'.");
             }
         }
 

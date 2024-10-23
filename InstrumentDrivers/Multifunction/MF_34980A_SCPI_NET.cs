@@ -1,12 +1,12 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 
-namespace ABT.Test.TestExecutive.InstrumentDrivers.Multifunction {
-    public class MF_34980A_SCPI : Ag34980, IInstrumentDrivers {
+namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
+    public class MF_34980A_SCPI : Ag34980, IInstruments {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
@@ -14,15 +14,26 @@ namespace ABT.Test.TestExecutive.InstrumentDrivers.Multifunction {
 
         public String Address { get; }
         public String Detail { get; }
+        public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void Reinitialize() {
+        public void ReInitialize() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
+        }
+
+        public Boolean ReInitialized() {
+            return false;
+        }
+        
+        public SELF_TEST_RESULTS SelfTest() {
+            SCPI.TST.Query(out Int32 result);
+            return (SELF_TEST_RESULTS)result;
         }
 
         public MF_34980A_SCPI(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
+            InstrumentType = INSTRUMENT_TYPES.MULTI_FUNCTION;
             DateTime now = DateTime.Now;
             SCPI.SYSTem.DATE.Command(now.Year, now.Month, now.Day);
             SCPI.SYSTem.TIME.Command(now.Hour, now.Minute, Convert.ToDouble(now.Second));
@@ -75,7 +86,7 @@ namespace ABT.Test.TestExecutive.InstrumentDrivers.Multifunction {
 
         public String SystemType(SLOTS Slot) {
             SCPI.SYSTem.CTYPe.Query((Int32)Slot, out String identity);
-            return identity.Split(Generic.SCPI99.IDENTITY_SEPARATOR)[(Int32)Generic.SCPI99.IDN_FIELDS.Model];
+            return identity.Split(Generic.SCPI_NET.IDENTITY_SEPARATOR)[(Int32)Generic.SCPI_NET.IDN_FIELDS.Model];
         }
         public TEMPERATURE_UNITS UnitsGet() {
             SCPI.UNIT.TEMPerature.Query(out String[] units);

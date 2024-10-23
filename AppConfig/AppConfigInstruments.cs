@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace ABT.Test.TestExecutive.AppConfig {
+namespace ABT.Test.Exec.AppConfig {
     public static class Instruments {
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = GetInstrumentsPortable();
