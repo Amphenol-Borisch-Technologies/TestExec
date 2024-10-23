@@ -8,7 +8,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
         public String Detail { get; }
         public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void ReInitialize() {
+        public void ResetClear() {
             Utility.Reset();
         }
 

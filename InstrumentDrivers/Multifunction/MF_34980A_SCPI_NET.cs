@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
-    public class MF_34980A_SCPI : Ag34980, IInstruments {
+    public class MF_34980A_SCPI : Ag34980, IInstruments, IRelays {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
@@ -17,7 +17,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
         public String Detail { get; }
         public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void ReInitialize() {
+        public void ResetClear() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
@@ -39,6 +39,8 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
             }
             return (SELF_TEST_RESULTS)result;
         }
+
+        public void OpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
 
         public MF_34980A_SCPI(String Address, String Detail) : base(Address) {
             this.Address = Address;

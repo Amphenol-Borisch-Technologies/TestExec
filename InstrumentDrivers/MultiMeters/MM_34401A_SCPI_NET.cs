@@ -13,7 +13,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
         public String Detail { get; }
         public INSTRUMENT_TYPES InstrumentType { get; }
 
-        public void ReInitialize() {
+        public void ResetClear() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }

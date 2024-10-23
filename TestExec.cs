@@ -25,6 +25,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.Exec.AppConfig;
 using ABT.Test.Exec.Logging;
 using ABT.Test.Exec.InstrumentDrivers;
+using ABT.Test.Exec.InstrumentDrivers.Multifunction;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -257,14 +258,16 @@ namespace ABT.Test.Exec {
             }
         }
 
-        public virtual void ReInitialize() {
+        public virtual void IInstrumentsResetClear() {
             if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).ReInitialize();
+            foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IInstruments ii) ii.ResetClear();
+            IRelaysOpenAll();
         }
 
-        public abstract void Disconnect();
-
-        public abstract Boolean Disconnected();
+        public virtual void IRelaysOpenAll() {
+            if (ConfigUUT.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IRelays ir) ir.OpenAll ();
+        }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
@@ -301,7 +304,7 @@ namespace ABT.Test.Exec {
         }
 
         private void PreApplicationExit() {
-            ReInitialize();
+            IInstrumentsResetClear();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             MutexTestPlan.ReleaseMutex();
             MutexTestPlan.Dispose();
@@ -521,7 +524,7 @@ namespace ABT.Test.Exec {
             IInstruments instrument;
             foreach (KeyValuePair<String, Object> kvp in Instruments) {
                 instrument = kvp.Value as IInstruments;
-                if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) instrument.ReInitialize(); // Try, try again...
+                if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
                     if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) {
                     failed = true;
                     _ = MessageBox.Show(ActiveForm, $"Instrument {kvp.Key} failed:{Environment.NewLine}" + 
@@ -595,7 +598,7 @@ namespace ABT.Test.Exec {
                 kvp.Value.Message.Clear();
             }
             ConfigUUT.TestEvent = TestEvents.UNSET;
-            ReInitialize();
+            IInstrumentsResetClear();
         }
 
         private async Task MeasurementsRun() {
@@ -608,11 +611,11 @@ namespace ABT.Test.Exec {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
-                            ReInitialize();
+                            IInstrumentsResetClear();
                             return;
                         }
                     } catch (Exception e) {
-                        ReInitialize();
+                        IInstrumentsResetClear();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;  // NOTE:  May be altered to TestEvents.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -641,7 +644,7 @@ namespace ABT.Test.Exec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            ReInitialize();
+            IInstrumentsResetClear();
             ConfigUUT.TestEvent = MeasurementsEvaluate(ConfigTest.Measurements);
             TextTest.Text = ConfigUUT.TestEvent;
             TextTest.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);
