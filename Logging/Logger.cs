@@ -66,25 +66,25 @@ namespace ABT.Test.Exec.Logging {
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
             message.AppendLine(FormatMessage("Revision", measurement.Revision));
-            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
+            message.AppendLine(FormatMessage("Measurement Type", measurement.GetType().Name));
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
             message.AppendLine(FormatMessage("Description", measurement.Description));
-            switch (measurement.ClassName) {
-                case MeasurementCustom.ClassName:
+            switch (measurement.GetType().Name) {
+                case nameof(MeasurementCustom):
                     message.AppendLine(measurement.Value);
                     break;
-                case MeasurementNumeric.ClassName:
+                case nameof(MeasurementNumeric):
                     message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
                     break;
-                case MeasurementProcess.ClassName:
+                case nameof(MeasurementProcess):
                     message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
                     break;
-                case MeasurementTextual.ClassName:
+                case nameof(MeasurementTextual):
                     message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
                     break;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.GetType().Name}' not implemented.");
             }
             message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.TestEvent));
             message.Append(measurement.Message.ToString());
@@ -178,7 +178,6 @@ namespace ABT.Test.Exec.Logging {
                 Log.CloseAndFlush();
                 if (testExec.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
                 if (testExec.ConfigLogger.SQLEnabled) SQLStop(testExec);
-                if (testExec.ConfigLogger.TestEventsEnabled) LogTestEvents(TestExec.ConfigUUT);
             }
         }
 #endregion Internal Methods
@@ -238,33 +237,6 @@ namespace ABT.Test.Exec.Logging {
 
         private static void SQLStop(TestExec testExec) {
             // TODO:  Eventually; SQL Server Express: SQLStop.
-        }
-
-        private static void LogTestEvents(AppConfigUUT uut) {
-            String eventCode;
-            switch (uut.TestEvent) {
-                case TestEvents.CANCEL:
-                    eventCode = "A";
-                    break;
-                case TestEvents.EMERGENCY_STOP:
-                    eventCode = "S";
-                    break;
-                case TestEvents.ERROR:
-                    eventCode = "E";
-                    break;
-                case TestEvents.FAIL:
-                    eventCode = "F";
-                    break;
-                case TestEvents.PASS:
-                    eventCode = "P";
-                    break;
-                case TestEvents.UNSET:
-                    eventCode = "U";
-                    break;
-                default:
-                    throw new NotImplementedException($"Unrecognized TestEvent '{uut.TestEvent}'.");
-            }
-            // TODO:  Eventually; invoke TestEvents with $"{uut.Number} {uut.SerialNumber} {uut.eventCode}";
         }
         #endregion Private
     }

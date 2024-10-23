@@ -194,7 +194,7 @@ namespace ABT.Test.Exec.AppConfig {
             ClassName = className;
             ClassObject = Activator.CreateInstance(Type.GetType(GetType().Namespace + "." + ClassName), new Object[] { ID, arguments });
             CancelNotPassed = cancelNotPassed;
-            if (String.Equals(ClassName, MeasurementNumeric.ClassName)) Value = Double.NaN.ToString();
+            if (String.Equals(ClassName, nameof(MeasurementNumeric))) Value = Double.NaN.ToString();
         }
 
         public static Dictionary<String, Measurement> Get() {

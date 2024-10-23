@@ -1,10 +1,10 @@
 ﻿﻿using System;
+using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Generic {
     public class SCPI_NET : AgSCPI99, IInstruments {
         public enum IDN_FIELDS { Manufacturer, Model, SerialNumber, FirmwareRevision } // Example: "Keysight Technologies,E36103B,MY61001983,1.0.2-1.02".  
-        public const Char IDENTITY_SEPARATOR = ',';
 
         public String Address { get; }
         public String Detail { get; }
@@ -15,13 +15,22 @@ namespace ABT.Test.Exec.InstrumentDrivers.Generic {
             SCPI.CLS.Command();
         }
 
-        public Boolean ReInitialized() {
-            return false;
-        }
-        
         public SELF_TEST_RESULTS SelfTest() {
-            SCPI.TST.Query(out Int32 result);
-            return (SELF_TEST_RESULTS)result;
+            Int32 result;
+            try {
+                SCPI.TST.Query(out result);
+            } catch (Exception) {
+                _ = MessageBox.Show($"Instrument with driver {GetType().Name} likely unpowered or not communicating:{Environment.NewLine}" + 
+                    $"Type:      {InstrumentType}{Environment.NewLine}" +
+                    $"Detail:    {Detail}{Environment.NewLine}" +
+                    $"Address:   {Address}"
+                    , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
+                // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
+                // which requires an apparently unavailable Keysight library to explicitly catch.
+                return SELF_TEST_RESULTS.FAIL;
+            }
+            return (SELF_TEST_RESULTS) result;
         }
 
         public SCPI_NET(String Address, String Detail) : base(Address) {
@@ -32,12 +41,12 @@ namespace ABT.Test.Exec.InstrumentDrivers.Generic {
 
         public String Identity(IDN_FIELDS Property) {
             SCPI.IDN.Query(out String Identity);
-            return Identity.Split(IDENTITY_SEPARATOR)[(Int32)Property];
+            return Identity.Split(',')[(Int32)Property];
         }
 
         public static String Identity(String Address, IDN_FIELDS Property) {
             new AgSCPI99(Address).SCPI.IDN.Query(out String Identity);
-            return Identity.Split(IDENTITY_SEPARATOR)[(Int32)Property];
+            return Identity.Split(',')[(Int32)Property];
         }
 
         public static String Identity(Object Instrument, IDN_FIELDS Property) {

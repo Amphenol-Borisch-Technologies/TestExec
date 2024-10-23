@@ -10,7 +10,6 @@ namespace ABT.Test.Exec.AppConfig {
     public enum UNITS_SI_MODIFIER { AC, DC, Peak, PP, NotApplicable, RMS }
 
     public abstract class MeasurementAbstract {
-        public const String ClassName = nameof(MeasurementAbstract);
         public const Char SA = '|'; // Arguments separator character.  Must match Arguments separator character used in TestPlan's App.config.
         public const Char SK = '='; // Key/Values separator character.  Must match Key/Values separator character used in TestPlan's App.config.
 
@@ -41,7 +40,6 @@ namespace ABT.Test.Exec.AppConfig {
     }
 
     public class MeasurementCustom : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementCustom);
         public readonly String Arguments;
         public static readonly String NOT_APPLICABLE = Enum.GetName(typeof(UNITS_SI), UNITS_SI.NotApplicable);
 
@@ -54,7 +52,7 @@ namespace ABT.Test.Exec.AppConfig {
         public override String ArgumentsGet() { return Arguments; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
-            if (argsDict.Count == 0) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
+            if (argsDict.Count == 0) throw new ArgumentException($"{nameof(MeasurementCustom)} ID '{id}' requires 1 or more case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{NOT_APPLICABLE}'{Environment.NewLine}" +
                 $"   Or     : 'Key{SK}Value'{Environment.NewLine}" +
                 $"   Or     : 'Key1{SK}Value1{SA}{Environment.NewLine}" +
@@ -65,7 +63,6 @@ namespace ABT.Test.Exec.AppConfig {
     }
 
     public class MeasurementNumeric : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementNumeric);
         public readonly Double Low;                                                                   private const String _LOW = nameof(Low);
         public readonly Double High;                                                                  private const String _HIGH = nameof(High);
         public readonly UNITS_SI Units_SI = UNITS_SI.NotApplicable;                                   private const String _UNITS_SI = nameof(Units_SI);
@@ -97,6 +94,7 @@ namespace ABT.Test.Exec.AppConfig {
         public override String ArgumentsGet() { return $"{_HIGH}{SK}{High}{SA}{_LOW}{SK}{Low}{SA}{_UNITS_SI}{SK}{Units_SI}{SA}{_Units_SI_Modifier}{SK}{Units_SI_Modifier}"; }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
+            const String ClassName = nameof(MeasurementNumeric);
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $"   Example: '{_HIGH}{SK}0.004{SA}{Environment.NewLine}" +
                 $"             {_LOW}{SK}0.002{SA}{Environment.NewLine}" +
@@ -114,7 +112,6 @@ namespace ABT.Test.Exec.AppConfig {
     }
 
     public class MeasurementProcess : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementProcess);
         public readonly String ProcessFolder;           private const String _PROCESS_FOLDER = nameof(ProcessFolder);
         public readonly String ProcessExecutable;       private const String _PROCESS_EXECUTABLE = nameof(ProcessExecutable);
         public readonly String ProcessArguments;        private const String _PROCESS_ARGUMENTS = nameof(ProcessArguments);
@@ -141,6 +138,7 @@ namespace ABT.Test.Exec.AppConfig {
         }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
+            const String ClassName = nameof(MeasurementProcess);
             if (argsDict.Count != 4) throw new ArgumentException($"{ClassName} ID '{id}' requires 4 case-sensitive arguments:{Environment.NewLine}" +
                 $@"   Example: '{_PROCESS_EXECUTABLE}{SK}ipecmd.exe{SA}{Environment.NewLine}
                                 {_PROCESS_FOLDER}{SK}C:\Program Files\Microchip\MPLABX\v6.15\mplab_platform\mplab_ipe\{SA}{Environment.NewLine}
@@ -158,7 +156,6 @@ namespace ABT.Test.Exec.AppConfig {
     }
 
     public class MeasurementTextual : MeasurementAbstract {
-        public new const String ClassName = nameof(MeasurementTextual);
         public readonly String Text;                                private const String _TEXT = nameof(Text);
 
         public MeasurementTextual(String ID, String Arguments) {
@@ -179,10 +176,10 @@ namespace ABT.Test.Exec.AppConfig {
         }
 
         internal override void ArgumentsValidate(String id, String arguments, Dictionary<String, String> argsDict) {
-            if (argsDict.Count != 1) throw new ArgumentException($"{ClassName} ID '{id}' requires 1 case-sensitive argument:{Environment.NewLine}" +
+            if (argsDict.Count != 1) throw new ArgumentException($"{nameof(MeasurementTextual)} ID '{id}' requires 1 case-sensitive argument:{Environment.NewLine}" +
                 $"   Example: '{_TEXT}{SK}The quick brown fox jumps over the lazy dog.'{Environment.NewLine}" +
                 $"   Actual : '{arguments}'");
-            if (!argsDict.ContainsKey(_TEXT)) throw new ArgumentException($"{ClassName} ID '{id}' does not contain '{_TEXT}' key-value pair.");
+            if (!argsDict.ContainsKey(_TEXT)) throw new ArgumentException($"{nameof(MeasurementTextual)} ID '{id}' does not contain '{_TEXT}' key-value pair.");
         }
     }
 

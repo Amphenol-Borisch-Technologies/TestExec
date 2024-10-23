@@ -13,10 +13,6 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
-
-        public Boolean ReInitialized() {
-            return (StateGet(OUTPUTS2.OUTput1) == STATES.off) && (StateGet(OUTPUTS2.OUTput2) == STATES.off);
-        }
         
         public SELF_TEST_RESULTS SelfTest() {
             SCPI.TST.Query(out Int32 result);

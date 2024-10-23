@@ -1,6 +1,5 @@
 ﻿﻿using System;
 using System.Windows.Forms;
-using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.Ag34401_11;
 
 namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
@@ -17,10 +16,6 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
         public void ReInitialize() {
             SCPI.RST.Command();
             SCPI.CLS.Command();
-        }
-
-        public Boolean ReInitialized() {
-            return false;
         }
         
         public SELF_TEST_RESULTS SelfTest() {

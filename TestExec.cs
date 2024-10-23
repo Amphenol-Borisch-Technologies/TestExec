@@ -26,6 +26,7 @@ using ABT.Test.Exec.AppConfig;
 using ABT.Test.Exec.Logging;
 using ABT.Test.Exec.InstrumentDrivers;
 using System.Configuration;
+using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
@@ -528,6 +529,23 @@ namespace ABT.Test.Exec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) {
+            UseWaitCursor = true;
+            Boolean failed = false;
+            IInstruments instrument;
+            foreach (KeyValuePair<String, Object> kvp in Instruments) {
+                instrument = kvp.Value as IInstruments;
+                if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) instrument.ReInitialize(); // Try, try again...
+                    if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) {
+                    failed = true;
+                    _ = MessageBox.Show(ActiveForm, $"Instrument {kvp.Key} failed:{Environment.NewLine}" + 
+                        $"Type:      {instrument.InstrumentType}{Environment.NewLine}" +
+                        $"Detail:    {instrument.Detail}{Environment.NewLine}" +
+                        $"Address:   {instrument.Address}"
+                        , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            if (!failed) _ = MessageBox.Show(ActiveForm, "Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UseWaitCursor = false;
 
         }
         private void TSMI_System_DiagnosticsRelays_Click(Object sender, EventArgs e) { }
@@ -587,7 +605,7 @@ namespace ABT.Test.Exec {
         private void MeasurementsPreRun() {
             Logger.Start(this, ref rtfResults);
             foreach (KeyValuePair<String, Measurement> kvp in ConfigTest.Measurements) {
-                if (String.Equals(kvp.Value.ClassName, MeasurementNumeric.ClassName)) kvp.Value.Value = Double.NaN.ToString();
+                if (String.Equals(kvp.Value.ClassName, nameof(MeasurementNumeric))) kvp.Value.Value = Double.NaN.ToString();
                 else kvp.Value.Value = String.Empty;
                 kvp.Value.TestEvent = TestEvents.UNSET;
                 kvp.Value.Message.Clear();
@@ -659,24 +677,24 @@ namespace ABT.Test.Exec {
         }
 
         private String MeasurementEvaluate(Measurement measurement) {
-            switch (measurement.ClassName) {
-                case MeasurementCustom.ClassName:
+            switch (measurement.GetType().Name) {
+                case nameof(MeasurementCustom):
                     return measurement.TestEvent; // Test Developer must set TestEvent in TestPlan, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
-                case MeasurementNumeric.ClassName:
+                case nameof(MeasurementNumeric):
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
                     if ((mn.Low <= dMeasurement) && (dMeasurement <= mn.High)) return TestEvents.PASS;
                     return TestEvents.FAIL;
-                case MeasurementProcess.ClassName:
+                case nameof(MeasurementProcess):
                     MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
                     if (String.Equals(mp.ProcessExpected, measurement.Value, StringComparison.Ordinal)) return TestEvents.PASS;
                     return TestEvents.FAIL;
-                case MeasurementTextual.ClassName:
+                case nameof(MeasurementTextual):
                     MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
                     if (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) return TestEvents.PASS;
                     return TestEvents.FAIL;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassName}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.GetType().Name}' not implemented.");
             }
         }
 
@@ -736,7 +754,7 @@ namespace ABT.Test.Exec {
         public Boolean IsMeasurement(String Description, String ClassName, Boolean CancelNotPassed, String Arguments) {
             return
                 String.Equals(MeasurementPresent.Description, Description) &&
-                String.Equals(MeasurementPresent.ClassName, ClassName) &&
+                String.Equals(MeasurementPresent.GetType().Name, ClassName) &&
                 MeasurementPresent.CancelNotPassed == CancelNotPassed &&
                 String.Equals((String)MeasurementPresent.ClassObject.GetType().GetMethod("ArgumentsGet").Invoke(MeasurementPresent.ClassObject, null), Arguments);
         }

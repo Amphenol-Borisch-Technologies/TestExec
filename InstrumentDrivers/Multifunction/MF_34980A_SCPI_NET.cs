@@ -20,10 +20,6 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
             SCPI.RST.Command();
             SCPI.CLS.Command();
         }
-
-        public Boolean ReInitialized() {
-            return false;
-        }
         
         public SELF_TEST_RESULTS SelfTest() {
             SCPI.TST.Query(out Int32 result);
@@ -86,7 +82,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
 
         public String SystemType(SLOTS Slot) {
             SCPI.SYSTem.CTYPe.Query((Int32)Slot, out String identity);
-            return identity.Split(Generic.SCPI_NET.IDENTITY_SEPARATOR)[(Int32)Generic.SCPI_NET.IDN_FIELDS.Model];
+            return identity.Split(',')[(Int32)Generic.SCPI_NET.IDN_FIELDS.Model];
         }
         public TEMPERATURE_UNITS UnitsGet() {
             SCPI.UNIT.TEMPerature.Query(out String[] units);

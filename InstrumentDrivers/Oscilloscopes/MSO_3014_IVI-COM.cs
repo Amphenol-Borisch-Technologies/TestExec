@@ -10,10 +10,6 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
         public void ReInitialize() {
             Utility.Reset();
         }
-
-        public Boolean ReInitialized() {
-            return true;
-        }
         
         public SELF_TEST_RESULTS SelfTest() {
             Int32 TestResult = 0;

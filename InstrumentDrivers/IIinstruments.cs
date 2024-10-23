@@ -8,7 +8,6 @@ namespace ABT.Test.Exec.InstrumentDrivers {
         String Detail { get; }  // NOTE: Store in instrument objects for easy error reporting of detailed descriptions, similar but more useful than SCPI's *IDN query.
         INSTRUMENT_TYPES InstrumentType { get; }
         void ReInitialize();    // NOTE: After each test run, reinitialize instrument.  Typically performs SCPI's *RST & *CLS commands.
-        Boolean ReInitialized();
         SELF_TEST_RESULTS SelfTest();
     }
 }
