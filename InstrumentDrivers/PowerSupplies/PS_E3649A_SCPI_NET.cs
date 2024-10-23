@@ -37,6 +37,12 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
             InstrumentType = INSTRUMENT_TYPES.POWER_SUPPLY;
         }
 
+        public void OutputsOff() {
+            // NOTE: Most multi-output supplies like the E3649A permit individual control of outputs,
+            // but the E3649A does not; all supplies are set to the same STATE, off or ON.
+            SCPI.OUTPut.STATe.Command(Convert.ToBoolean(STATES.off));
+        }
+
         public OUTPUTS2 Selected() {
             SCPI.INSTrument.SELect.Query(out String select);
             return select == "OUTP1" ? OUTPUTS2.OUTput1 : OUTPUTS2.OUTput2;

@@ -1,6 +1,4 @@
 ﻿﻿using System;
-using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
-using ABT.Test.Exec.InstrumentDrivers;
 using Agilent.CommandExpert.ScpiNet.AgE363x_1_7;
 using System.Windows.Forms;
 
@@ -39,6 +37,10 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies  {
             this.Address = Address;
             this.Detail = Detail;
             InstrumentType = INSTRUMENT_TYPES.POWER_SUPPLY;
+        }
+
+        public void OutputsOff() {
+            SCPI.OUTPut.STATe.Command(Convert.ToBoolean(STATES.off));
         }
 
         public RANGE RangeGet() { 

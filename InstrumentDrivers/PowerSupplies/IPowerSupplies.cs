@@ -7,20 +7,24 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
     public enum OUTPUTS3 { OUTput1, OUTput2, OUTput3 };
     public enum MMD { MINimum, MAXimum, DEFault }
 
-    public interface IPowerSupplyOutputs1 {
+    public interface IPowerSupply {
+        void OutputsOff();
+    }
+
+    public interface IPowerSupplyOutputs1 : IPowerSupply {
         STATES StateGet();
         void StateSet(STATES State);
         (Double AmpsDC, Double VoltsDC) Get(DC DC);
         void Set(Double Volts, Double Amps, Double OVP, STATES State);
     }
 
-    public interface IPowerSupplyOutputs2ExceptStateSet {
+    public interface IPowerSupplyOutputs2ExceptStateSet : IPowerSupply{
         STATES StateGet(OUTPUTS2 Output);
         (Double AmpsDC, Double VoltsDC) Get(OUTPUTS2 Output, DC DC);
         void Set(OUTPUTS2 Output, Double Volts, Double Amps, Double OVP, STATES State);
     }
 
-    public interface IPowerSupplyOutputs2 : IPowerSupplyOutputs2ExceptStateSet {
+    public interface IPowerSupplyOutputs2 : IPowerSupply, IPowerSupplyOutputs2ExceptStateSet {
         void StateSet(OUTPUTS2 Output, STATES State);
     }
 
@@ -31,7 +35,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies {
         void Set(OUTPUTS3 Output, Double Volts, Double Amps, Double OVP, STATES State);
     }
 
-    public interface IPowerSupplyE3649A: IPowerSupplyOutputs2ExceptStateSet {
+    public interface IPowerSupplyE3649A: IPowerSupply, IPowerSupplyOutputs2ExceptStateSet {
         // NOTE: Most multi-output supplies like the E3649A permit individual control of outputs,
         // but the E3649A does not; all supplies are set to the same STATE, off or ON.
         void StateSet(STATES State);

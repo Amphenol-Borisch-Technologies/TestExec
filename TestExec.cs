@@ -25,6 +25,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.Exec.AppConfig;
 using ABT.Test.Exec.Logging;
 using ABT.Test.Exec.InstrumentDrivers;
+using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
 using ABT.Test.Exec.InstrumentDrivers.Multifunction;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
@@ -258,15 +259,26 @@ namespace ABT.Test.Exec {
             }
         }
 
+        public virtual void SystemReset() {
+            if (ConfigUUT.Simulate) return;
+            IPowerSuppliesOutputsOff();
+            IInstrumentsResetClear();
+            IRelaysOpenAll();
+        }
+
         public virtual void IInstrumentsResetClear() {
             if (ConfigUUT.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IInstruments ii) ii.ResetClear();
-            IRelaysOpenAll();
         }
 
         public virtual void IRelaysOpenAll() {
             if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IRelays ir) ir.OpenAll ();
+            foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IRelays ir) ir.OpenAll();
+        }
+
+        public virtual void IPowerSuppliesOutputsOff() {
+            if (ConfigUUT.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in Instruments) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -304,7 +316,7 @@ namespace ABT.Test.Exec {
         }
 
         private void PreApplicationExit() {
-            IInstrumentsResetClear();
+            SystemReset();
             if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
             MutexTestPlan.ReleaseMutex();
             MutexTestPlan.Dispose();
@@ -598,7 +610,7 @@ namespace ABT.Test.Exec {
                 kvp.Value.Message.Clear();
             }
             ConfigUUT.TestEvent = TestEvents.UNSET;
-            IInstrumentsResetClear();
+            SystemReset();
         }
 
         private async Task MeasurementsRun() {
@@ -611,11 +623,11 @@ namespace ABT.Test.Exec {
                         ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
                         ConfigTest.Measurements[measurementID].TestEvent = MeasurementEvaluate(ConfigTest.Measurements[measurementID]);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
-                            IInstrumentsResetClear();
+                            SystemReset();
                             return;
                         }
                     } catch (Exception e) {
-                        IInstrumentsResetClear();
+                        SystemReset();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                             ConfigTest.Measurements[measurementID].TestEvent = TestEvents.CANCEL;  // NOTE:  May be altered to TestEvents.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
@@ -644,7 +656,7 @@ namespace ABT.Test.Exec {
         protected abstract Task<String> MeasurementRun(String measurementID);
 
         private void MeasurementsPostRun() {
-            IInstrumentsResetClear();
+            SystemReset();
             ConfigUUT.TestEvent = MeasurementsEvaluate(ConfigTest.Measurements);
             TextTest.Text = ConfigUUT.TestEvent;
             TextTest.BackColor = TestEvents.GetColor(ConfigUUT.TestEvent);
