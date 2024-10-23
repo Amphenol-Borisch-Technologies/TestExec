@@ -262,7 +262,9 @@ namespace ABT.Test.Exec {
             foreach (KeyValuePair<String, Object> kvp in Instruments) ((IInstruments)kvp.Value).ReInitialize();
         }
 
-        public abstract Boolean ReInitialized();
+        public abstract void Disconnect();
+
+        public abstract Boolean Disconnected();
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
