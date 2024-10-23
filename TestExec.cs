@@ -260,8 +260,8 @@ namespace ABT.Test.Exec {
         public virtual void SystemReset() {
             if (ConfigUUT.Simulate) return;
             IPowerSuppliesOutputsOff();
-            IInstrumentsResetClear();
             IRelaysOpenAll();
+            IInstrumentsResetClear();
         }
 
         public virtual void IInstrumentsResetClear() {
