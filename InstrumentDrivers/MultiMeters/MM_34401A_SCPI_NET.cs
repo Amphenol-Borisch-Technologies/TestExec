@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34401_11;
+using ABT.Test.Exec.InstrumentDrivers.Interfaces;
 
 namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
     public class MM_34401A_SCPI_NET : Ag34401, IInstruments {

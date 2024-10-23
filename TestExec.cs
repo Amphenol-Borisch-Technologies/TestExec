@@ -24,9 +24,7 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.Test.Exec.AppConfig;
 using ABT.Test.Exec.Logging;
-using ABT.Test.Exec.InstrumentDrivers;
-using ABT.Test.Exec.InstrumentDrivers.PowerSupplies;
-using ABT.Test.Exec.InstrumentDrivers.Multifunction;
+using ABT.Test.Exec.InstrumentDrivers.Interfaces;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.

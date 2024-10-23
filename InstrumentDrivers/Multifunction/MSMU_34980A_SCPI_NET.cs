@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
+using ABT.Test.Exec.InstrumentDrivers.Interfaces;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
     public class MSMU_34980A_SCPI : Ag34980, IInstruments, IRelays {
