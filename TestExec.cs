@@ -535,7 +535,6 @@ namespace ABT.Test.Exec {
 
             foreach (KeyValuePair<String, Object> kvp in Instruments) {
                 instrument = (IInstruments)kvp.Value;
-                // TODO: instrument = kvp.Value as IInstruments;
                 if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
                     if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) {
                     failed = true;
