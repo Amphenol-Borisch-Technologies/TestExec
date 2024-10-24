@@ -34,7 +34,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return DIAGNOSTICS_RESULTS.FAIL;
             }
-            return result ? DIAGNOSTICS_RESULTS.PASS : DIAGNOSTICS_RESULTS.FAIL;
+            return result ? DIAGNOSTICS_RESULTS.FAIL : DIAGNOSTICS_RESULTS.PASS; // Ag34401 returns 0 for passed, 1 for fail, opposite of C#'s Convert.ToBoolean(Int32).
         }
 
         public MM_34401A_SCPI_NET(String Address, String Detail) : base(Address) {

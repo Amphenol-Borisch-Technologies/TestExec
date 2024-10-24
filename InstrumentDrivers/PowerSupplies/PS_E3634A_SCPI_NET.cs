@@ -31,7 +31,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.PowerSupplies  {
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return DIAGNOSTICS_RESULTS.FAIL;
             }
-            return (DIAGNOSTICS_RESULTS)result;
+            return (DIAGNOSTICS_RESULTS)result; // AgE363x returns 0 for passed, 1 for fail.
         }
 
         public PS_E3634A_SCPI_NET(String Address, String Detail) : base(Address) {

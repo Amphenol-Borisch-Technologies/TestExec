@@ -29,7 +29,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return DIAGNOSTICS_RESULTS.FAIL;
             }
-            return TestResult == 0 ? DIAGNOSTICS_RESULTS.PASS : DIAGNOSTICS_RESULTS.FAIL;
+            return (DIAGNOSTICS_RESULTS)TestResult; // Tkdpo2k3k4kClass returns 0 for passed, 1 for fail.
         }
 
         public MSO_3014_IVI_COM(String Address, String Detail) {

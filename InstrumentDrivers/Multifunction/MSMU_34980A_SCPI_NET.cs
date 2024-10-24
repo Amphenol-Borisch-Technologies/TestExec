@@ -38,7 +38,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
                 // which requires an apparently unavailable Keysight library to explicitly catch.
                 return DIAGNOSTICS_RESULTS.FAIL;
             }
-            return (DIAGNOSTICS_RESULTS)result;
+            return (DIAGNOSTICS_RESULTS)result; // Ag34980 returns 0 for passed, 1 for fail.
         }
 
         public void OpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
