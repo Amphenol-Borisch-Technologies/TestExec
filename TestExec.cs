@@ -691,7 +691,7 @@ namespace ABT.Test.Exec {
                     if (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) return TestEvents.PASS;
                     return TestEvents.FAIL;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.GetType().Name}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassObject.GetType().Name}' not implemented.");
             }
         }
 
@@ -751,7 +751,7 @@ namespace ABT.Test.Exec {
         public Boolean IsMeasurement(String Description, String ClassName, Boolean CancelNotPassed, String Arguments) {
             return
                 String.Equals(MeasurementPresent.Description, Description) &&
-                String.Equals(MeasurementPresent.GetType().Name, ClassName) &&
+                String.Equals(MeasurementPresent.ClassObject.GetType().Name, ClassName) &&
                 MeasurementPresent.CancelNotPassed == CancelNotPassed &&
                 String.Equals((String)MeasurementPresent.ClassObject.GetType().GetMethod("ArgumentsGet").Invoke(MeasurementPresent.ClassObject, null), Arguments);
         }

@@ -67,7 +67,7 @@ namespace ABT.Test.Exec.Logging {
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
             message.AppendLine(FormatMessage("Revision", measurement.Revision));
-            message.AppendLine(FormatMessage("Measurement Type", measurement.GetType().Name));
+            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassObject.GetType().Name));
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
             message.AppendLine(FormatMessage("Description", measurement.Description));
@@ -85,7 +85,7 @@ namespace ABT.Test.Exec.Logging {
                     message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
                     break;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.GetType().Name}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassObject.GetType().Name}' not implemented.");
             }
             message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.TestEvent));
             message.Append(measurement.Message.ToString());
