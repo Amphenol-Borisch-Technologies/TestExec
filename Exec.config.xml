@@ -106,6 +106,5 @@
     <InstrumentStationary ID="MSMU1_34980A" Detail="Agilent 34980A Multifunction Switch/Measure Unit"                Address="GPIB0::2::INSTR" />
     <InstrumentStationary ID="PS1ε2_E3649A" Detail="Agilent E3649A Dual Output DC Power Supply"                      Address="GPIB0::1::INSTR" />
     <InstrumentStationary ID="PS3_E3634A"   Detail="Keysight E3634A Single Ouput Dual Range DC Power Supply"         Address="GPIB0::3::INSTR" />
-    <InstrumentStationary ID="MSO1_3014"    Detail="Tektronix MSO3014 Mixed Signal Oscilloscope"                     Address="USB0::0x0699::0x0421::C021373::INSTR" />
   </InstrumentsStationary>
 </Configuration>
