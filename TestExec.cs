@@ -534,8 +534,8 @@ namespace ABT.Test.Exec {
             IInstruments instrument;
             foreach (KeyValuePair<String, Object> kvp in Instruments) {
                 instrument = kvp.Value as IInstruments;
-                if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
-                    if (instrument.SelfTest() is SELF_TEST_RESULTS.FAIL) {
+                if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
+                    if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) {
                     failed = true;
                     _ = MessageBox.Show(ActiveForm, $"Instrument {kvp.Key} failed:{Environment.NewLine}" + 
                         $"Type:      {instrument.InstrumentType}{Environment.NewLine}" +

@@ -13,7 +13,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
             Utility.Reset();
         }
 
-        public SELF_TEST_RESULTS SelfTest() {
+        public DIAGNOSTICS_RESULTS Diagnostics() {
             Int32 TestResult = 0;
             String TestMessage = String.Empty;
             try {
@@ -27,9 +27,9 @@ namespace ABT.Test.Exec.InstrumentDrivers.Oscilloscopes {
                 // If unpowered or not communicating (comms cable possibly disconnected) SelfTest throws a
                 // Keysight.CommandExpert.InstrumentAbstraction.CommunicationException exception,
                 // which requires an apparently unavailable Keysight library to explicitly catch.
-                return SELF_TEST_RESULTS.FAIL;
+                return DIAGNOSTICS_RESULTS.FAIL;
             }
-            return TestResult == 0 ? SELF_TEST_RESULTS.PASS : SELF_TEST_RESULTS.FAIL;
+            return TestResult == 0 ? DIAGNOSTICS_RESULTS.PASS : DIAGNOSTICS_RESULTS.FAIL;
         }
 
         public MSO_3014_IVI_COM(String Address, String Detail) {
