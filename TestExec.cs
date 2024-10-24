@@ -674,19 +674,19 @@ namespace ABT.Test.Exec {
         }
 
         private String MeasurementEvaluate(Measurement measurement) {
-            switch (measurement.GetType().Name) {
-                case nameof(MeasurementCustom):
+            switch (measurement.ClassObject) {
+                case MeasurementCustom _:
                     return measurement.TestEvent; // Test Developer must set TestEvent in TestPlan, else it remains MeasurementsPreRun()'s initial TestEvents.UNSET.
-                case nameof(MeasurementNumeric):
+                case MeasurementNumeric _:
                     if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
                     MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
                     if ((mn.Low <= dMeasurement) && (dMeasurement <= mn.High)) return TestEvents.PASS;
                     return TestEvents.FAIL;
-                case nameof(MeasurementProcess):
+                case MeasurementProcess _:
                     MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
                     if (String.Equals(mp.ProcessExpected, measurement.Value, StringComparison.Ordinal)) return TestEvents.PASS;
                     return TestEvents.FAIL;
-                case nameof(MeasurementTextual):
+                case MeasurementTextual _:
                     MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
                     if (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) return TestEvents.PASS;
                     return TestEvents.FAIL;

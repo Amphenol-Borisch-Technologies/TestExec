@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.Exec.AppConfig;
+using System.Diagnostics;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -70,17 +71,17 @@ namespace ABT.Test.Exec.Logging {
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
             message.AppendLine(FormatMessage("Description", measurement.Description));
-            switch (measurement.GetType().Name) {
-                case nameof(MeasurementCustom):
+            switch (measurement.ClassObject) {
+                case MeasurementCustom _:
                     message.AppendLine(measurement.Value);
                     break;
-                case nameof(MeasurementNumeric):
+                case MeasurementNumeric _:
                     message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
                     break;
-                case nameof(MeasurementProcess):
+                case MeasurementProcess _:
                     message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
                     break;
-                case nameof(MeasurementTextual):
+                case MeasurementTextual _:
                     message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
                     break;
                 default:
