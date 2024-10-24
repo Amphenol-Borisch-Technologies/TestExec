@@ -89,7 +89,6 @@ namespace ABT.Test.Exec.InstrumentDrivers.MultiMeters {
 
         public void TerminalsSetRear() {
             if (TerminalsGet() == TERMINALS.Front) _ = MessageBox.Show("Please depress Keysight 34401A Front/Rear button.", "Paused, click OK to continue.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            SCPI.TRIGger.DELay.Command(Enum.GetName(typeof(MMD), $"{MMD.DEF}"));
             SCPI.TRIGger.DELay.AUTO.Command(true);
         }
 

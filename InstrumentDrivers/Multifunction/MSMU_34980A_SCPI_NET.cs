@@ -8,7 +8,7 @@ using Agilent.CommandExpert.ScpiNet.Ag34980_2_43;
 using ABT.Test.Exec.InstrumentDrivers.Interfaces;
 
 namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
-    public class MSMU_34980A_SCPI : Ag34980, IInstruments, IRelays {
+    public class MSMU_34980A_SCPI_NET : Ag34980, IInstruments, IRelays {
         public enum ABUS { ABUS1, ABUS2, ABUS3, ABUS4, ALL };
         public enum SLOTS { SLOT1 = 1, SLOT2 = 2, SLOT3 = 3, SLOT4 = 4, SLOT5 = 5, SLOT6 = 6, SLOT7 = 7, SLOT8 = 8 }
         public enum TEMPERATURE_UNITS { C, F, K }
@@ -43,7 +43,7 @@ namespace ABT.Test.Exec.InstrumentDrivers.Multifunction {
 
         public void OpenAll() { SCPI.ROUTe.OPEN.ALL.Command(null); }
 
-        public MSMU_34980A_SCPI(String Address, String Detail) : base(Address) {
+        public MSMU_34980A_SCPI_NET(String Address, String Detail) : base(Address) {
             this.Address = Address;
             this.Detail = Detail;
             InstrumentType = INSTRUMENT_TYPES.MULTI_FUNCTION;

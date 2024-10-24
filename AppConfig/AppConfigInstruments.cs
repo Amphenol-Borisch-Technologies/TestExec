@@ -10,13 +10,11 @@ namespace ABT.Test.Exec.AppConfig {
         public static Dictionary<String, Object> Get() {
             Dictionary<String, Object> Instruments = GetInstrumentsPortable();
             Dictionary<String, String> InstrumentsStationary = GetInstrumentsStationary();
-            IEnumerable<XElement> IS = XElement.Load(TestExec.ConfigurationTestExec).Elements("InstrumentsStationary").Elements("InstrumentStationary");
-            XElement I;
+            IEnumerable<XElement> IS = XElement.Load(TestExec.ConfigurationTestExec).Elements("InstrumentsStationary");
             // Now add InstrumentsStationary listed in app.config, but must first read their Address, Detail & ClassName from TestExec.ConfigurationTestExec.
             foreach (KeyValuePair<String, String> kvp in InstrumentsStationary) {
-                I = IS.FirstOrDefault(x => x.Element("ID").Value == kvp.Key);
-                if (I == null) throw new ArgumentException($"Instrument with ID '{kvp.Key}' not present in file '{TestExec.ConfigurationTestExec}'.");
-                Instruments.Add(kvp.Key, Activator.CreateInstance(Type.GetType(I.Element("ClassName").Value), new Object[] { I.Element("Address").Value, I.Element("Detail").Value }));
+                var v = IS.Descendants("InstrumentStationary").FirstOrDefault(e => (String)e.Attribute("ID") == kvp.Key) ?? throw new ArgumentException($"Instrument with ID '{kvp.Key}' not present in file '{TestExec.ConfigurationTestExec}'.");
+                Instruments.Add(kvp.Key, Activator.CreateInstance(Type.GetType(kvp.Value), new Object[] { v.Attribute("Address").Value, v.Attribute("Detail").Value }));
             }
             return Instruments;
         }

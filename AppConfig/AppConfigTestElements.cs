@@ -101,7 +101,7 @@ namespace ABT.Test.Exec.AppConfig {
     }
     [ConfigurationCollection(typeof(InstrumentPortableRequired))]
     public class InstrumentsPortableRequired : ConfigurationElementCollection {
-        public const String PropertyName = "InstrumentsPortableRequired";
+        public const String PropertyName = "InstrumentPortableRequired";
         public InstrumentPortableRequired this[Int32 idx] { get { return (InstrumentPortableRequired)BaseGet(idx); } }
         public override ConfigurationElementCollectionType CollectionType { get { return ConfigurationElementCollectionType.BasicMapAlternate; } }
         protected override String ElementName { get { return PropertyName; } }
