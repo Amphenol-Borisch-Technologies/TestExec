@@ -131,12 +131,12 @@ namespace ABT.Test.Exec {
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
+        private const String _serialNumberMostRecent = "MostRecent";
+        private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly String _ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Exec.config.xml";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
-        private const String _serialNumberMostRecent = "MostRecent";
-        private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
         private CancellationTokenSource _CTS_Cancel;
         private CancellationTokenSource _CTS_EmergencyStop;
