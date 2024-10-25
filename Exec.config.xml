@@ -71,7 +71,7 @@
 	- For instrument calibration or replacement, swap identical InstrumentStationary with others, then update Address.
 	- For deletions, remove InstrumentStationary element.
   - For additions, add InstrumentStationary element.
-    - Add a new driver to ABT.Test.Exec.InstrumentDrivers.* if needed.
+    - Add a new driver to ABT.Test.Lib.InstrumentDrivers.* if needed.
 
 	ID:			- Required element.
 					- Unique Identifier; no 2 can be identical, as ID is unique key in a Dictionary object.
@@ -88,21 +88,23 @@
 							- https://www.keysight.com/us/en/assets/7018-03222/data-sheets/5990-9362.pdf.
 							- Example VISA address for USB instrument: USB0::0x2A8D::0x1602::MY61001983::0::INSTR.
 	ClassName:  Required element.
-							- Class name from ABT.Test.Exec.InstrumentDrivers.*
+							- Class name from ABT.Test.Lib.InstrumentDrivers.*
 							- This is the instrument driver, typically inherited from a manufacturer provided SCPI or IVI driver.
 							- The inheritance permits adding custom methods and interfaces, most quite simple, but useful.
               - Note that instruments may have multiple drivers; SCPI, IVI-C, IVI-COM & IVI.Net are common Keysight provided drivers.
                 - SCPI drivers are likely more familiar, being very similar to native SCPI, but IVI drivers be advantageous.
                 - Regardless which, TestPlan developers should utilize their preferred instrument driver.
-                - If absent from TestExec's ABT.Test.Exec.InstrumentDrivers.*, can utilize preferred drivers 
+                - If absent from TestExec's ABT.Test.Lib.InstrumentDrivers.*, can utilize preferred drivers 
                   as InstrumentPortableRequired, with driver being installed locally with the TestPlan.
-                  - Consider adding to TestExec's ABT.Test.Exec.InstrumentDrivers.* when convenient.
+                  - Consider adding to TestExec's ABT.Test.Lib.InstrumentDrivers.* when convenient.
                         
 	NOTE:  VISA addresses (AKA VISA Resource Names) are explained at:
 	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
-  -->    
+  -->
+    <!--
     <InstrumentStationary ID="MM1_34401A"   Detail="Agilent 34401A Digital Multimeter"                               Address="GPIB0::4::INSTR" />
+  -->    
     <InstrumentStationary ID="MSMU1_34980A" Detail="Agilent 34980A Multifunction Switch/Measure Unit"                Address="GPIB0::2::INSTR" />
     <InstrumentStationary ID="PS1ε2_E3649A" Detail="Agilent E3649A Dual Output DC Power Supply"                      Address="GPIB0::1::INSTR" />
     <InstrumentStationary ID="PS3_E3634A"   Detail="Keysight E3634A Single Ouput Dual Range DC Power Supply"         Address="GPIB0::3::INSTR" />

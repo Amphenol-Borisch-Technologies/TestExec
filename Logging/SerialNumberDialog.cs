@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using Windows.Security.Cryptography;
@@ -26,9 +25,12 @@ namespace ABT.Test.Exec.Logging {
         private BarcodeScanner _scanner = null;
         private ClaimedBarcodeScanner _claimedScanner = null;
         private readonly String _serialNumberRegEx;
+        private readonly String _scannerID;
 
-        public SerialNumberDialog(String SerialNumberRegEx) {
+        public SerialNumberDialog(String SerialNumberRegEx, String ScannerID) {
             _serialNumberRegEx = SerialNumberRegEx;
+            _scannerID = ScannerID;
+
             InitializeComponent();
 
             GetBarcodeScanner();
@@ -40,10 +42,9 @@ namespace ABT.Test.Exec.Logging {
         public String Get() { return BarCodeText.Text; }
 
         private async void GetBarcodeScanner() {
-            String scannerID = XElement.Load(TestExec.ConfigurationTestExec).Element("BarCodeScannerID").Value;
-            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(scannerID);
+            DeviceInformation DI = await DeviceInformation.CreateFromIdAsync(_scannerID);
             _scanner = await BarcodeScanner.FromIdAsync(DI.Id);
-            if (_scanner == null) throw new InvalidOperationException($"{Environment.NewLine}Cannot find Barcode scanner Device ID:{Environment.NewLine}'{scannerID}'{Environment.NewLine}");
+            if (_scanner == null) throw new InvalidOperationException($"{Environment.NewLine}Cannot find Barcode scanner Device ID:{Environment.NewLine}'{_scannerID}'{Environment.NewLine}");
             _claimedScanner = await _scanner.ClaimScannerAsync(); // Claim exclusively.
             if (_claimedScanner == null) throw new InvalidOperationException($"{Environment.NewLine}Barcode scanner cannot be claimed.{Environment.NewLine}");
             _claimedScanner.DataReceived += ClaimedScanner_DataReceived;
