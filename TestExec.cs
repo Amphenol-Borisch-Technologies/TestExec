@@ -168,7 +168,7 @@ namespace ABT.Test.Exec {
             TestData.CT_EmergencyStop = _CTS_EmergencyStop.Token;
 
             if (!TestData.ConfigUUT.Simulate) {
-                TestData.InstrumentDrivers = Instruments.Get(_ConfigurationTestExec);
+                TestData.InstrumentDrivers = InstrumentDrivers.Get(_ConfigurationTestExec);
                 if (TestData.ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
             }
         }
