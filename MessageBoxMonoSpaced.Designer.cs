@@ -1,4 +1,4 @@
-﻿namespace ABT.Test.Exec {
+﻿namespace ABT.TestExec.Exec {
     partial class MessageBoxMonoSpaced {
         /// <summary>
         /// Required designer variable.

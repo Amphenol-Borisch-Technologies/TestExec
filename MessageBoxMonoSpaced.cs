@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ABT.Test.Exec {
+namespace ABT.TestExec.Exec {
     public partial class MessageBoxMonoSpaced : Form {
         public MessageBoxMonoSpaced(String Title, String Text, String Link) {
             InitializeComponent();

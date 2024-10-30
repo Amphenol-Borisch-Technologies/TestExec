@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TestExec")]
+[assembly: AssemblyTitle("Exec")]
 [assembly: AssemblyDescription("Test sequencer for functional test of electrical units, circuit cards & components.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Amphenol Borisch Technologies")]
-[assembly: AssemblyProduct("TestExec")]
+[assembly: AssemblyProduct("Exec")]
 [assembly: AssemblyCopyright("Copyright © Amphenol Borisch Technologies 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -22,13 +22,13 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
-using ABT.Test.Lib;
-using ABT.Test.Lib.AppConfig;
-using ABT.Test.Exec.Logging;
-using ABT.Test.Lib.InstrumentDrivers.Interfaces;
+using ABT.TestExec.Lib;
+using ABT.TestExec.Lib.AppConfig;
+using ABT.TestExec.Exec.Logging;
+using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
 
-// NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug TestPlan based closed source/proprietary projects:
-//        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like TestPlan.
+// NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
+//        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
 //          - That is, it's excellent for non-GUI (WinForms/WPF/WinUI) C# development.
 //          - VS Code is free for both private & commercial use:
 //            - https://code.visualstudio.com/docs/supporting/FAQ
@@ -37,7 +37,7 @@ using ABT.Test.Lib.InstrumentDrivers.Interfaces;
 //        - https://github.com/Amphenol-Borisch-Technologies/TestExec/blob/master/LICENSE.txt
 //        - "An unlimited number of users within an organization can use Visual Studio Community for the following scenarios:
 //           in a classroom learning environment, for academic research, or for contributing to open source projects."
-//        - TestPlan based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
+//        - Tests based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
 //          - https://visualstudio.microsoft.com/vs/community/
 //          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
 // NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
@@ -60,18 +60,14 @@ using ABT.Test.Lib.InstrumentDrivers.Interfaces;
 // NOTE:  ABT's Zero Trust, Cloudflare Warp enterprise security solution inhibits GitHub's security, causing below error when sychronizing with
 //        TestExec's GitHub repository at https://github.com/Amphenol-Borisch-Technologies/TestExec:
 //             Opening repositories:
-//             P:\Test\Engineers\repos\TestPlan
-//             Opening repositories:
-//             P:\Test\Engineers\repos\TestPlan
-//             C:\Users\phils\source\repos\TestExec
-//             Git failed with a fatal error.
+//             P:\Test\Engineers\repos\ABT\TestExec
 //             Git failed with a fatal error.
 //             unable to access 'https://github.com/Amphenol-Borisch-Technologies/TestLibrary/': schannel: CertGetCertificateChain trust error CERT_TRUST_IS_PARTIAL_CHAIN
 //        - Temporarily disabling Zero Trust by "pausing" it resolves above error.
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
-//        - FYI, synchronizing with TestPlan's repository doesn't error out, as it doesn't utilize a Git server.
+//        - FYI, synchronizing with Tests repository doesn't error out, as it doesn't utilize a Git server.
 
-namespace ABT.Test.Exec {
+namespace ABT.TestExec.Exec {
     /// <remarks>
     ///  <b>References:</b>
     /// <item>
@@ -94,13 +90,13 @@ namespace ABT.Test.Exec {
     /// </summary>
     /// 
     /// <summary>
-    /// NOTE:  Two types of TestPlan cancellations possible, each having two sub-types resulting in 4 altogether:
+    /// NOTE:  Two types of TestExec cancellations possible, each having two sub-types resulting in 4 altogether:
     /// <para>
     /// A) Spontaneous Operator Initiated Cancellations:
     ///      1)  Operator Proactive:
     ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
     ///            cancel currently executing Measurement.
-    ///          - Requires TestPlan implementation by the Test Developer, but is initiated by Operator, so categorized as such.
+    ///          - Requires Test project implementation by the Test Developer, but is initiated by Operator, so categorized as such.
     ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
@@ -113,21 +109,21 @@ namespace ABT.Test.Exec {
     ///            prior to the next Measurement's execution.
     ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
     /// B) PrePlanned Developer Programmed Cancellations:
-    ///      3)  TestPlan/Test Developer initiated cancellations:
-    ///          - Any TestPlan's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
+    ///      3)  TestExec Developer initiated cancellations:
+    ///          - Any Tests project's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
     ///          - Permits immediate cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
     ///      4)  App.config's CancelNotPassed:
     ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-    ///          - If the current TestPlan.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EVENTS.PASS,
+    ///          - If the current Test.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EVENTS.PASS,
     ///            TestExec.MeasurementsRun() will break/exit, stopping further testing.
     ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MeasurementsPostRun().
     ///
-    /// NOTE:  The Operator Proactive &amp; TestPlan/Test Developer initiated cancellations both occur while the currently executing TestPlan.MeasurementRun() conpletes, via 
+    /// NOTE:  The Operator Proactive &amp; TestExec Developer initiated cancellations both occur while the currently executing Tests.MeasurementRun() conpletes, via 
     ///        thrown OperationCanceledException.
-    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing TestPlan.MeasurementRun() completes, via checks
-    ///        inside the TestExec.MeasurementsRun() loop.
+    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing Tests.MeasurementRun() completes, via checks
+    ///        inside the Exec.MeasurementsRun() loop.
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
@@ -145,8 +141,8 @@ namespace ABT.Test.Exec {
             InitializeComponent();
             Icon = icon;
             // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            if (String.Equals(TestData.ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
-            else _serialNumberRegEx = TestData.ConfigUUT.SerialNumberRegExCustom;
+            if (string.Equals(Lib.TestLib.ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
+            else _serialNumberRegEx = Lib.TestLib.ConfigUUT.SerialNumberRegExCustom;
 
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
@@ -156,20 +152,20 @@ namespace ABT.Test.Exec {
                 throw new ArgumentException(sb.ToString());
             }
 
-            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{TestData.ConfigUUT.Customer}\\{TestData.ConfigUUT.Number}\\SerialNumber");
-            TestData.ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
+            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{Lib.TestLib.ConfigUUT.Customer}\\{Lib.TestLib.ConfigUUT.Number}\\SerialNumber");
+            Lib.TestLib.ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, string.Empty).ToString();
             // NOTE:  Writing into Application Settings is generally advisable over writing into Windows' Registry, but doing so permits all app users to write the App.config file.
             // - This means all users can also modify App.config's TestOperations, TestGroups & TestMeasurements, which is a no-no.
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             _CTS_Cancel = new CancellationTokenSource();
-            TestData.CT_Cancel = _CTS_Cancel.Token;
+            Lib.TestLib.CT_Cancel = _CTS_Cancel.Token;
             _CTS_EmergencyStop = new CancellationTokenSource();
-            TestData.CT_EmergencyStop = _CTS_EmergencyStop.Token;
+            Lib.TestLib.CT_EmergencyStop = _CTS_EmergencyStop.Token;
 
-            if (!TestData.ConfigUUT.Simulate) {
-                TestData.InstrumentDrivers = InstrumentDrivers.Get(_ConfigurationTestExec);
-                if (TestData.ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
+            if (!Lib.TestLib.ConfigUUT.Simulate) {
+                Lib.TestLib.InstrumentDrivers = InstrumentDrivers.Get(_ConfigurationTestExec);
+                if (Lib.TestLib.ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
             }
         }
 
@@ -179,8 +175,8 @@ namespace ABT.Test.Exec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            if (!String.Equals(TestData.ConfigUUT.EMailTestEngineer, _NOT_APPLICABLE)) {
-                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {TestData.ConfigUUT.EMailTestEngineer}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+            if (!string.Equals(Lib.TestLib.ConfigUUT.EMailTestEngineer, _NOT_APPLICABLE)) {
+                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {Lib.TestLib.ConfigUUT.EMailTestEngineer}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
         }
@@ -219,7 +215,7 @@ namespace ABT.Test.Exec {
             TSMI_File_Change.Enabled = true;
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
-            ButtonRunReset(enabled: TestData.ConfigTest != null);
+            ButtonRunReset(enabled: Lib.TestLib.ConfigTest != null);
             TSMI_System_Diagnostics.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
@@ -248,25 +244,25 @@ namespace ABT.Test.Exec {
         }
 
         public virtual void SystemReset() {
-            if (TestData.ConfigUUT.Simulate) return;
+            if (Lib.TestLib.ConfigUUT.Simulate) return;
             IPowerSuppliesOutputsOff();
             IRelaysOpenAll();
             IInstrumentsResetClear();
         }
 
         public virtual void IInstrumentsResetClear() {
-            if (TestData.ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestData.InstrumentDrivers) if (kvp.Value is IInstruments ii) ii.ResetClear();
+            if (Lib.TestLib.ConfigUUT.Simulate) return;
+            foreach (KeyValuePair<string, object> kvp in Lib.TestLib.InstrumentDrivers) if (kvp.Value is IInstruments ii) ii.ResetClear();
         }
 
         public virtual void IRelaysOpenAll() {
-            if (TestData.ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestData.InstrumentDrivers) if (kvp.Value is IRelays ir) ir.OpenAll();
+            if (Lib.TestLib.ConfigUUT.Simulate) return;
+            foreach (KeyValuePair<string, object> kvp in Lib.TestLib.InstrumentDrivers) if (kvp.Value is IRelays ir) ir.OpenAll();
         }
 
         public virtual void IPowerSuppliesOutputsOff() {
-            if (TestData.ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestData.InstrumentDrivers) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
+            if (Lib.TestLib.ConfigUUT.Simulate) return;
+            foreach (KeyValuePair<string, object> kvp in Lib.TestLib.InstrumentDrivers) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -305,9 +301,9 @@ namespace ABT.Test.Exec {
 
         private void PreApplicationExit() {
             SystemReset();
-            if (TestData.ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
-            TestData.MutexTestPlan.ReleaseMutex();
-            TestData.MutexTestPlan.Dispose();
+            if (Lib.TestLib.ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            Lib.TestLib.MutexTest.ReleaseMutex();
+            Lib.TestLib.MutexTest.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -332,7 +328,7 @@ namespace ABT.Test.Exec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = String.Equals(_NOT_APPLICABLE, TestData.ConfigUUT.EMailTestEngineer) ? String.Empty : TestData.ConfigUUT.EMailTestEngineer;
+                mailItem.To = string.Equals(_NOT_APPLICABLE, Lib.TestLib.ConfigUUT.EMailTestEngineer) ? string.Empty : Lib.TestLib.ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -346,15 +342,15 @@ namespace ABT.Test.Exec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = String.Equals(_NOT_APPLICABLE, TestData.ConfigUUT.EMailTestEngineer) ? String.Empty : TestData.ConfigUUT.EMailTestEngineer;
+                mailItem.To = string.Equals(_NOT_APPLICABLE, Lib.TestLib.ConfigUUT.EMailTestEngineer) ? string.Empty : Lib.TestLib.ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
                     $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
                     $" - Be specific!  Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}";
-                String rtfTempFile = $"{Path.GetTempPath()}\\{TestData.ConfigUUT.Number}.rtf";
+                String rtfTempFile = $"{Path.GetTempPath()}\\{Lib.TestLib.ConfigUUT.Number}.rtf";
                 rtfResults.SaveFile(rtfTempFile);
-                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{TestData.ConfigUUT.Number}.rtf");
+                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{Lib.TestLib.ConfigUUT.Number}.rtf");
                 mailItem.Display();
             } catch {
                 Logger.LogError(subject);
@@ -381,7 +377,7 @@ namespace ABT.Test.Exec {
             if (_CTS_Cancel.IsCancellationRequested) {
                 _CTS_Cancel.Dispose();
                 _CTS_Cancel = new CancellationTokenSource();
-                TestData.CT_Cancel = _CTS_Cancel.Token;
+                Lib.TestLib.CT_Cancel = _CTS_Cancel.Token;
             }
             ButtonCancel.Enabled = enabled;
         }
@@ -395,34 +391,34 @@ namespace ABT.Test.Exec {
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
-            if (TestData.CT_EmergencyStop.IsCancellationRequested) {
+            if (Lib.TestLib.CT_EmergencyStop.IsCancellationRequested) {
                 _CTS_EmergencyStop = new CancellationTokenSource();
-                TestData.CT_EmergencyStop = _CTS_EmergencyStop.Token;
+                Lib.TestLib.CT_EmergencyStop = _CTS_EmergencyStop.Token;
             }
             ButtonEmergencyStop.Enabled = enabled;
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            TestData.ConfigTest = AppConfigTest.Get();
+            Lib.TestLib.ConfigTest = AppConfigTest.Get();
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
-            Text = $"{TestData.ConfigUUT.Number}, {TestData.ConfigUUT.Description}, {TestData.ConfigTest.TestElementID}";
+            base.Text = $"{Lib.TestLib.ConfigUUT.Number}, {Lib.TestLib.ConfigUUT.Description}, {Lib.TestLib.ConfigTest.TestElementID}";
             FormModeReset();
             FormModeSelect();
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
             String serialNumber;
-            if (TestData.ConfigLogger.SerialNumberDialogEnabled) {
-                _serialNumberDialog.Set(TestData.ConfigUUT.SerialNumber);
-                serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
+            if (Lib.TestLib.ConfigLogger.SerialNumberDialogEnabled) {
+                _serialNumberDialog.Set(Lib.TestLib.ConfigUUT.SerialNumber);
+                serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : string.Empty;
                 _serialNumberDialog.Hide();
             } else {
-                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: TestData.ConfigUUT.SerialNumber).Trim().ToUpper();
-                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
+                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: Lib.TestLib.ConfigUUT.SerialNumber).Trim().ToUpper();
+                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : string.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
-            TestData.ConfigUUT.SerialNumber = serialNumber;
+            Lib.TestLib.ConfigUUT.SerialNumber = serialNumber;
 
             FormModeReset();
             FormModeRun();
@@ -446,14 +442,14 @@ namespace ABT.Test.Exec {
 
         #region Form Tool Strip Menu Items
         private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            if (GetTestPlanFolder() != String.Empty) { }
-            // TODO: "Restart" TestExec with new TestPlanFolder.
+            if (GetTestFolder() != String.Empty) { }
+            // TODO: "Restart" TestExec with new Tests folder.
         }
-        private String GetTestPlanFolder() {
+        private String GetTestFolder() {
             CommonOpenFileDialog cofd = new CommonOpenFileDialog {
-                InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("TestPlans").Value,
+                InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("Tests").Value,
                 IsFolderPicker = true,
-                Title= "Select a TestPlan Folder"
+                Title= "Select a Tests Folder"
             };
             return (cofd.ShowDialog() == CommonFileDialogResult.Ok) ? cofd.FileName : String.Empty;
         }
@@ -462,11 +458,12 @@ namespace ABT.Test.Exec {
             System.Windows.Forms.Application.Exit();
         }
         private void TSMI_File_Save_Click(Object sender, EventArgs e) {
-            SaveFileDialog saveFileDialog = new SaveFileDialog {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{TestData.ConfigUUT.Number}_{TestData.ConfigTest.TestElementID}_{TestData.ConfigUUT.SerialNumber}",
+                FileName = $"{Lib.TestLib.ConfigUUT.Number}_{Lib.TestLib.ConfigTest.TestElementID}_{Lib.TestLib.ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -485,8 +482,8 @@ namespace ABT.Test.Exec {
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {TestData.ConfigUUT.Number}, {TestData.ConfigUUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {TestData.ConfigUUT.Number}, {TestData.ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {Lib.TestLib.ConfigUUT.Number}, {Lib.TestLib.ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {Lib.TestLib.ConfigUUT.Number}, {Lib.TestLib.ConfigUUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
@@ -523,7 +520,7 @@ namespace ABT.Test.Exec {
             Boolean failed = false;
             IInstruments instrument;
 
-            foreach (KeyValuePair<String, Object> kvp in TestData.InstrumentDrivers) {
+            foreach (KeyValuePair<string, object> kvp in Lib.TestLib.InstrumentDrivers) {
                 instrument = (IInstruments)kvp.Value;
                 if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
                     if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) {
@@ -560,28 +557,28 @@ namespace ABT.Test.Exec {
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
-        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(TestData.ConfigUUT.DocumentationFolder); }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(TestData.ConfigUUT.ManualsFolder); }
+        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(Lib.TestLib.ConfigUUT.DocumentationFolder); }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(Lib.TestLib.ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new MessageBoxMonoSpaced(
-                Title: $"{TestData.ConfigUUT.Number}, {TestData.ConfigTest.TestElementID}, {TestData.ConfigTest.StatusTime()}",
-                Text: TestData.ConfigTest.StatisticsDisplay(),
-                Link: String.Empty
+                Title: $"{Lib.TestLib.ConfigUUT.Number}, {Lib.TestLib.ConfigTest.TestElementID}, {Lib.TestLib.ConfigTest.StatusTime()}",
+                Text: Lib.TestLib.ConfigTest.StatisticsDisplay(),
+                Link: string.Empty
             );
             _ = statistics.ShowDialog();
 
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            TestData.ConfigTest.Statistics = new Statistics();
+            Lib.TestLib.ConfigTest.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(TestData.ConfigLogger.FilePath); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(Lib.TestLib.ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new MessageBoxMonoSpaced (
-                Title: "About TestPlan",
+                Title: "About Tests",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestPlan"
             );
@@ -592,49 +589,49 @@ namespace ABT.Test.Exec {
         #region Measurements
         private void MeasurementsPreRun() {
             Logger.Start(this, ref rtfResults);
-            foreach (KeyValuePair<String, Measurement> kvp in TestData.ConfigTest.Measurements) {
-                if (String.Equals(kvp.Value.ClassName, nameof(MeasurementNumeric))) kvp.Value.Value = Double.NaN.ToString();
-                else kvp.Value.Value = String.Empty;
+            foreach (KeyValuePair<string, Measurement> kvp in Lib.TestLib.ConfigTest.Measurements) {
+                if (string.Equals(kvp.Value.ClassName, nameof(Lib.AppConfig.MeasurementNumeric))) kvp.Value.Value = double.NaN.ToString();
+                else kvp.Value.Value = string.Empty;
                 kvp.Value.Event = EVENTS.UNSET;
                 kvp.Value.Message.Clear();
             }
-            TestData.ConfigUUT.Event = EVENTS.UNSET;
+            Lib.TestLib.ConfigUUT.Event = EVENTS.UNSET;
             SystemReset();
         }
 
         private async Task MeasurementsRun() {
-            foreach (String groupID in TestData.ConfigTest.GroupIDsSequence) {
-                foreach (String measurementID in TestData.ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
-                    TestData.MeasurementIDPresent = measurementID;
-                    TestData.MeasurementPresent = TestData.ConfigTest.Measurements[TestData.MeasurementIDPresent];
+            foreach (String groupID in Lib.TestLib.ConfigTest.GroupIDsSequence) {
+                foreach (String measurementID in Lib.TestLib.ConfigTest.GroupIDsToMeasurementIDs[groupID]) {
+                    Lib.TestLib.MeasurementIDPresent = measurementID;
+                    Lib.TestLib.MeasurementPresent = Lib.TestLib.ConfigTest.Measurements[Lib.TestLib.MeasurementIDPresent];
                     try {
                         StatusStatisticsUpdate(null, null);
-                        TestData.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
-                        TestData.ConfigTest.Measurements[measurementID].Event = MeasurementEvaluate(TestData.ConfigTest.Measurements[measurementID]);
-                        if (TestData.CT_EmergencyStop.IsCancellationRequested || TestData.CT_Cancel.IsCancellationRequested) {
+                        Lib.TestLib.ConfigTest.Measurements[measurementID].Value = await Task.Run(() => MeasurementRun(measurementID));
+                        Lib.TestLib.ConfigTest.Measurements[measurementID].Event = MeasurementEvaluate(Lib.TestLib.ConfigTest.Measurements[measurementID]);
+                        if (Lib.TestLib.CT_EmergencyStop.IsCancellationRequested || Lib.TestLib.CT_Cancel.IsCancellationRequested) {
                             SystemReset();
                             return;
                         }
                     } catch (Exception e) {
                         SystemReset();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
-                            TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;  // NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
+                            Lib.TestLib.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;  // NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                            TestData.ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
+                            Lib.TestLib.ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
                         }
-                        if (!TestData.CT_EmergencyStop.IsCancellationRequested && !TestData.CT_Cancel.IsCancellationRequested) {
-                            TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.ERROR;
-                            TestData.ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
+                        if (!Lib.TestLib.CT_EmergencyStop.IsCancellationRequested && !Lib.TestLib.CT_Cancel.IsCancellationRequested) {
+                            Lib.TestLib.ConfigTest.Measurements[measurementID].Event = EVENTS.ERROR;
+                            Lib.TestLib.ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{e}");
                             ErrorMessage(e);
                         }
                         return;
                     } finally {
                         // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
                         // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
-                        if      (TestData.CT_EmergencyStop.IsCancellationRequested) TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.EMERGENCY_STOP;
-                        else if (TestData.CT_Cancel.IsCancellationRequested) TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;
+                        if      (Lib.TestLib.CT_EmergencyStop.IsCancellationRequested) Lib.TestLib.ConfigTest.Measurements[measurementID].Event = EVENTS.EMERGENCY_STOP;
+                        else if (Lib.TestLib.CT_Cancel.IsCancellationRequested) Lib.TestLib.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;
                         // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                        Logger.LogTest(TestData.ConfigTest.IsOperation, TestData.ConfigTest.Measurements[measurementID], ref rtfResults);
+                        Logger.LogTest(Lib.TestLib.ConfigTest.IsOperation, Lib.TestLib.ConfigTest.Measurements[measurementID], ref rtfResults);
                     }
                     if (MeasurementCancelNotPassed(measurementID)) return;
                 }
@@ -646,21 +643,21 @@ namespace ABT.Test.Exec {
 
         private void MeasurementsPostRun() {
             SystemReset();
-            TestData.ConfigUUT.Event = MeasurementsEvaluate(TestData.ConfigTest.Measurements);
-            TextTest.Text = TestData.ConfigUUT.Event.ToString();
-            TextTest.BackColor = TestData.EventColors[TestData.ConfigUUT.Event];
-            TestData.ConfigTest.Statistics.Update(TestData.ConfigUUT.Event);
+            Lib.TestLib.ConfigUUT.Event = MeasurementsEvaluate(Lib.TestLib.ConfigTest.Measurements);
+            TextTest.Text = Lib.TestLib.ConfigUUT.Event.ToString();
+            TextTest.BackColor = Lib.TestLib.EventColors[Lib.TestLib.ConfigUUT.Event];
+            Lib.TestLib.ConfigTest.Statistics.Update(Lib.TestLib.ConfigUUT.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
-        private Boolean MeasurementCancelNotPassed(String measurementID) { return (TestData.ConfigTest.Measurements[measurementID].Event != EVENTS.PASS) && TestData.ConfigTest.Measurements[measurementID].CancelNotPassed; }
+        private Boolean MeasurementCancelNotPassed(String measurementID) { return (Lib.TestLib.ConfigTest.Measurements[measurementID].Event != EVENTS.PASS) && Lib.TestLib.ConfigTest.Measurements[measurementID].CancelNotPassed; }
 
-        private Boolean MeasurementsCancelNotPassed(String groupID) { return (MeasurementsEvaluate(MeasurementsGet(groupID)) != EVENTS.PASS) && TestData.ConfigTest.Groups[groupID].CancelNotPassed; }
+        private Boolean MeasurementsCancelNotPassed(String groupID) { return (MeasurementsEvaluate(MeasurementsGet(groupID)) != EVENTS.PASS) && Lib.TestLib.ConfigTest.Groups[groupID].CancelNotPassed; }
 
         private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
             Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
-            foreach (String measurementID in TestData.ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, TestData.ConfigTest.Measurements[measurementID]);
+            foreach (String measurementID in Lib.TestLib.ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, Lib.TestLib.ConfigTest.Measurements[measurementID]);
             return measurements;
         }
 
@@ -734,19 +731,19 @@ namespace ABT.Test.Exec {
             MessageAppendLine("Caller Line #", $"'{callerLineNumber}'");
         }
 
-        public void MessageAppend(String Message) { TestData.MeasurementPresent.Message.Append(Message); }
+        public void MessageAppend(String Message) { Lib.TestLib.MeasurementPresent.Message.Append(Message); }
 
-        public void MessageAppendLine(String Message) { TestData.MeasurementPresent.Message.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { Lib.TestLib.MeasurementPresent.Message.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { TestData.MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
+        public void MessageAppendLine(String Label, String Message) { Lib.TestLib.MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestData.ConfigTest.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = Lib.TestLib.ConfigTest.StatusTime())); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestData.ConfigTest.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = Lib.TestLib.ConfigTest.StatisticsStatus())); }
 
         private enum MODES { Resetting, Selecting, Running, Cancelling, Emergency_Stopping };
 

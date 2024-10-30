@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.Test.Exec;
-using ABT.Test.Lib;
-using ABT.Test.Lib.AppConfig;
+using ABT.TestExec.Exec;
+using ABT.TestExec.Lib;
+using ABT.TestExec.Lib.AppConfig;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -21,7 +21,7 @@ using ABT.Test.Lib.AppConfig;
 // - Export in CSV, report in PDF.
 //
 
-namespace ABT.Test.Exec.Logging {
+namespace ABT.TestExec.Exec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
@@ -89,11 +89,11 @@ namespace ABT.Test.Exec.Logging {
             message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.Event.ToString()));
             message.Append(measurement.Message.ToString());
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, TestData.EventColors[measurement.Event]);
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, Lib.TestLib.EventColors[measurement.Event]);
         }
 
         public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
-            if (!TestData.ConfigTest.IsOperation) {
+            if (!Lib.TestLib.ConfigTest.IsOperation) {
                 // When TestGroups are executed, measurement data is never saved as Rich Text.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
@@ -101,27 +101,27 @@ namespace ABT.Test.Exec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{TestData.ConfigUUT.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{TestData.ConfigUUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{TestData.ConfigUUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ID", $"{TestData.ConfigTest.TestElementID}"));
-                Log.Information(FormatMessage($"Description", $"{TestData.ConfigTest.TestElementDescription}"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{Lib.TestLib.ConfigUUT.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{Lib.TestLib.ConfigUUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{Lib.TestLib.ConfigUUT.Revision}"));
+                Log.Information(FormatMessage($"TestGroup ID", $"{Lib.TestLib.ConfigTest.TestElementID}"));
+                Log.Information(FormatMessage($"Description", $"{Lib.TestLib.ConfigTest.TestElementDescription}"));
                 Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
-            if (TestData.ConfigLogger.FileEnabled && !TestData.ConfigLogger.SQLEnabled) {
+            if (Lib.TestLib.ConfigLogger.FileEnabled && !Lib.TestLib.ConfigLogger.SQLEnabled) {
                 // When TestOperations are executed, measurement data is always & automatically saved as Rich Text.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
-            } else if (!TestData.ConfigLogger.FileEnabled && TestData.ConfigLogger.SQLEnabled) {
+            } else if (!Lib.TestLib.ConfigLogger.FileEnabled && Lib.TestLib.ConfigLogger.SQLEnabled) {
                 // TODO:  Eventually; RichTextBox + SQL.
                 SQLStart();
-            } else if (TestData.ConfigLogger.FileEnabled && TestData.ConfigLogger.SQLEnabled) {
+            } else if (Lib.TestLib.ConfigLogger.FileEnabled && Lib.TestLib.ConfigLogger.SQLEnabled) {
                 // TODO:  Eventually; RichTextBox + File + SQL.
                 SQLStart();
             } else {
@@ -133,12 +133,12 @@ namespace ABT.Test.Exec.Logging {
             }
             Log.Information($"UUT:");
             Log.Information($"\t{MESSAGE_UUT_EVENT}");
-            Log.Information($"\tSerial Number     : {TestData.ConfigUUT.SerialNumber}");
-            Log.Information($"\tNumber            : {TestData.ConfigUUT.Number}");
-            Log.Information($"\tRevision          : {TestData.ConfigUUT.Revision}");
-            Log.Information($"\tDescription       : {TestData.ConfigUUT.Description}");
-            Log.Information($"\tType              : {TestData.ConfigUUT.Type}");
-            Log.Information($"\tCustomer          : {TestData.ConfigUUT.Customer}\n");
+            Log.Information($"\tSerial Number     : {Lib.TestLib.ConfigUUT.SerialNumber}");
+            Log.Information($"\tNumber            : {Lib.TestLib.ConfigUUT.Number}");
+            Log.Information($"\tRevision          : {Lib.TestLib.ConfigUUT.Revision}");
+            Log.Information($"\tDescription       : {Lib.TestLib.ConfigUUT.Description}");
+            Log.Information($"\tType              : {Lib.TestLib.ConfigUUT.Type}");
+            Log.Information($"\tCustomer          : {Lib.TestLib.ConfigUUT.Customer}\n");
 
             Log.Information($"TestOperation:");
             Log.Information($"\tStart             : {DateTime.Now}");
@@ -146,19 +146,19 @@ namespace ABT.Test.Exec.Logging {
             Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
             // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
             Log.Information($"\tMachineName       : {Environment.MachineName}");
-            Log.Information($"\tTestExec          : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
-            Log.Information($"\tTestPlan          : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-            Log.Information($"\tSpecification     : {TestData.ConfigUUT.TestSpecification}");
-            Log.Information($"\tID                : {TestData.ConfigTest.TestElementID}");
+            Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
+            Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
+            Log.Information($"\tSpecification     : {Lib.TestLib.ConfigUUT.TestSpecification}");
+            Log.Information($"\tID                : {Lib.TestLib.ConfigTest.TestElementID}");
 #if VERBOSE
             Log.Information($"\tRevision          : {TestData.ConfigTest.TestElementRevision}");
 #endif
-            Log.Information($"\tDescription       : {TestData.ConfigTest.TestElementDescription}\n");
+            Log.Information($"\tDescription       : {Lib.TestLib.ConfigTest.TestElementDescription}\n");
 
             StringBuilder sb = new StringBuilder();
-            foreach (String groupID in TestData.ConfigTest.GroupIDsSequence) {
-                sb.Append(String.Format("\t{0,-" + TestData.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, TestData.ConfigTest.Groups[groupID].Description));
-                foreach (String measurementID in TestData.ConfigTest.GroupIDsToMeasurementIDs[groupID]) sb.Append(String.Format("\t\t{0,-" + TestData.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, TestData.ConfigTest.Measurements[measurementID].Description));
+            foreach (String groupID in Lib.TestLib.ConfigTest.GroupIDsSequence) {
+                sb.Append(string.Format("\t{0,-" + Lib.TestLib.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, Lib.TestLib.ConfigTest.Groups[groupID].Description));
+                foreach (String measurementID in Lib.TestLib.ConfigTest.GroupIDsToMeasurementIDs[groupID]) sb.Append(string.Format("\t\t{0,-" + Lib.TestLib.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, Lib.TestLib.ConfigTest.Measurements[measurementID].Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
         }
@@ -169,22 +169,22 @@ namespace ABT.Test.Exec.Logging {
         }
 
         public static void Stop(TestExec testExec, ref RichTextBox rtfResults) {
-            if (!TestData.ConfigTest.IsOperation) Log.CloseAndFlush();
+            if (!Lib.TestLib.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestData.ConfigUUT.Event.ToString());
-                SetBackColor(ref rtfResults, 0, TestData.ConfigUUT.Event.ToString(), TestData.EventColors[TestData.ConfigUUT.Event]);
-                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + Lib.TestLib.ConfigUUT.Event.ToString());
+                SetBackColor(ref rtfResults, 0, Lib.TestLib.ConfigUUT.Event.ToString(), Lib.TestLib.EventColors[Lib.TestLib.ConfigUUT.Event]);
+                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
-                if (TestData.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
-                if (TestData.ConfigLogger.SQLEnabled) SQLStop();
+                if (Lib.TestLib.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
+                if (Lib.TestLib.ConfigLogger.SQLEnabled) SQLStop();
             }
         }
         #endregion Public Methods
 
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            String fileName = $"{TestData.ConfigUUT.Number}_{TestData.ConfigUUT.SerialNumber}_{TestData.ConfigTest.TestElementID}";
+            String fileName = $"{Lib.TestLib.ConfigUUT.Number}_{Lib.TestLib.ConfigUUT.SerialNumber}_{Lib.TestLib.ConfigTest.TestElementID}";
             String[] files = Directory.GetFiles(GetFilePath(), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
@@ -206,11 +206,11 @@ namespace ABT.Test.Exec.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{TestData.ConfigUUT.Event}.rtf";
+            fileName += $"_{++maxNumber}_{Lib.TestLib.ConfigUUT.Event}.rtf";
             rtfResults.SaveFile($"{GetFilePath()}{fileName}");
         }
         
-        private static String GetFilePath() { return $"{TestData.ConfigLogger.FilePath}{TestData.ConfigTest.TestElementID}\\"; }
+        private static String GetFilePath() { return $"{Lib.TestLib.ConfigLogger.FilePath}{Lib.TestLib.ConfigTest.TestElementID}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
