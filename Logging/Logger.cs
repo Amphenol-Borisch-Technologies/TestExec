@@ -66,7 +66,7 @@ namespace ABT.Test.Exec.Logging {
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
             message.AppendLine(FormatMessage("Revision", measurement.Revision));
-            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassObject.GetType().Name));
+            message.AppendLine(FormatMessage("Measurement Type", nameof(measurement.ClassObject)));
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
             message.AppendLine(FormatMessage("Description", measurement.Description));
@@ -84,12 +84,12 @@ namespace ABT.Test.Exec.Logging {
                     message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
                     break;
                 default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with ClassName '{measurement.ClassObject.GetType().Name}' not implemented.");
+                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with classname '{nameof(measurement.ClassObject)}' not implemented.");
             }
-            message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.TestEvent));
+            message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.Event.ToString()));
             message.Append(measurement.Message.ToString());
             Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, TestEvents.GetColor(measurement.TestEvent));
+            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, TestData.EventColors[measurement.Event]);
         }
 
         public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
@@ -172,8 +172,8 @@ namespace ABT.Test.Exec.Logging {
             if (!TestData.ConfigTest.IsOperation) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestData.ConfigUUT.TestEvent);
-                SetBackColor(ref rtfResults, 0, TestData.ConfigUUT.TestEvent, TestEvents.GetColor(TestData.ConfigUUT.TestEvent));
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestData.ConfigUUT.Event.ToString());
+                SetBackColor(ref rtfResults, 0, TestData.ConfigUUT.Event.ToString(), TestData.EventColors[TestData.ConfigUUT.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);               
                 Log.CloseAndFlush();
                 if (TestData.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
