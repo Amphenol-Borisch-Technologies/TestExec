@@ -66,7 +66,7 @@ namespace ABT.TestExec.Exec.Logging {
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
             message.AppendLine(FormatMessage("Revision", measurement.Revision));
-            message.AppendLine(FormatMessage("Measurement Type", nameof(measurement.ClassObject)));
+            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
             message.AppendLine(FormatMessage("Description", measurement.Description));

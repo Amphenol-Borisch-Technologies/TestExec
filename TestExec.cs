@@ -18,7 +18,6 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
@@ -175,7 +174,7 @@ namespace ABT.TestExec.Exec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            if (!string.Equals(TestLib.ConfigUUT.EMailTestEngineer, _NOT_APPLICABLE)) {
+            if (!String.Equals(TestLib.ConfigUUT.EMailTestEngineer, _NOT_APPLICABLE)) {
                 ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {TestLib.ConfigUUT.EMailTestEngineer}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
@@ -328,7 +327,7 @@ namespace ABT.TestExec.Exec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = string.Equals(_NOT_APPLICABLE, TestLib.ConfigUUT.EMailTestEngineer) ? string.Empty : TestLib.ConfigUUT.EMailTestEngineer;
+                mailItem.To = String.Equals(_NOT_APPLICABLE, TestLib.ConfigUUT.EMailTestEngineer) ? String.Empty : TestLib.ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -342,7 +341,7 @@ namespace ABT.TestExec.Exec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = string.Equals(_NOT_APPLICABLE, TestLib.ConfigUUT.EMailTestEngineer) ? string.Empty : TestLib.ConfigUUT.EMailTestEngineer;
+                mailItem.To = String.Equals(_NOT_APPLICABLE, TestLib.ConfigUUT.EMailTestEngineer) ? String.Empty : TestLib.ConfigUUT.EMailTestEngineer;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
@@ -410,11 +409,11 @@ namespace ABT.TestExec.Exec {
             String serialNumber;
             if (TestLib.ConfigLogger.SerialNumberDialogEnabled) {
                 _serialNumberDialog.Set(TestLib.ConfigUUT.SerialNumber);
-                serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : string.Empty;
+                serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                 _serialNumberDialog.Hide();
             } else {
                 serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: TestLib.ConfigUUT.SerialNumber).Trim().ToUpper();
-                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : string.Empty;
+                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
@@ -442,16 +441,20 @@ namespace ABT.TestExec.Exec {
 
         #region Form Tool Strip Menu Items
         private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            if (GetTestFolder() != String.Empty) { }
-            // TODO: "Restart" TestExec with new Tests folder.
+            String configPath = GetTestFolder();
+            if (!String.Equals(configPath, String.Empty)) {
+                Debug.Print($"configPath: '{configPath}'.");
+                // TODO: "Restart" TestExec with new Tests folder.
+            }
         }
         private String GetTestFolder() {
-            CommonOpenFileDialog cofd = new CommonOpenFileDialog {
+            OpenFileDialog ofd = new OpenFileDialog {
                 InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("Tests").Value,
-                IsFolderPicker = true,
-                Title = "Select a Tests Folder"
+                Filter = "Test files (*.config.exe)|*.config.exe",
+                Title = "Select Test files *.config.exe",
+                Multiselect = false
             };
-            return (cofd.ShowDialog() == CommonFileDialogResult.Ok) ? cofd.FileName : String.Empty;
+            return (ofd.ShowDialog() == DialogResult.OK) ? ofd.FileName : String.Empty;
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();
@@ -562,7 +565,7 @@ namespace ABT.TestExec.Exec {
             Form statistics = new MessageBoxMonoSpaced(
                 Title: $"{TestLib.ConfigUUT.Number}, {TestLib.ConfigTest.TestElementID}, {TestLib.ConfigTest.StatusTime()}",
                 Text: TestLib.ConfigTest.StatisticsDisplay(),
-                Link: string.Empty
+                Link: String.Empty
             );
             _ = statistics.ShowDialog();
 
@@ -589,8 +592,8 @@ namespace ABT.TestExec.Exec {
         private void MeasurementsPreRun() {
             Logger.Start(this, ref rtfResults);
             foreach (KeyValuePair<String, Measurement> kvp in TestLib.ConfigTest.Measurements) {
-                if (string.Equals(kvp.Value.ClassName, nameof(MeasurementNumeric))) kvp.Value.Value = Double.NaN.ToString();
-                else kvp.Value.Value = string.Empty;
+                if (String.Equals(kvp.Value.ClassName, nameof(MeasurementNumeric))) kvp.Value.Value = Double.NaN.ToString();
+                else kvp.Value.Value = String.Empty;
                 kvp.Value.Event = EVENTS.UNSET;
                 kvp.Value.Message.Clear();
             }
