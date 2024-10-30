@@ -58,7 +58,7 @@
   <Folders>
     <BarcodeScanner>P:\Test\Engineers\Equipment Manuals\TestExec\Honeywell Voyager 1200g</BarcodeScanner>		<!-- Honeywell Voyager USB 1200g corded Barcode Scanner -->
     <Instruments>P:\Test\Engineers\Equipment Manuals</Instruments>
-    <Tests>C:\Users\phils\source\repos\ABT\TestExec\Tests\Diagnostics\bin\x64\Debug</Tests>																															<!-- Tests executables. -->
+    <Tests>C:\Users\phils\source\repos\ABT\TestExec\Tests</Tests>																															<!-- Tests executables. -->
   </Folders>
 
   <InstrumentsStationary>

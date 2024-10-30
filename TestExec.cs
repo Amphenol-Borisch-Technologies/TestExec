@@ -25,6 +25,7 @@ using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
 using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -448,13 +449,13 @@ namespace ABT.TestExec.Exec {
             }
         }
         private String GetTestFolder() {
-            OpenFileDialog ofd = new OpenFileDialog {
+            CommonOpenFileDialog cofd = new CommonOpenFileDialog {
                 InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("Tests").Value,
-                Filter = "Test files (*.config.exe)|*.config.exe",
-                Title = "Select Test files *.config.exe",
+                IsFolderPicker = true,
+                Title = "Select Test Folder",
                 Multiselect = false
             };
-            return (ofd.ShowDialog() == DialogResult.OK) ? ofd.FileName : String.Empty;
+            return (cofd.ShowDialog() == CommonFileDialogResult.Ok) ? cofd.FileName : String.Empty;
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();
