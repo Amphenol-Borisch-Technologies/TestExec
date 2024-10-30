@@ -194,7 +194,8 @@ namespace ABT.Test.Exec.Logging {
                 s = s.Replace($"{GetFilePath()}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
-                foreach (FieldInfo fi in typeof(TestEvents).GetFields()) s = s.Replace((String)fi.GetValue(null), String.Empty);
+
+                foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) s = s.Replace(Event.ToString(), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
                 // Example for final (3rd) iteration of foreach (String f in files):
                 //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
@@ -205,7 +206,7 @@ namespace ABT.Test.Exec.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{TestData.ConfigUUT.TestEvent}.rtf";
+            fileName += $"_{++maxNumber}_{TestData.ConfigUUT.Event}.rtf";
             rtfResults.SaveFile($"{GetFilePath()}{fileName}");
         }
         
