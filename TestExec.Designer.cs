@@ -28,7 +28,7 @@ namespace ABT.Test.Exec {
             this.ButtonRun = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.TextTest = new System.Windows.Forms.TextBox();
-            this.LabelTestEvent = new System.Windows.Forms.Label();
+            this.LabelEvent = new System.Windows.Forms.Label();
             this.rtfResults = new System.Windows.Forms.RichTextBox();
             this.ButtonSelect = new System.Windows.Forms.Button();
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
@@ -127,18 +127,18 @@ namespace ABT.Test.Exec {
             this.TextTest.TabStop = false;
             this.TextTest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelTestEvent
+            // LabelEvent
             // 
-            this.LabelTestEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.LabelTestEvent.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTestEvent.Location = new System.Drawing.Point(765, 672);
-            this.LabelTestEvent.Margin = new System.Windows.Forms.Padding(4);
-            this.LabelTestEvent.Name = "LabelTestEvent";
-            this.LabelTestEvent.Size = new System.Drawing.Size(120, 20);
-            this.LabelTestEvent.TabIndex = 8;
-            this.LabelTestEvent.Text = "Test Event";
-            this.LabelTestEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelTestEvent.UseWaitCursor = true;
+            this.LabelEvent.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.LabelEvent.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEvent.Location = new System.Drawing.Point(765, 672);
+            this.LabelEvent.Margin = new System.Windows.Forms.Padding(4);
+            this.LabelEvent.Name = "LabelEvent";
+            this.LabelEvent.Size = new System.Drawing.Size(120, 20);
+            this.LabelEvent.TabIndex = 8;
+            this.LabelEvent.Text = "Event";
+            this.LabelEvent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelEvent.UseWaitCursor = true;
             // 
             // rtfResults
             // 
@@ -255,7 +255,7 @@ namespace ABT.Test.Exec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(260, 26);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightBenchVue
@@ -290,7 +290,7 @@ namespace ABT.Test.Exec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(260, 26);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Microsoft.Text = "Micro&soft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
@@ -415,7 +415,7 @@ namespace ABT.Test.Exec {
             // TSMI_System_DiagnosticsInstruments
             // 
             this.TSMI_System_DiagnosticsInstruments.Name = "TSMI_System_DiagnosticsInstruments";
-            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(168, 26);
             this.TSMI_System_DiagnosticsInstruments.Text = "&Instruments";
             this.TSMI_System_DiagnosticsInstruments.ToolTipText = "Invoke Instruments self-tests.";
             this.TSMI_System_DiagnosticsInstruments.Click += new System.EventHandler(this.TSMI_System_DiagnosticsInstruments_Click);
@@ -432,7 +432,7 @@ namespace ABT.Test.Exec {
             // TSMI_System_ManualsBarcodeScanner
             // 
             this.TSMI_System_ManualsBarcodeScanner.Name = "TSMI_System_ManualsBarcodeScanner";
-            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_ManualsBarcodeScanner.Size = new System.Drawing.Size(203, 26);
             this.TSMI_System_ManualsBarcodeScanner.Text = "&Barcode Scanner";
             this.TSMI_System_ManualsBarcodeScanner.ToolTipText = "If you\'re bored...";
             this.TSMI_System_ManualsBarcodeScanner.Click += new System.EventHandler(this.TSMI_System_ManualsBarcodeScanner_Click);
@@ -440,7 +440,7 @@ namespace ABT.Test.Exec {
             // TSMI_System_ManualsInstruments
             // 
             this.TSMI_System_ManualsInstruments.Name = "TSMI_System_ManualsInstruments";
-            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_ManualsInstruments.Size = new System.Drawing.Size(203, 26);
             this.TSMI_System_ManualsInstruments.Text = "&Instruments";
             this.TSMI_System_ManualsInstruments.ToolTipText = "...really bored...";
             this.TSMI_System_ManualsInstruments.Click += new System.EventHandler(this.TSMI_System_ManualsInstruments_Click);
@@ -630,7 +630,7 @@ namespace ABT.Test.Exec {
             this.Controls.Add(this.ButtonEmergencyStop);
             this.Controls.Add(this.ButtonSelect);
             this.Controls.Add(this.rtfResults);
-            this.Controls.Add(this.LabelTestEvent);
+            this.Controls.Add(this.LabelEvent);
             this.Controls.Add(this.TextTest);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonRun);
@@ -655,7 +655,7 @@ namespace ABT.Test.Exec {
         private System.Windows.Forms.Button ButtonRun;
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.TextBox TextTest;
-        private System.Windows.Forms.Label LabelTestEvent;
+        private System.Windows.Forms.Label LabelEvent;
         private System.Windows.Forms.RichTextBox rtfResults;
         private System.Windows.Forms.Button ButtonSelect;
         private Button ButtonEmergencyStop;

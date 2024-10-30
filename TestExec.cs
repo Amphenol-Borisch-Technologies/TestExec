@@ -120,7 +120,7 @@ namespace ABT.Test.Exec {
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
     ///      4)  App.config's CancelNotPassed:
     ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-    ///          - If the current TestPlan.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return TestEvents.PASS,
+    ///          - If the current TestPlan.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EVENTS.PASS,
     ///            TestExec.MeasurementsRun() will break/exit, stopping further testing.
     ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MeasurementsPostRun().
     ///
@@ -618,7 +618,7 @@ namespace ABT.Test.Exec {
                     } catch (Exception e) {
                         SystemReset();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
-                            TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;  // NOTE:  May be altered to TestEvents.EMERGENCY_STOP in finally block.
+                            TestData.ConfigTest.Measurements[measurementID].Event = EVENTS.CANCEL;  // NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
                             while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
                             TestData.ConfigTest.Measurements[measurementID].Message.Append($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
                         }
@@ -648,7 +648,7 @@ namespace ABT.Test.Exec {
             SystemReset();
             TestData.ConfigUUT.Event = MeasurementsEvaluate(TestData.ConfigTest.Measurements);
             TextTest.Text = TestData.ConfigUUT.Event.ToString();
-            TextTest.BackColor = TestData.EventColors[TestData.ConfigUUT.Event]; //TestEvents.GetColor(TestData.ConfigUUT.Event);
+            TextTest.BackColor = TestData.EventColors[TestData.ConfigUUT.Event];
             TestData.ConfigTest.Statistics.Update(TestData.ConfigUUT.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
@@ -686,23 +686,23 @@ namespace ABT.Test.Exec {
         private EVENTS MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
             if (MeasurementEventsCount(measurements, EVENTS.PASS) == measurements.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement TestEvents are PASS, so overall TestEvent is PASS.
+            // All measurement Events are PASS, so UUT Event is PASS.
             if (MeasurementEventsCount(measurements, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
-            // - If any measurement TestEvent is EMERGENCY_STOP, overall TestEvent is EMERGENCY_STOP.
+            // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
             if (MeasurementEventsCount(measurements, EVENTS.ERROR) != 0) return EVENTS.ERROR;
             // 3rd priority evaluation:
-            // - If any measurement TestEvent is ERROR, and none were EMERGENCY_STOP, overall TestEvent is ERROR.
+            // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
             if (MeasurementEventsCount(measurements, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
             // rth priority evaluation:
-            // - If any measurement TestEvent is CANCEL, and none were EMERGENCY_STOP or ERROR, overall TestEvent is CANCEL.
+            // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
             if (MeasurementEventsCount(measurements, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
-            // - If any measurement TestEvent is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
+            // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
             if (MeasurementEventsCount(measurements, EVENTS.FAIL) != 0) return EVENTS.FAIL;
             // 6th priority evaluation:
-            // - If any measurement TestEvent is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, TestEvent is FAIL.
+            // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             String invalidTests = String.Empty;
@@ -716,8 +716,8 @@ namespace ABT.Test.Exec {
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
                     default:
-                        invalidTests += $"ID: '{kvp.Key}' TestEvent: '{kvp.Value.Event}'.{Environment.NewLine}";
-                        Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to TestEvents(s):{Environment.NewLine}{invalidTests}");
+                        invalidTests += $"ID: '{kvp.Key}' Event: '{kvp.Value.Event}'.{Environment.NewLine}";
+                        Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to enum EVENTS:{Environment.NewLine}{invalidTests}");
                         break; // Above EVENTS aren't yet handled in this method.
                 }
             }
