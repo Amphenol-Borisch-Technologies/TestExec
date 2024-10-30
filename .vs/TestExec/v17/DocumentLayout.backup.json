@@ -1,0 +1,135 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{24D5E99E-185C-4507-81F0-132D8CB8164E}|..\\Lib\\Lib.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\lib\\testlib.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5FC19C56-1566-457A-A8AF-A3A69561320C}|..\\Tests\\Diagnostics\\Diagnostics.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\tests\\diagnostics\\tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\exec\\testexec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|solutionrelative:testexec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Exec||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Lib||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Diagnostics||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5FC19C56-1566-457A-A8AF-A3A69561320C}|..\\Tests\\Diagnostics\\Diagnostics.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\tests\\diagnostics\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\exec\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24D5E99E-185C-4507-81F0-132D8CB8164E}|..\\Lib\\Lib.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\lib\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Tests.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "RelativeDocumentMoniker": "..\\Tests\\Diagnostics\\Tests.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "RelativeToolTip": "..\\Tests\\Diagnostics\\Tests.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAHwAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-30T14:52:38.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TestLib.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "RelativeDocumentMoniker": "..\\Lib\\TestLib.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "RelativeToolTip": "..\\Lib\\TestLib.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-30T14:51:32.602Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Lib",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
+              "RelativeDocumentMoniker": "..\\Lib\\Lib.csproj",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
+              "RelativeToolTip": "..\\Lib\\Lib.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-30T14:21:29.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TestExec.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\TestExec.cs",
+              "RelativeDocumentMoniker": "TestExec.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\TestExec.cs",
+              "RelativeToolTip": "TestExec.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-30T14:22:49.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Diagnostics",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Diagnostics.csproj",
+              "RelativeDocumentMoniker": "..\\Tests\\Diagnostics\\Diagnostics.csproj",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Diagnostics.csproj",
+              "RelativeToolTip": "..\\Tests\\Diagnostics\\Diagnostics.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-30T14:21:50.628Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Exec",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
+              "RelativeDocumentMoniker": "Exec.csproj",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
+              "RelativeToolTip": "Exec.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-30T14:21:03.858Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
