@@ -1,6 +1,5 @@
 C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Resources\EmergencyStop.png
 C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Exec.config.xml
-C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Exec.dll.config
 C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Exec.dll
 C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Exec.pdb
 C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Serilog.dll
