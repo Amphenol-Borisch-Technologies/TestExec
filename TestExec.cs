@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
@@ -25,7 +26,6 @@ using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
 using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
