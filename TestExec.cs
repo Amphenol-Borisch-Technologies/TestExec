@@ -442,20 +442,16 @@ namespace ABT.TestExec.Exec {
 
         #region Form Tool Strip Menu Items
         private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            String configPath = GetTestFolder();
-            if (!String.Equals(configPath, String.Empty)) {
-                Debug.Print($"configPath: '{configPath}'.");
-                // TODO: "Restart" TestExec with new Tests folder.
-            }
-        }
-        private String GetTestFolder() {
             CommonOpenFileDialog cofd = new CommonOpenFileDialog {
                 InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("Tests").Value,
                 IsFolderPicker = true,
                 Title = "Select Test Folder",
                 Multiselect = false
             };
-            return (cofd.ShowDialog() == CommonFileDialogResult.Ok) ? cofd.FileName : String.Empty;
+            if ((cofd.ShowDialog() == CommonFileDialogResult.Ok) && !String.Equals(cofd.FileName, String.Empty)) {
+                Debug.Print($"configPath: '{cofd.FileName}'.");
+                // TODO: "Restart" TestExec with new Tests folder.
+            }
         }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();

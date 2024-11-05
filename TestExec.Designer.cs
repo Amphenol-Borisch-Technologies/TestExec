@@ -212,8 +212,9 @@ namespace ABT.TestExec.Exec {
             // 
             // TSMI_File_Change
             // 
+            this.TSMI_File_Change.Enabled = false;
             this.TSMI_File_Change.Name = "TSMI_File_Change";
-            this.TSMI_File_Change.Size = new System.Drawing.Size(142, 26);
+            this.TSMI_File_Change.Size = new System.Drawing.Size(228, 30);
             this.TSMI_File_Change.Text = "&Change";
             this.TSMI_File_Change.Click += new System.EventHandler(this.TSMI_File_Change_Click);
             // 
@@ -222,7 +223,7 @@ namespace ABT.TestExec.Exec {
             this.TSMI_File_Save.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_Save.Image")));
             this.TSMI_File_Save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_File_Save.Name = "TSMI_File_Save";
-            this.TSMI_File_Save.Size = new System.Drawing.Size(142, 26);
+            this.TSMI_File_Save.Size = new System.Drawing.Size(228, 30);
             this.TSMI_File_Save.Text = "&Save";
             this.TSMI_File_Save.ToolTipText = "Save UUT results.";
             this.TSMI_File_Save.Click += new System.EventHandler(this.TSMI_File_Save_Click);
@@ -230,12 +231,12 @@ namespace ABT.TestExec.Exec {
             // TSMI_File_Separator1
             // 
             this.TSMI_File_Separator1.Name = "TSMI_File_Separator1";
-            this.TSMI_File_Separator1.Size = new System.Drawing.Size(139, 6);
+            this.TSMI_File_Separator1.Size = new System.Drawing.Size(225, 6);
             // 
             // TSMI_File_Exit
             // 
             this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(142, 26);
+            this.TSMI_File_Exit.Size = new System.Drawing.Size(228, 30);
             this.TSMI_File_Exit.Text = "&Exit";
             this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
             // 
@@ -255,7 +256,7 @@ namespace ABT.TestExec.Exec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(155, 26);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightBenchVue
@@ -290,7 +291,7 @@ namespace ABT.TestExec.Exec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(155, 26);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_Microsoft.Text = "Micro&soft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
