@@ -203,7 +203,7 @@ namespace ABT.TestExec.Exec {
             ButtonRunReset(enabled: false);
             TSMI_File_Change.Enabled = false;
             TSMI_File_Exit.Enabled = false;
-            TSMI_System_Diagnostics.Enabled = false;
+            TSMI_System_SelfTests.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_Statistics.Enabled = false;
             StatusModeUpdate(MODES.Running);
@@ -216,7 +216,7 @@ namespace ABT.TestExec.Exec {
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: TestLib.ConfigTest != null);
-            TSMI_System_Diagnostics.Enabled = true;
+            TSMI_System_SelfTests.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
             StatusModeUpdate(MODES.Selecting);
@@ -514,25 +514,8 @@ namespace ABT.TestExec.Exec {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
-        private void TSMI_System_DiagnosticsInstruments_Click(Object sender, EventArgs e) {
-            UseWaitCursor = true;
-            Boolean failed = false;
-            IInstruments instrument;
+        private void TSMI_System_SelfTestsInstruments_Click(Object sender, EventArgs e) {
 
-            foreach (KeyValuePair<String, Object> kvp in TestLib.InstrumentDrivers) {
-                instrument = (IInstruments)kvp.Value;
-                if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) instrument.ResetClear(); // Try, try again...
-                if (instrument.Diagnostics() is DIAGNOSTICS_RESULTS.FAIL) {
-                    failed = true;
-                    _ = MessageBox.Show(ActiveForm, $"Instrument {kvp.Key} failed:{Environment.NewLine}" +
-                        $"Type:      {instrument.InstrumentType}{Environment.NewLine}" +
-                        $"Detail:    {instrument.Detail}{Environment.NewLine}" +
-                        $"Address:   {instrument.Address}"
-                        , "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            if (!failed) _ = MessageBox.Show(ActiveForm, "Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            UseWaitCursor = false;
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
