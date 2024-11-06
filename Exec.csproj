@@ -160,7 +160,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Amphenol.ico" />
+    <Content Include="Resources\Amphenol.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\EmergencyStop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

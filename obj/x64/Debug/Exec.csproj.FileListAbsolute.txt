@@ -53,3 +53,4 @@ C:\Users\phils\source\repos\ABT\TestExec\Exec\obj\x64\Debug\Exec.csproj.CoreComp
 C:\Users\phils\source\repos\ABT\TestExec\Exec\obj\x64\Debug\Exec.csproj.Up2Date
 C:\Users\phils\source\repos\ABT\TestExec\Exec\obj\x64\Debug\Exec.dll
 C:\Users\phils\source\repos\ABT\TestExec\Exec\obj\x64\Debug\Exec.pdb
+C:\Users\phils\source\repos\ABT\TestExec\Exec\bin\x64\Debug\Resources\Amphenol.ico
