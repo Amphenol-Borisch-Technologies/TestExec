@@ -519,7 +519,7 @@ namespace ABT.TestExec.Exec {
             UseWaitCursor = true;
             Boolean passed = true;
             foreach (KeyValuePair<String, Object> kvp in TestLib.InstrumentDrivers) passed &= ((IInstruments)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
-            if (!passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
