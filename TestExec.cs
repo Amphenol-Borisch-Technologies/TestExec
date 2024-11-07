@@ -718,11 +718,13 @@ namespace ABT.TestExec.Exec {
             MessageAppendLine("Caller Line #", $"'{callerLineNumber}'");
         }
 
+        public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
+
         public void MessageAppend(String Message) { TestLib.MeasurementPresent.Message.Append(Message); }
 
         public void MessageAppendLine(String Message) { TestLib.MeasurementPresent.Message.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { TestLib.MeasurementPresent.Message.AppendLine($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
+        public void MessageAppendLine(String Label, String Message) { TestLib.MeasurementPresent.Message.AppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
