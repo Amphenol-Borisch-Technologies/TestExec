@@ -26,6 +26,7 @@ using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
 using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
+using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -515,7 +516,11 @@ namespace ABT.TestExec.Exec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_SelfTestsInstruments_Click(Object sender, EventArgs e) {
-
+            UseWaitCursor = true;
+            Boolean passed = true;
+            foreach (KeyValuePair<String, Object> kvp in TestLib.InstrumentDrivers) passed &= ((IInstruments)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
+            if (!passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UseWaitCursor = false;
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
