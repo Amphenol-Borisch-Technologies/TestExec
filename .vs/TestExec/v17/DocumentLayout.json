@@ -1,34 +1,16 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\",
+  "WorkspaceRootPath": "C:\\Users\\phils\\source\\repos\\TestExec\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24D5E99E-185C-4507-81F0-132D8CB8164E}|..\\Lib\\Lib.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\lib\\testlib.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5FC19C56-1566-457A-A8AF-A3A69561320C}|..\\Tests\\Diagnostics\\Diagnostics.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\tests\\diagnostics\\tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\exec\\testexec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|solutionrelative:testexec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Exec||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Lib||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Diagnostics||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5FC19C56-1566-457A-A8AF-A3A69561320C}|..\\Tests\\Diagnostics\\Diagnostics.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\tests\\diagnostics\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{314614CB-6E17-4B74-A9F9-CE4699F78C9B}|Exec.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\exec\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{24D5E99E-185C-4507-81F0-132D8CB8164E}|..\\Lib\\Lib.csproj|c:\\users\\phils\\source\\repos\\abt\\testexec\\lib\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\TestExec\\TestExec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TestExec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,50 +20,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 41,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Tests.cs",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "RelativeDocumentMoniker": "..\\Tests\\Diagnostics\\Tests.cs",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "RelativeToolTip": "..\\Tests\\Diagnostics\\Tests.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAAAHwAAABaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:52:38.271Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TestLib.cs",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "RelativeDocumentMoniker": "..\\Lib\\TestLib.cs",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "RelativeToolTip": "..\\Lib\\TestLib.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:51:32.602Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Lib",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
-              "RelativeDocumentMoniker": "..\\Lib\\Lib.csproj",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
-              "RelativeToolTip": "..\\Lib\\Lib.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-30T14:21:29.323Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -91,41 +31,191 @@
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:149:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:150:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:151:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:152:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:153:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:154:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:155:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:156:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:148:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:147:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{dd1ddd20-d59b-11da-a94d-0800200c9a66}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Tests.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "RelativeDocumentMoniker": "..\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "RelativeToolTip": "..\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAHwAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-30T14:52:38.271Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TestLib.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "RelativeDocumentMoniker": "..\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "RelativeToolTip": "..\\ABT\\TestExec\\Lib\\TestLib.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-30T14:51:32.602Z"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "TestExec.cs",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\TestExec.cs",
+              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\TestExec\\TestExec.cs",
               "RelativeDocumentMoniker": "TestExec.cs",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\TestExec.cs",
+              "ToolTip": "C:\\Users\\phils\\source\\repos\\TestExec\\TestExec.cs",
               "RelativeToolTip": "TestExec.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:22:49.749Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Diagnostics",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Diagnostics.csproj",
-              "RelativeDocumentMoniker": "..\\Tests\\Diagnostics\\Diagnostics.csproj",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Diagnostics.csproj",
-              "RelativeToolTip": "..\\Tests\\Diagnostics\\Diagnostics.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-30T14:21:50.628Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Exec",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
-              "RelativeDocumentMoniker": "Exec.csproj",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
-              "RelativeToolTip": "Exec.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-30T14:21:03.858Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-30T14:22:49.749Z"
             }
           ]
         }

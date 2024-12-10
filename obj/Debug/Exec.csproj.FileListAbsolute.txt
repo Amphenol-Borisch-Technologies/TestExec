@@ -1,0 +1,8 @@
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\Exec.csproj.AssemblyReference.cache
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\Exec.csproj.ResolveComReference.cache
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\ABT.TestExec.Exec.Logging.SerialNumberDialog.resources
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\ABT.TestExec.Exec.MessageBoxMonoSpaced.resources
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\ABT.TestExec.Exec.Properties.Resources.resources
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\ABT.TestExec.Exec.TestExec.resources
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\Exec.csproj.GenerateResource.cache
+C:\Users\phils\Source\Repos\TestExec\obj\Debug\Exec.csproj.CoreCompileInputs.cache

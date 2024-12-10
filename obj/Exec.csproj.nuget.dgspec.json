@@ -1,19 +1,126 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj": {}
+    "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj": {}
   },
   "projects": {
-    "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj": {
+    "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
-        "projectName": "Exec",
-        "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\Exec.csproj",
+        "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj",
+        "projectName": "Lib",
+        "projectPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj",
         "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Exec\\obj\\",
+        "outputPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
+        "UsingMicrosoftNETSdk": false,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\phils\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "all"
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "dependencies": {
+            "Microsoft.Windows.SDK.Contracts": {
+              "target": "Package",
+              "version": "[10.0.26100.1742, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
+            "System.Buffers": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "System.Diagnostics.DiagnosticSource": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "System.Memory": {
+              "target": "Package",
+              "version": "[4.5.5, )"
+            },
+            "System.Numerics.Vectors": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Runtime.CompilerServices.Unsafe": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Runtime.InteropServices.WindowsRuntime": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Runtime.WindowsRuntime": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Runtime.WindowsRuntime.UI.Xaml": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Threading.Channels": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Threading.Tasks.Extensions": {
+              "target": "Package",
+              "version": "[4.5.4, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-arm64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
+        "projectName": "Exec",
+        "projectPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
+        "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "UsingMicrosoftNETSdk": false,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
@@ -32,8 +139,8 @@
         "frameworks": {
           "net48": {
             "projectReferences": {
-              "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj": {
-                "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj"
+              "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj": {
+                "projectPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj"
               }
             }
           }
@@ -41,7 +148,7 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
+          "auditMode": "all"
         }
       },
       "frameworks": {
@@ -106,111 +213,6 @@
             "WindowsAPICodePack": {
               "target": "Package",
               "version": "[8.0.6, )"
-            }
-          }
-        }
-      },
-      "runtimes": {
-        "win": {
-          "#import": []
-        },
-        "win-arm64": {
-          "#import": []
-        },
-        "win-x64": {
-          "#import": []
-        },
-        "win-x86": {
-          "#import": []
-        }
-      }
-    },
-    "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
-        "projectName": "Lib",
-        "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\Lib.csproj",
-        "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\obj\\",
-        "projectStyle": "PackageReference",
-        "skipContentFileWrite": true,
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\phils\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net48"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net48": {
-            "projectReferences": {}
-          }
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net48": {
-          "dependencies": {
-            "Microsoft.Windows.SDK.Contracts": {
-              "target": "Package",
-              "version": "[10.0.26100.1742, )"
-            },
-            "Serilog": {
-              "target": "Package",
-              "version": "[4.1.0, )"
-            },
-            "System.Buffers": {
-              "target": "Package",
-              "version": "[4.5.1, )"
-            },
-            "System.Diagnostics.DiagnosticSource": {
-              "target": "Package",
-              "version": "[8.0.1, )"
-            },
-            "System.Memory": {
-              "target": "Package",
-              "version": "[4.5.5, )"
-            },
-            "System.Numerics.Vectors": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            },
-            "System.Runtime.CompilerServices.Unsafe": {
-              "target": "Package",
-              "version": "[6.0.0, )"
-            },
-            "System.Runtime.InteropServices.WindowsRuntime": {
-              "target": "Package",
-              "version": "[4.3.0, )"
-            },
-            "System.Runtime.WindowsRuntime": {
-              "target": "Package",
-              "version": "[4.7.0, )"
-            },
-            "System.Runtime.WindowsRuntime.UI.Xaml": {
-              "target": "Package",
-              "version": "[4.7.0, )"
-            },
-            "System.Threading.Channels": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "System.Threading.Tasks.Extensions": {
-              "target": "Package",
-              "version": "[4.5.4, )"
             }
           }
         }
