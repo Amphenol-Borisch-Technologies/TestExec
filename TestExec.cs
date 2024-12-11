@@ -26,7 +26,6 @@ using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
 using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
-using Agilent.CommandExpert.ScpiNet.AgSCPI99_1_0;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
