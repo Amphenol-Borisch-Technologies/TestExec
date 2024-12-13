@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj": {}
+    "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj": {}
   },
   "projects": {
-    "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj": {
+    "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj",
+        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj",
         "projectName": "Lib",
-        "projectPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj",
+        "projectPath": "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj",
         "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\obj\\",
+        "outputPath": "C:\\Users\\phils\\source\\repos\\Lib\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "UsingMicrosoftNETSdk": false,
@@ -110,14 +110,14 @@
         }
       }
     },
-    "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj": {
+    "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
+        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj",
         "projectName": "Exec",
-        "projectPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
+        "projectPath": "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj",
         "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\obj\\",
+        "outputPath": "C:\\Users\\phils\\source\\repos\\TestExec\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "UsingMicrosoftNETSdk": false,
@@ -139,8 +139,8 @@
         "frameworks": {
           "net48": {
             "projectReferences": {
-              "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj": {
-                "projectPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj"
+              "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj": {
+                "projectPath": "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj"
               }
             }
           }
