@@ -3920,11 +3920,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj",
+      "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
       "projectName": "Exec",
-      "projectPath": "C:\\Users\\phils\\source\\repos\\TestExec\\Exec.csproj",
+      "projectPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
       "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\phils\\source\\repos\\TestExec\\obj\\",
+      "outputPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "UsingMicrosoftNETSdk": false,
@@ -3946,8 +3946,8 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
-            "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj": {
-              "projectPath": "C:\\Users\\phils\\source\\repos\\Lib\\Lib.csproj"
+            "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj": {
+              "projectPath": "C:\\Users\\phils\\Source\\Repos\\Lib\\Lib.csproj"
             }
           }
         }

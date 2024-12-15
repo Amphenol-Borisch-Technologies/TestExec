@@ -176,8 +176,10 @@ namespace ABT.TestExec.Exec.Logging {
                 SetBackColor(ref rtfResults, 0, TestLib.ConfigUUT.Event.ToString(), TestLib.EventColors[TestLib.ConfigUUT.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
-                if (TestLib.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
-                if (TestLib.ConfigLogger.SQLEnabled) SQLStop();
+                if (TestLib.ConfigUUT.Event != EVENTS.IGNORE) {
+                    if (TestLib.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
+                    if (TestLib.ConfigLogger.SQLEnabled) SQLStop();
+                }
             }
         }
         #endregion Public Methods

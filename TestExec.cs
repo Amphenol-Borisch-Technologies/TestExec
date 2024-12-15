@@ -667,9 +667,12 @@ namespace ABT.TestExec.Exec {
         }
 
         private EVENTS MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (MeasurementEventsCount(measurements, EVENTS.PASS) == measurements.Count) return EVENTS.PASS;
+            if (MeasurementEventsCount(measurements, EVENTS.IGNORE) == measurements.Count) return EVENTS.IGNORE;
+            // 0th priority evaluation:
+            // All measurement Events are IGNORE, so UUT Event is IGNORE.
+            if (MeasurementEventsCount(measurements, EVENTS.PASS) + MeasurementEventsCount(measurements, EVENTS.IGNORE) == measurements.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement Events are PASS, so UUT Event is PASS.
+            // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
             if (MeasurementEventsCount(measurements, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
             // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
@@ -677,7 +680,7 @@ namespace ABT.TestExec.Exec {
             // 3rd priority evaluation:
             // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
             if (MeasurementEventsCount(measurements, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
-            // rth priority evaluation:
+            // 4th priority evaluation:
             // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
             if (MeasurementEventsCount(measurements, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
@@ -695,6 +698,7 @@ namespace ABT.TestExec.Exec {
                     case EVENTS.EMERGENCY_STOP:
                     case EVENTS.ERROR:
                     case EVENTS.FAIL:
+                    case EVENTS.IGNORE:
                     case EVENTS.PASS:
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
