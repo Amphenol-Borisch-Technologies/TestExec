@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.TestExec.Lib;
-using ABT.TestExec.Lib.AppConfig;
+using ABT.Test.Lib;
+using ABT.Test.Lib.AppConfig;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -20,7 +20,7 @@ using ABT.TestExec.Lib.AppConfig;
 // - Export in CSV, report in PDF.
 //
 
-namespace ABT.TestExec.Exec.Logging {
+namespace ABT.Test.Exec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";

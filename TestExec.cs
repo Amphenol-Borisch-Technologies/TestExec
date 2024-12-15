@@ -22,10 +22,10 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
-using ABT.TestExec.Exec.Logging;
-using ABT.TestExec.Lib;
-using ABT.TestExec.Lib.AppConfig;
-using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
+using ABT.Test.Exec.Logging;
+using ABT.Test.Lib;
+using ABT.Test.Lib.AppConfig;
+using ABT.Test.Lib.InstrumentDrivers.Interfaces;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -67,7 +67,7 @@ using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
 //        - https://stackoverflow.com/questions/27087483/how-to-resolve-git-pull-fatal-unable-to-access-https-github-com-empty
 //        - FYI, synchronizing with Tests repository doesn't error out, as it doesn't utilize a Git server.
 
-namespace ABT.TestExec.Exec {
+namespace ABT.Test.Exec {
     /// <remarks>
     ///  <b>References:</b>
     /// <item>

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace ABT.TestExec.Exec {
+namespace ABT.Test.Exec {
     public abstract partial class TestExec : Form {
         /// <summary>
         /// Required designer variable.
@@ -173,7 +173,7 @@ namespace ABT.TestExec.Exec {
             // 
             this.ButtonEmergencyStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ButtonEmergencyStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonEmergencyStop.Image = global::ABT.TestExec.Exec.Properties.Resources.EmergencyStop;
+            this.ButtonEmergencyStop.Image = global::ABT.Test.Exec.Properties.Resources.EmergencyStop;
             this.ButtonEmergencyStop.Location = new System.Drawing.Point(1433, 654);
             this.ButtonEmergencyStop.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";

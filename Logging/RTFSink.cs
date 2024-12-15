@@ -5,9 +5,9 @@ using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using ABT.TestExec.Lib;
+using ABT.Test.Lib;
 
-namespace ABT.TestExec.Exec.Logging {
+namespace ABT.Test.Exec.Logging {
     public class RichTextBoxSink : ILogEventSink {
         private readonly RichTextBox richTextBox;
         private readonly ITextFormatter formatter;
