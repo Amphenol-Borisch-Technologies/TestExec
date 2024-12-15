@@ -22,9 +22,9 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
+using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
-using ABT.TestExec.Exec.Logging;
 using ABT.TestExec.Lib.InstrumentDrivers.Interfaces;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:

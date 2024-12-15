@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using Serilog.Events;
@@ -33,7 +32,7 @@ namespace ABT.TestExec.Exec.Logging {
                     selectionStart = richTextBox.Find(Event.ToString(), startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                     richTextBox.SelectionStart = selectionStart;
                     richTextBox.SelectionLength = Event.ToString().Length;
-                    richTextBox.SelectionBackColor = Lib.TestLib.EventColors[Event];
+                    richTextBox.SelectionBackColor = TestLib.EventColors[Event];
                 }
             }
         }

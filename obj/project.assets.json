@@ -557,7 +557,7 @@
           }
         }
       },
-      "Lib/1.0.0": {
+      "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
         "dependencies": {
@@ -575,10 +575,10 @@
           "System.Threading.Tasks.Extensions": "4.6.0"
         },
         "compile": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         }
       }
     },
@@ -1094,7 +1094,7 @@
           }
         }
       },
-      "Lib/1.0.0": {
+      "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
         "dependencies": {
@@ -1112,10 +1112,10 @@
           "System.Threading.Tasks.Extensions": "4.6.0"
         },
         "compile": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         }
       }
     },
@@ -1631,7 +1631,7 @@
           }
         }
       },
-      "Lib/1.0.0": {
+      "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
         "dependencies": {
@@ -1649,10 +1649,10 @@
           "System.Threading.Tasks.Extensions": "4.6.0"
         },
         "compile": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         }
       }
     },
@@ -2168,7 +2168,7 @@
           }
         }
       },
-      "Lib/1.0.0": {
+      "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
         "dependencies": {
@@ -2186,10 +2186,10 @@
           "System.Threading.Tasks.Extensions": "4.6.0"
         },
         "compile": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         }
       }
     },
@@ -2705,7 +2705,7 @@
           }
         }
       },
-      "Lib/1.0.0": {
+      "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
         "dependencies": {
@@ -2723,10 +2723,10 @@
           "System.Threading.Tasks.Extensions": "4.6.0"
         },
         "compile": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Lib.dll": {}
+          "bin/placeholder/TestLib.dll": {}
         }
       }
     }
@@ -3887,7 +3887,7 @@
         "windowsapicodepack.nuspec"
       ]
     },
-    "Lib/1.0.0": {
+    "TestLib/1.0.0": {
       "type": "project",
       "path": "../Lib/Lib.csproj",
       "msbuildProject": "../Lib/Lib.csproj"
@@ -3895,7 +3895,6 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.8": [
-      "Lib >= 1.0.0",
       "Microsoft.Windows.SDK.Contracts >= 10.0.26100.1742",
       "Serilog >= 4.2.0",
       "Serilog.Sinks.File >= 6.0.0",
@@ -3910,6 +3909,7 @@
       "System.Threading.Channels >= 9.0.0",
       "System.Threading.Tasks.Extensions >= 4.6.0",
       "System.ValueTuple >= 4.5.0",
+      "TestLib >= 1.0.0",
       "WindowsAPICodePack >= 8.0.6"
     ]
   },
@@ -3921,7 +3921,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
-      "projectName": "Exec",
+      "projectName": "TestExec",
       "projectPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\Exec.csproj",
       "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\phils\\Source\\Repos\\TestExec\\obj\\",

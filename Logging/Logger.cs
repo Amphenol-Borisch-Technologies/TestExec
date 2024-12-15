@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.TestExec.Exec;
 using ABT.TestExec.Lib;
 using ABT.TestExec.Lib.AppConfig;
 
