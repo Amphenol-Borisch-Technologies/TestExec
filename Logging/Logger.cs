@@ -65,7 +65,6 @@ namespace ABT.TestExec.Exec.Logging {
             StringBuilder message = new StringBuilder();
             message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
 #if VERBOSE
-            message.AppendLine(FormatMessage("Revision", measurement.Revision));
             message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
             message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
 #endif
@@ -150,9 +149,6 @@ namespace ABT.TestExec.Exec.Logging {
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestLib.ConfigUUT.TestSpecification}");
             Log.Information($"\tID                : {TestLib.ConfigTest.TestElementID}");
-#if VERBOSE
-            Log.Information($"\tRevision          : {TestData.ConfigTest.TestElementRevision}");
-#endif
             Log.Information($"\tDescription       : {TestLib.ConfigTest.TestElementDescription}\n");
 
             StringBuilder sb = new StringBuilder();
@@ -176,7 +172,7 @@ namespace ABT.TestExec.Exec.Logging {
                 SetBackColor(ref rtfResults, 0, TestLib.ConfigUUT.Event.ToString(), TestLib.EventColors[TestLib.ConfigUUT.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
-                if (TestLib.ConfigUUT.Event != EVENTS.IGNORE) {
+                if (TestLib.ConfigUUT.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
                     if (TestLib.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
                     if (TestLib.ConfigLogger.SQLEnabled) SQLStop();
                 }
