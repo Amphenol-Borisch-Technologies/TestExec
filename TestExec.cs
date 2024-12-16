@@ -72,6 +72,7 @@ namespace ABT.Test.TestExec {
     ///  <b>References:</b>
     /// <item>
     ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestExec">TestExec</a></description>
+    ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestLib">TestLib</a></description>
     ///  <description><a href="https://github.com/Amphenol-Borisch-Technologies/TestPlan">TestPlan</a></description>
     ///  </item>
     ///  </remarks>
