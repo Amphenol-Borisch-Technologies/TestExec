@@ -3889,8 +3889,8 @@
     },
     "TestLib/1.0.0": {
       "type": "project",
-      "path": "../Lib/Lib.csproj",
-      "msbuildProject": "../Lib/Lib.csproj"
+      "path": "../Lib/TestLib.csproj",
+      "msbuildProject": "../Lib/TestLib.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3920,9 +3920,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Exec\\Exec.csproj",
+      "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Exec\\TestExec.csproj",
       "projectName": "TestExec",
-      "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Exec\\Exec.csproj",
+      "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Exec\\TestExec.csproj",
       "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Exec\\obj\\",
       "projectStyle": "PackageReference",
@@ -3946,8 +3946,8 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
-            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Lib\\Lib.csproj": {
-              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Lib\\Lib.csproj"
+            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Lib\\TestLib.csproj": {
+              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\Lib\\TestLib.csproj"
             }
           }
         }

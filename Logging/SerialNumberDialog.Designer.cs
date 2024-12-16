@@ -1,4 +1,4 @@
-﻿namespace ABT.Test.Exec.Logging {
+﻿namespace ABT.Test.TestExec.Logging {
     partial class SerialNumberDialog {
         /// <summary>
         /// Required designer variable.

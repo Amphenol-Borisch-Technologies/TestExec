@@ -5,9 +5,9 @@ using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using ABT.Test.Lib;
+using ABT.Test.TestLib;
 
-namespace ABT.Test.Exec.Logging {
+namespace ABT.Test.TestExec.Logging {
     public class RichTextBoxSink : ILogEventSink {
         private readonly RichTextBox richTextBox;
         private readonly ITextFormatter formatter;
@@ -32,7 +32,7 @@ namespace ABT.Test.Exec.Logging {
                     selectionStart = richTextBox.Find(Event.ToString(), startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                     richTextBox.SelectionStart = selectionStart;
                     richTextBox.SelectionLength = Event.ToString().Length;
-                    richTextBox.SelectionBackColor = TestLib.EventColors[Event];
+                    richTextBox.SelectionBackColor = TestLib.TestLib.EventColors[Event];
                 }
             }
         }
