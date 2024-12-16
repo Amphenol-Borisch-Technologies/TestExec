@@ -164,7 +164,7 @@
     <Content Include="Resources\EmergencyStop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Exec.config.xml">
+    <Content Include="TestExec.config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Raytheon.ico" />
@@ -255,7 +255,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lib\TestLib.csproj">
+    <ProjectReference Include="..\TestLib\TestLib.csproj">
       <Project>{24d5e99e-185c-4507-81f0-132d8cb8164e}</Project>
       <Name>TestLib</Name>
     </ProjectReference>

@@ -129,7 +129,7 @@ namespace ABT.Test.TestExec {
     public abstract partial class TestExec : Form {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String _NOT_APPLICABLE = "NotApplicable";
-        private readonly String _ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Exec.config.xml";
+        private readonly String _ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly RegistryKey _serialNumberRegistryKey = null;
