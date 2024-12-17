@@ -554,8 +554,8 @@ namespace ABT.Test.TestExec {
                 openFileDialog.RestoreDirectory = false;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    if(Validator.ValidSpecification(FileSpecificationXSD: openFileDialog.FileName, FileSpecificationXML: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestPlan.xsd")) {
-                        Generator.Generate(Path.GetDirectoryName(openFileDialog.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog.FileName) + ".new.cs");
+                    if(Validator.ValidSpecification( FileSpecificationXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestPlan.xsd", FileSpecificationXML: openFileDialog.FileName)) {
+                        Generator.Generate(FileSpecificationXML: openFileDialog.FileName);
                     }
                 }
             }
