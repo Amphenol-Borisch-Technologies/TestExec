@@ -26,6 +26,7 @@ using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.AppConfig;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
+using ABT.Test.TestLib.TestConfig;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -545,6 +546,20 @@ namespace ABT.Test.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.DocumentationFolder); }
+        private void TSMI_UUT_Generate_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.InitialDirectory = @"C:\Users\phils\source\repos\ABT\Test\TestPlans";
+                openFileDialog.Filter = "XML files (*.xml)|*.xml";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = false;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    if(Validator.ValidSpecification(FileSpecificationXSD: openFileDialog.FileName, FileSpecificationXML: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestPlan.xsd")) {
+                        Generator.Generate(Path.GetDirectoryName(openFileDialog.FileName) + @"\" + Path.GetFileNameWithoutExtension(openFileDialog.FileName) + ".new.cs");
+                    }
+                }
+            }
+        }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new MessageBoxMonoSpaced(
