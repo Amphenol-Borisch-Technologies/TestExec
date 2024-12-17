@@ -70,10 +70,10 @@
     <Compile Include="Logging\SerialNumberDialog.Designer.cs">
       <DependentUpon>SerialNumberDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="MessageBoxMonoSpaced.cs">
+    <Compile Include="Miscellaneous\MessageBoxMonoSpaced.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MessageBoxMonoSpaced.Designer.cs">
+    <Compile Include="Miscellaneous\MessageBoxMonoSpaced.Designer.cs">
       <DependentUpon>MessageBoxMonoSpaced.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -94,7 +94,7 @@
       <DependentUpon>SerialNumberDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MessageBoxMonoSpaced.resx">
+    <EmbeddedResource Include="Miscellaneous\MessageBoxMonoSpaced.resx">
       <DependentUpon>MessageBoxMonoSpaced.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

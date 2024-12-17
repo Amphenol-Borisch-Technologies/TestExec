@@ -529,7 +529,7 @@ namespace ABT.Test.TestExec {
 
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            Form about = new MessageBoxMonoSpaced(
+            Form about = new Miscellaneous.MessageBoxMonoSpaced(
                 Title: "About TestExec",
                 Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestExec"
@@ -562,7 +562,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
-            Form statistics = new MessageBoxMonoSpaced(
+            Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
                 Title: $"{TestLib.TestLib.ConfigUUT.Number}, {TestLib.TestLib.ConfigTest.TestElementID}, {TestLib.TestLib.ConfigTest.StatusTime()}",
                 Text: TestLib.TestLib.ConfigTest.StatisticsDisplay(),
                 Link: String.Empty
@@ -579,7 +579,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigLogger.FilePath); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            Form about = new MessageBoxMonoSpaced(
+            Form about = new Miscellaneous.MessageBoxMonoSpaced(
                 Title: "About Tests",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestPlan"
