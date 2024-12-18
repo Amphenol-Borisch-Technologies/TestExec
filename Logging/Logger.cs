@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.AppConfig;
+using ABT.Test.TestLib.TestConfig;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -36,8 +37,8 @@ namespace ABT.Test.TestExec.Logging {
             sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
             sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Value, MN.FD, MidpointRounding.ToEven)}"));
             sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
-            String units_si = $"{Enum.GetName(typeof(UNITS_SI), MN.Units_SI)}";
-            if (MN.Units_SI_Modifier != UNITS_SI_MODIFIER.NotApplicable) units_si += $" {Enum.GetName(typeof(UNITS_SI_MODIFIER), MN.Units_SI_Modifier)}";
+            String units_si = $"{Enum.GetName(typeof(MI_Units), MN.Units_SI)}";
+            if (MN.Units_SI_Modifier != MI_UnitSuffix.NONE) units_si += $" {Enum.GetName(typeof(MI_UnitSuffix), MN.Units_SI_Modifier)}";
             sb.Append(FormatMessage("SI Units", units_si));
             return sb.ToString();
         }
