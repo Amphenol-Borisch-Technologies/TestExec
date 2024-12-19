@@ -139,9 +139,10 @@ namespace ABT.Test.TestExec {
         private CancellationTokenSource _CTS_Cancel;
         private CancellationTokenSource _CTS_EmergencyStop;
 
-        protected TestExec(Icon icon) {
+        protected TestExec(Icon icon, String BaseDirectory) {
             InitializeComponent();
             Icon = icon;
+            TestLib.TestLib.BaseDirectory = BaseDirectory;
             // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             if (String.Equals(TestLib.TestLib.ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = TestLib.TestLib.ConfigUUT.SerialNumberRegExCustom;
@@ -221,7 +222,7 @@ namespace ABT.Test.TestExec {
             TSMI_System_SelfTests.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
-            StatusModeUpdate(MODES.Selecting);
+            StatusModeUpdate(MODES.Waiting);
         }
 
         private String GetFolder(String FolderID) { return XElement.Load(_ConfigurationTestExec).Element("Folders").Element(FolderID).Value; }
@@ -402,7 +403,7 @@ namespace ABT.Test.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             TestLib.TestLib.ConfigTest = AppConfigTest.Get();
-            TestLib.TestLib.Namespace = Serializing.Deserialize(TestSpecXML: @"C:\Users\phils\source\repos\ABT\Test\TestPlans\Diagnostics\TestSpecification.xml");
+            TestLib.TestLib.Namespace = Serializing.Deserialize(TestSpecXML: $"{TestLib.TestLib.BaseDirectory}TestSpecification.xml");
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             base.Text = $"{TestLib.TestLib.ConfigUUT.Number}, {TestLib.TestLib.ConfigUUT.Description}, {TestLib.TestLib.ConfigTest.TestElementID}";
             FormModeReset();
@@ -549,7 +550,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.DocumentationFolder); }
         private void TSMI_UUT_Generate_Click(Object sender, EventArgs e) {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = @"C:\Users\phils\source\repos\ABT\Test\TestPlans";
+                openFileDialog.InitialDirectory = TestLib.TestLib.BaseDirectory;
                 openFileDialog.Filter = "XML files (*.xml)|*.xml";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = false;
@@ -754,15 +755,15 @@ namespace ABT.Test.TestExec {
 
         private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestLib.TestLib.ConfigTest.StatisticsStatus())); }
 
-        private enum MODES { Resetting, Selecting, Running, Cancelling, Emergency_Stopping };
+        private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
         private void StatusModeUpdate(MODES mode) {
             Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
                 { MODES.Resetting, SystemColors.ControlLight }, // Invisible ink!
-                { MODES.Selecting, Color.Black },
                 { MODES.Running, Color.Green },
                 { MODES.Cancelling, Color.Yellow },
-                { MODES.Emergency_Stopping, Color.Firebrick }
+                { MODES.Emergency_Stopping, Color.Firebrick },
+                { MODES.Waiting, Color.Black },
             };
 
             Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
