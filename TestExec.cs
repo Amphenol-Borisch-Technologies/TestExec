@@ -403,7 +403,7 @@ namespace ABT.Test.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             TestLib.TestLib.ConfigTest = AppConfigTest.Get();
-            TestLib.TestLib.Namespace = Serializing.Deserialize(TestSpecXML: $"{TestLib.TestLib.BaseDirectory}TestSpecification.xml");
+            TestLib.TestLib.TestSpecification = Serializing.Deserialize(TestSpecXML: $"{TestLib.TestLib.BaseDirectory}TestSpecification.xml");
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
             base.Text = $"{TestLib.TestLib.ConfigUUT.Number}, {TestLib.TestLib.ConfigUUT.Description}, {TestLib.TestLib.ConfigTest.TestElementID}";
             FormModeReset();
