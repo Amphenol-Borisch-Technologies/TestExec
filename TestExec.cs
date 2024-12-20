@@ -399,10 +399,14 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            TestLib.TestLib.ConfigTest = AppConfigTest.Get();
+            // TestLib.TestLib.ConfigTest = AppConfigTest.Get();
             TestLib.TestLib.TestSpecification = Serializing.Deserialize(TestSpecXML: $"{TestLib.TestLib.BaseDirectory}TestSpecification.xml");
+            Object TestObject = TestSelect.Get();
             _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
-            base.Text = $"{TestLib.TestLib.ConfigUUT.Number}, {TestLib.TestLib.ConfigUUT.Description}, {TestLib.TestLib.ConfigTest.TestElementID}";
+            String s = String.Empty;
+            if (TestObject is TO to) s = to.NamespaceLeaf;
+            if (TestObject is TG tg) s = tg.Class;
+            base.Text = $"{TestLib.TestLib.ConfigUUT.Number}, {TestLib.TestLib.ConfigUUT.Description}, {s}";
             FormModeReset();
             FormModeSelect();
         }
