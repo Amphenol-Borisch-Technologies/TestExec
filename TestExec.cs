@@ -204,7 +204,6 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: true);
             ButtonSelect.Enabled = false;
             ButtonRunReset(enabled: false);
-            TSMI_File_Change.Enabled = false;
             TSMI_File_Exit.Enabled = false;
             TSMI_System_SelfTests.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
@@ -215,7 +214,6 @@ namespace ABT.Test.TestExec {
         private void FormModeSelect() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
-            TSMI_File_Change.Enabled = true;
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: TestLib.TestLib.ConfigTest != null);

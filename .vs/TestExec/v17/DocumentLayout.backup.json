@@ -3,12 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\phils\\source\\repos\\TestExec\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\phils\\source\\repos\\TestExec\\TestExec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TestExec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -20,12 +14,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 41,
+          "SelectedChildIndex": 40,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -33,6 +23,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Bookmark",
@@ -184,30 +178,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Tests.cs",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "RelativeDocumentMoniker": "..\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "RelativeToolTip": "..\\ABT\\TestExec\\Tests\\Diagnostics\\Tests.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAAAHwAAABaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:52:38.271Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "TestLib.cs",
-              "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "RelativeDocumentMoniker": "..\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "ToolTip": "C:\\Users\\phils\\source\\repos\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "RelativeToolTip": "..\\ABT\\TestExec\\Lib\\TestLib.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:51:32.602Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "TestExec.cs",
               "DocumentMoniker": "C:\\Users\\phils\\source\\repos\\TestExec\\TestExec.cs",
               "RelativeDocumentMoniker": "TestExec.cs",
@@ -215,7 +186,8 @@
               "RelativeToolTip": "TestExec.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T14:22:49.749Z"
+              "WhenOpened": "2024-10-30T14:22:49.749Z",
+              "EditorCaption": ""
             }
           ]
         }
