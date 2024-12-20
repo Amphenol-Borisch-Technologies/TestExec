@@ -18,7 +18,6 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
