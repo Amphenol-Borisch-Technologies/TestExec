@@ -461,21 +461,23 @@ namespace ABT.Test.TestExec {
         }
 
         private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
+            (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
+            if (DR != DialogResult.OK) return;
+            if (!Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML)) return;
+            Generator.Generate(TestSpecXML);
+        }
+        private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
+            (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
+            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML);
+        }
+        private (DialogResult DR, String TestSpecXML) GetTestSpecXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = TestLib.TestLib.BaseDirectory;
                 openFileDialog.Filter = "XML files (*.xml)|*.xml";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = false;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    if(Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML: openFileDialog.FileName)) {
-                        Generator.Generate(TestSpecXML: openFileDialog.FileName);
-                    }
-                }
+                return (openFileDialog.ShowDialog(), openFileDialog.FileName);
             }
-        }
-        private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
-
         }
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
