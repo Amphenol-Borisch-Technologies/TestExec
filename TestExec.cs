@@ -445,23 +445,11 @@ namespace ABT.Test.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
-            CommonOpenFileDialog cofd = new CommonOpenFileDialog {
-                InitialDirectory = XElement.Load(_ConfigurationTestExec).Element("Folders").Element("Tests").Value,
-                IsFolderPicker = true,
-                Title = "Select Test Folder",
-                Multiselect = false
-            };
-            if ((cofd.ShowDialog() == CommonFileDialogResult.Ok) && !String.Equals(cofd.FileName, String.Empty)) {
-                Debug.Print($"configPath: '{cofd.FileName}'.");
-                // TODO: "Restart" TestExec with new Tests folder.
-            }
-        }
         private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
             PreApplicationExit();
             System.Windows.Forms.Application.Exit();
         }
-        private void TSMI_File_Save_Click(Object sender, EventArgs e) {
+        private void TSMI_File_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
@@ -474,6 +462,23 @@ namespace ABT.Test.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
         }
 
+        private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.InitialDirectory = TestLib.TestLib.BaseDirectory;
+                openFileDialog.Filter = "XML files (*.xml)|*.xml";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = false;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    if(Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML: openFileDialog.FileName)) {
+                        Generator.Generate(TestSpecXML: openFileDialog.FileName);
+                    }
+                }
+            }
+        }
+        private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
+
+        }
         private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
@@ -548,20 +553,6 @@ namespace ABT.Test.TestExec {
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.DocumentationFolder); }
-        private void TSMI_UUT_Generate_Click(Object sender, EventArgs e) {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = TestLib.TestLib.BaseDirectory;
-                openFileDialog.Filter = "XML files (*.xml)|*.xml";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = false;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    if(Validator.ValidSpecification( TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML: openFileDialog.FileName)) {
-                        Generator.Generate(TestSpecXML: openFileDialog.FileName);
-                    }
-                }
-            }
-        }
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(TestLib.TestLib.ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
