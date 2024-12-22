@@ -143,6 +143,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             TestLib.TestLib.BaseDirectory = BaseDirectory;
+            TestSpec = Serializing.Deserialize(TestSpecXML: $"{BaseDirectory}TestSpec.xml");
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
@@ -210,7 +211,7 @@ namespace ABT.Test.TestExec {
             StatusModeUpdate(MODES.Running);
         }
 
-        private void FormModeSelect() {
+        private void FormModeWait() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
             TSMI_File_Exit.Enabled = true;
@@ -399,13 +400,11 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            // ConfigTest = AppConfigTest.Get();
-            TestSpec = Serializing.Deserialize(TestSpecXML: $"{BaseDirectory}TestSpec.xml");
             (TestLib.TestLib.TestOperation, TestLib.TestLib.TestGroup) = TestSelect.Get();
-            _statusTime.Start();  // NOTE:  Cannot update Status Bar until ConfigTest is instantiated.
+            _statusTime.Start();  // NOTE:  Don't update Status Bar until test is select via TestSelect.Get().
             base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestLib.TestLib.TestGroup != null) ? TestLib.TestLib.TestGroup.Class : TestLib.TestLib.TestOperation.NamespaceLeaf)}";
             FormModeReset();
-            FormModeSelect();
+            FormModeWait();
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
@@ -427,7 +426,7 @@ namespace ABT.Test.TestExec {
             MeasurementsPreRun();
             await MeasurementsRun();
             MeasurementsPostRun();
-            FormModeSelect();
+            FormModeWait();
         }
 
         private void ButtonRunReset(Boolean enabled) {
@@ -452,7 +451,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{ConfigTest.TestElementID}_{ConfigUUT.SerialNumber}",
+                FileName = $"{ConfigUUT.Number}_{TestLib.TestLib.TestOperation.NamespaceLeaf}_{ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -556,8 +555,8 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{ConfigUUT.Number}, {ConfigTest.TestElementID}, {ConfigTest.StatusTime()}",
-                Text: ConfigTest.StatisticsDisplay(),
+                Title: $"{ConfigUUT.Number}, {TestLib.TestLib.TestOperation.NamespaceLeaf}, {TestSpec.StatusTime()}",
+                Text: TestSpec.StatisticsDisplay(),
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
@@ -565,7 +564,7 @@ namespace ABT.Test.TestExec {
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            ConfigTest.Statistics = new Statistics();
+            TestSpec.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
@@ -641,7 +640,7 @@ namespace ABT.Test.TestExec {
             ConfigUUT.Event = MeasurementsEvaluate(ConfigTest.Measurements);
             TextTest.Text = ConfigUUT.Event.ToString();
             TextTest.BackColor = EventColors[ConfigUUT.Event];
-            ConfigTest.Statistics.Update(ConfigUUT.Event);
+            TestSpec.Statistics.Update(ConfigUUT.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
@@ -742,9 +741,9 @@ namespace ABT.Test.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = ConfigTest.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSpec.StatusTime())); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = ConfigTest.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSpec.StatisticsStatus())); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
