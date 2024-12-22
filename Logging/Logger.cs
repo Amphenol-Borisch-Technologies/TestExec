@@ -147,7 +147,7 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tMachineName       : {Environment.MachineName}");
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-            Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestSpecification}");
+            Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestSpec}");
             Log.Information($"\tID                : {TestLib.TestLib.ConfigTest.TestElementID}");
             Log.Information($"\tDescription       : {TestLib.TestLib.ConfigTest.TestElementDescription}\n");
 
