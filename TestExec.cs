@@ -401,8 +401,8 @@ namespace ABT.Test.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             (TestLib.TestLib.TestOperation, TestLib.TestLib.TestGroup) = TestSelect.Get();
-            _statusTime.Start();  // NOTE:  Don't update Status Bar until test is select via TestSelect.Get().
             base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestLib.TestLib.TestGroup != null) ? TestLib.TestLib.TestGroup.Class : TestLib.TestLib.TestOperation.NamespaceLeaf)}";
+            _statusTime.Start();
             FormModeReset();
             FormModeWait();
         }
