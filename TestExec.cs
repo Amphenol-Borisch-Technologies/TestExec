@@ -25,7 +25,7 @@ using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.AppConfig;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
-using ABT.Test.TestLib.TestConfig;
+using ABT.Test.TestLib.TestSpec;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -466,12 +466,12 @@ namespace ABT.Test.TestExec {
         private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
             if (DR != DialogResult.OK) return;
-            if (!Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML)) return;
+            if (!Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestSpec\TestSpecification.xsd", TestSpecXML)) return;
             Generator.Generate(TestSpecXML);
         }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
-            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestConfig\TestSpecification.xsd", TestSpecXML);
+            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestSpecXSD: @"C:\Users\phils\source\repos\ABT\Test\TestLib\TestSpec\TestSpecification.xsd", TestSpecXML);
         }
         private (DialogResult DR, String TestSpecXML) GetTestSpecXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
