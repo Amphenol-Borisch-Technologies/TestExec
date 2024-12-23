@@ -770,11 +770,11 @@ namespace ABT.Test.TestExec {
 
         public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
-        public void MessageAppend(String Message) { MeasurementPresent.Message.Append(Message); }
+        public void MessageAppend(String Message) { TestIndex.M.Log.Append(Message); }
 
-        public void MessageAppendLine(String Message) { MeasurementPresent.Message.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { TestIndex.M.Log.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { MeasurementPresent.Message.AppendLine(MessageFormat(Label, Message)); }
+        public void MessageAppendLine(String Label, String Message) { TestIndex.M.Log.AppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
@@ -786,15 +786,15 @@ namespace ABT.Test.TestExec {
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
-        private void StatusModeUpdate(MODES mode) {
-            Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
-                { MODES.Resetting, EventColors[EVENTS.UNSET] },
-                { MODES.Running, EventColors[EVENTS.PASS] },
-                { MODES.Cancelling, EventColors[EVENTS.CANCEL] },
-                { MODES.Emergency_Stopping, EventColors[EVENTS.EMERGENCY_STOP] },
-                { MODES.Waiting, Color.Black },
-            };
+        private static readonly Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
+            { MODES.Resetting, EventColors[EVENTS.UNSET] },
+            { MODES.Running, EventColors[EVENTS.PASS] },
+            { MODES.Cancelling, EventColors[EVENTS.CANCEL] },
+            { MODES.Emergency_Stopping, EventColors[EVENTS.EMERGENCY_STOP] },
+            { MODES.Waiting, Color.Black }
+        };
 
+        private void StatusModeUpdate(MODES mode) {
             Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
             Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
         }
