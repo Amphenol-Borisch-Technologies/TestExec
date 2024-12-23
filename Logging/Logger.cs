@@ -10,6 +10,8 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.AppConfig;
 using ABT.Test.TestLib.TestSpec;
+using System.Globalization;
+using System.Diagnostics.Metrics;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -32,28 +34,28 @@ namespace ABT.Test.TestExec.Logging {
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
-        public static String FormatNumeric(MeasurementNumeric MN, Double Value) {
+        public static String FormatNumeric(MI mi) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("High Limit", $"{MN.High:G}"));
-            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Value, MN.FD, MidpointRounding.ToEven)}"));
-            sb.AppendLine(FormatMessage("Low Limit", $"{MN.Low:G}"));
-            String units_si = $"{Enum.GetName(typeof(MI_Units), MN.Units_SI)}";
-            if (MN.Units_SI_Modifier != MI_UnitSuffix.NONE) units_si += $" {Enum.GetName(typeof(MI_UnitSuffix), MN.Units_SI_Modifier)}";
-            sb.Append(FormatMessage("SI Units", units_si));
+            sb.AppendLine(FormatMessage("High Limit", $"{mi.High:G}"));
+            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)mi.Value), (Int32)mi.FractionalDigits, MidpointRounding.ToEven)}"));
+            sb.AppendLine(FormatMessage("Low Limit", $"{mi.Low:G}"));
+            String units = $"{Enum.GetName(typeof(MI_Units), mi.Units)}";
+            if (mi.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), mi.UnitSuffix)}";
+            sb.Append(FormatMessage("Units", units));
             return sb.ToString();
         }
 
-        public static String FormatProcess(MeasurementProcess MP, String Value) {
+        public static String FormatProcess(MP mp) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", MP.ProcessExpected));
-            sb.Append(FormatMessage("Actual", Value));
+            sb.AppendLine(FormatMessage("Expected", mp.Expected));
+            sb.Append(FormatMessage("Actual", (String)mp.Value));
             return sb.ToString();
         }
 
-        public static String FormatTextual(MeasurementTextual MT, String Value) {
+        public static String FormatTextual(MT mt) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", MT.Text));
-            sb.Append(FormatMessage("Actual", Value));
+            sb.AppendLine(FormatMessage("Expected", mt.Text));
+            sb.Append(FormatMessage("Actual", (String)mt.Value));
             return sb.ToString();
         }
 
@@ -61,38 +63,27 @@ namespace ABT.Test.TestExec.Logging {
 
         public static void LogMessage(String Message) { Log.Information(Message); }
 
-        public static void LogTest(Boolean isOperation, Measurement measurement, ref RichTextBox rtfResults) {
-            StringBuilder message = new StringBuilder();
-            message.AppendLine(FormatMessage("TestMeasurement ID", measurement.ID));
+        public static void LogTest(Boolean isOperation, M m, ref RichTextBox rtfResults) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(FormatMessage("Method", m.Method));
 #if VERBOSE
-            message.AppendLine(FormatMessage("Measurement Type", measurement.ClassName));
-            message.AppendLine(FormatMessage("Cancel Not Passed", measurement.CancelNotPassed.ToString()));
+            stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", m.CancelNotPassed.ToString()));
 #endif
-            message.AppendLine(FormatMessage("Description", measurement.Description));
-            switch (measurement.ClassObject) {
-                case MeasurementCustom _:
-                    // NOTE: Call LogMessage from Tests project to log any MeasurementCustom desired detail.
-                    break;
-                case MeasurementNumeric _:
-                    message.AppendLine(FormatNumeric((MeasurementNumeric)measurement.ClassObject, Double.Parse(measurement.Value)));
-                    break;
-                case MeasurementProcess _:
-                    message.AppendLine(FormatProcess((MeasurementProcess)measurement.ClassObject, measurement.Value));
-                    break;
-                case MeasurementTextual _:
-                    message.AppendLine(FormatTextual((MeasurementTextual)measurement.ClassObject, measurement.Value));
-                    break;
-                default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with classname '{nameof(measurement.ClassObject)}' not implemented.");
-            }
-            message.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, measurement.Event.ToString()));
-            message.Append(measurement.Message.ToString());
-            Log.Information(message.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, measurement.ID, TestLib.TestLib.EventColors[measurement.Event]);
+            stringBuilder.AppendLine(FormatMessage("Description", m.Description));
+
+            if (m is MC) { } // NOTE: Call LogMessage from Tests project to log any MeasurementCustom desired detail.
+            else if (m is MI mi) stringBuilder.AppendLine(FormatNumeric(mi));
+            else if (m is MP mp) stringBuilder.AppendLine(FormatProcess(mp));
+            else if (m is MT mt) stringBuilder.AppendLine(FormatTextual(mt));
+            else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
+            stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, m.Event.ToString()));
+            stringBuilder.Append(m.Log.ToString());
+            Log.Information(stringBuilder.ToString());
+            if (isOperation) SetBackColor(ref rtfResults, 0, m.Method, TestLib.TestLib.EventColors[m.Event]);
         }
 
         public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
-            if (!TestLib.TestLib.ConfigTest.IsOperation) {
+            if (TestSelection.IsGroup()) {
                 // When TestGroups are executed, measurement data is never saved as Rich Text.
                 // RichTextBox only. 
                 Log.Logger = new LoggerConfiguration()
@@ -103,8 +94,8 @@ namespace ABT.Test.TestExec.Logging {
                 Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.ConfigUUT.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.ConfigUUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.ConfigUUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ID", $"{TestLib.TestLib.ConfigTest.TestElementID}"));
-                Log.Information(FormatMessage($"Description", $"{TestLib.TestLib.ConfigTest.TestElementDescription}"));
+                Log.Information(FormatMessage($"TestGroup ", $"{TestSelection.TG.Class}"));
+                Log.Information(FormatMessage($"Description", $"{TestSelection.TG.Description}"));
                 Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
@@ -148,13 +139,13 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestSpec}");
-            Log.Information($"\tID                : {TestLib.TestLib.ConfigTest.TestElementID}");
-            Log.Information($"\tDescription       : {TestLib.TestLib.ConfigTest.TestElementDescription}\n");
+            Log.Information($"\tID                : {TestSelection.TO.NamespaceLeaf}");
+            Log.Information($"\tDescription       : {TestSelection.TO.Description}\n");
 
             StringBuilder sb = new StringBuilder();
-            foreach (String groupID in TestLib.TestLib.ConfigTest.GroupIDsSequence) {
-                sb.Append(String.Format("\t{0,-" + TestLib.TestLib.ConfigTest.FormattingLengthGroupID + "} : {1}\n", groupID, TestLib.TestLib.ConfigTest.Groups[groupID].Description));
-                foreach (String measurementID in TestLib.TestLib.ConfigTest.GroupIDsToMeasurementIDs[groupID]) sb.Append(String.Format("\t\t{0,-" + TestLib.TestLib.ConfigTest.FormattingLengthMeasurementID + "} : {1}\n", measurementID, TestLib.TestLib.ConfigTest.Measurements[measurementID].Description));
+            foreach (TG tg in TestSelection.TO.TestGroups) {
+                sb.Append(String.Format("\t{0,-" + tg.FormattingLengthGroupID + "} : {1}\n", tg.Class, tg.Description));
+                foreach (M m in tg.Methods) sb.Append(String.Format("\t\t{0,-" + tg.FormattingLengthMeasurementID + "} : {1}\n", m.Method, m.Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
         }
@@ -165,7 +156,7 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         public static void Stop(TestExec testExec, ref RichTextBox rtfResults) {
-            if (!TestLib.TestLib.ConfigTest.IsOperation) Log.CloseAndFlush();
+            if (TestSelection.IsGroup()) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
                 ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestLib.TestLib.ConfigUUT.Event.ToString());
@@ -178,14 +169,14 @@ namespace ABT.Test.TestExec.Logging {
                 }
             }
         }
-        #endregion Public Methods
+#endregion Public Methods
 
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestLib.TestLib.ConfigTest.TestElementID}";
+            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TO.NamespaceLeaf}";
             String[] files = Directory.GetFiles(GetFilePath(), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
-            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_configTest.TestElementID_*.rtf.
+            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TO.NamespaceLeaf_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
@@ -208,7 +199,7 @@ namespace ABT.Test.TestExec.Logging {
             rtfResults.SaveFile($"{GetFilePath()}{fileName}");
         }
         
-        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestLib.TestLib.ConfigTest.TestElementID}\\"; }
+        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TO.NamespaceLeaf}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);

@@ -23,12 +23,9 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
 using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
-using ABT.Test.TestLib.AppConfig;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
 using ABT.Test.TestLib.TestSpec;
 using static ABT.Test.TestLib.TestLib;
-using System.Diagnostics.Metrics;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -218,7 +215,7 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: false);
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
-            ButtonRunReset(enabled: ConfigTest != null);
+            ButtonRunReset(enabled: TestSelection.IsNotNull());
             TSMI_System_SelfTests.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
