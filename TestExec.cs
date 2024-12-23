@@ -598,7 +598,7 @@ namespace ABT.Test.TestExec {
 
         private async Task MeasurementsRun() {
             TestIndex.TO = TestSelection.TO;
-            if (TestSelection.IsOperation()) {
+            if (TestSelection.IsOperation()) { // TODO: Accomodate if(TestSelection.IsGroup())
                 foreach (TG tg in TestSelection.TO.TestGroups) {
                     TestIndex.TG = tg;
                     foreach (M m in tg.Methods) {
@@ -632,20 +632,18 @@ namespace ABT.Test.TestExec {
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
                             Logger.LogTest((TestSelection.TG == null), m, ref rtfResults);
                         }
-                        if (MeasurementCancelNotPassed(m)) return;
+                        if (m.Event != EVENTS.PASS && m.CancelNotPassed) return;
                     }
-                    if (MeasurementsCancelNotPassed(tg)) return;
+                    if (GroupEvaluate(tg) != EVENTS.PASS && tg.CancelNotPassed) return;
                 }
             }
         }
-
-        protected abstract Task<String> MeasurementRun(String measurementID);
 
         protected abstract Task<String> MeasurementRun(M m);
 
         private void MeasurementsPostRun() {
             SystemReset();
-            ConfigUUT.Event = MeasurementsEvaluate(ConfigTest.Measurements);
+            ConfigUUT.Event = OperationEvaluate();
             TextTest.Text = ConfigUUT.Event.ToString();
             TextTest.BackColor = EventColors[ConfigUUT.Event];
             TestSelection.TS.Statistics.Update(ConfigUUT.Event);
@@ -653,63 +651,48 @@ namespace ABT.Test.TestExec {
             Logger.Stop(this, ref rtfResults);
         }
 
-        private Boolean MeasurementCancelNotPassed(String measurementID) { return (ConfigTest.Measurements[measurementID].Event != EVENTS.PASS) && ConfigTest.Measurements[measurementID].CancelNotPassed; }
-
-        private Boolean MeasurementsCancelNotPassed(String groupID) { return (MeasurementsEvaluate(MeasurementsGet(groupID)) != EVENTS.PASS) && ConfigTest.Groups[groupID].CancelNotPassed; }
-
-        private Dictionary<String, Measurement> MeasurementsGet(String groupID) {
-            Dictionary<String, Measurement> measurements = new Dictionary<String, Measurement>();
-            foreach (String measurementID in ConfigTest.GroupIDsToMeasurementIDs[groupID]) measurements.Add(measurementID, ConfigTest.Measurements[measurementID]);
-            return measurements;
+        private EVENTS MeasurementEvaluate(M m) {
+            if (m is MC) return m.Event;
+            else if (m is MI mi) {
+                if (!Double.TryParse((String)mi.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Method}' Value '{m.Value}' ≠ System.Double.");
+                if (mi.LowComparator is MI_LowComparator.GE && mi.HighComparator is MI_HighComparator.LE) return ((mi.Low <= dMeasurement) && (dMeasurement <= mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (mi.LowComparator is MI_LowComparator.GE && mi.HighComparator is MI_HighComparator.LT) return ((mi.Low <= dMeasurement) && (dMeasurement < mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (mi.LowComparator is MI_LowComparator.GT && mi.HighComparator is MI_HighComparator.LE) return ((mi.Low < dMeasurement) && (dMeasurement <= mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (mi.LowComparator is MI_LowComparator.GT && mi.HighComparator is MI_HighComparator.LT) return ((mi.Low < dMeasurement) && (dMeasurement < mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', contains unimplemented comparators '{mi.LowComparator}' and/or '{mi.HighComparator}'.");
+            } else if (m is MP mp) return (String.Equals(mp.Expected, (String)mp.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            else if (m is MT mt) return (String.Equals(mt.Text, (String)mt.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
         }
 
-        private EVENTS MeasurementEvaluate(Measurement measurement) {
-            switch (measurement.ClassObject) {
-                case MeasurementCustom _:
-                    return (EVENTS)Enum.Parse(typeof(EVENTS), measurement.Value);
-                case MeasurementNumeric _:
-                    if (!Double.TryParse(measurement.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"TestMeasurement ID '{measurement.ID}' Measurement '{measurement.Value}' ≠ System.Double.");
-                    MeasurementNumeric mn = (MeasurementNumeric)measurement.ClassObject;
-                    return ((mn.Low <= dMeasurement) && (dMeasurement <= mn.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                case MeasurementProcess _:
-                    MeasurementProcess mp = (MeasurementProcess)measurement.ClassObject;
-                    return (String.Equals(mp.ProcessExpected, measurement.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-                case MeasurementTextual _:
-                    MeasurementTextual mt = (MeasurementTextual)measurement.ClassObject;
-                    return (String.Equals(mt.Text, measurement.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-                default:
-                    throw new NotImplementedException($"TestMeasurement ID '{measurement.ID}' with classname '{nameof(measurement.ClassObject)}' not implemented.");
-            }
-        }
-
-        private EVENTS MeasurementsEvaluate(Dictionary<String, Measurement> measurements) {
-            if (MeasurementEventsCount(measurements, EVENTS.IGNORE) == measurements.Count) return EVENTS.IGNORE;
+        private EVENTS GroupEvaluate(TG tg) {
+            if (MeasurementEventsCount(tg, EVENTS.IGNORE) == tg.Methods.Count) return EVENTS.IGNORE;
             // 0th priority evaluation:
             // All measurement Events are IGNORE, so UUT Event is IGNORE.
-            if (MeasurementEventsCount(measurements, EVENTS.PASS) + MeasurementEventsCount(measurements, EVENTS.IGNORE) == measurements.Count) return EVENTS.PASS;
+            if (MeasurementEventsCount(tg, EVENTS.PASS) + MeasurementEventsCount(tg, EVENTS.IGNORE) == tg.Methods.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
-            if (MeasurementEventsCount(measurements, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
+            if (MeasurementEventsCount(tg, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
             // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
-            if (MeasurementEventsCount(measurements, EVENTS.ERROR) != 0) return EVENTS.ERROR;
+            if (MeasurementEventsCount(tg, EVENTS.ERROR) != 0) return EVENTS.ERROR;
             // 3rd priority evaluation:
             // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
-            if (MeasurementEventsCount(measurements, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
+            if (MeasurementEventsCount(tg, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
             // 4th priority evaluation:
             // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
-            if (MeasurementEventsCount(measurements, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
+            if (MeasurementEventsCount(tg, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
             // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
-            if (MeasurementEventsCount(measurements, EVENTS.FAIL) != 0) return EVENTS.FAIL;
+            if (MeasurementEventsCount(tg, EVENTS.FAIL) != 0) return EVENTS.FAIL;
             // 6th priority evaluation:
             // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
-            String invalidTests = String.Empty;
-            foreach (KeyValuePair<String, Measurement> kvp in measurements) {
-                switch (kvp.Value.Event) {
+            StringBuilder invalidTests = new StringBuilder();
+            foreach (M m in tg.Methods) {
+                switch (m.Event) {
                     case EVENTS.CANCEL:
                     case EVENTS.EMERGENCY_STOP:
                     case EVENTS.ERROR:
@@ -719,15 +702,66 @@ namespace ABT.Test.TestExec {
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
                     default:
-                        invalidTests += $"ID: '{kvp.Key}' Event: '{kvp.Value.Event}'.{Environment.NewLine}";
-                        Logger.LogError($"{Environment.NewLine}Invalid Measurement ID(s) to enum EVENTS:{Environment.NewLine}{invalidTests}");
+                        invalidTests.AppendLine($"Method: '{m.Method}', Description '{m.Description}', Event: '{m.Event}'.");
+                        Logger.LogError($"{Environment.NewLine}Invalid methods to enum EVENTS:{Environment.NewLine}{invalidTests}");
                         break; // Above EVENTS aren't yet handled in this method.
                 }
             }
             return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
         }
 
-        private Int32 MeasurementEventsCount(Dictionary<String, Measurement> measurements, EVENTS Event) { return (from measurement in measurements where String.Equals(measurement.Value.Event, Event) select measurement).Count(); }
+        private EVENTS OperationEvaluate() {
+            List<EVENTS> groupEvents = new List<EVENTS>();
+            Int32 methodsCount = 0;
+            foreach (TG tg in TestSelection.TO.TestGroups) {
+                groupEvents.Add(GroupEvaluate(tg));
+                methodsCount += tg.Methods.Count();
+            }
+            if (groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.IGNORE;
+            // 0th priority evaluation:
+            // All measurement Events are IGNORE, so UUT Event is IGNORE.
+            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.PASS;
+            // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
+            // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
+            if (groupEvents.FindAll(e => e is EVENTS.EMERGENCY_STOP).Count() != 0) return EVENTS.EMERGENCY_STOP;
+            // 2nd priority evaluation:
+            // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
+            if (groupEvents.FindAll(e => e is EVENTS.ERROR).Count() != 0) return EVENTS.ERROR;
+            // 3rd priority evaluation:
+            // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
+            if (groupEvents.FindAll(e => e is EVENTS.CANCEL).Count() != 0) return EVENTS.CANCEL;
+            // 4th priority evaluation:
+            // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
+            if (groupEvents.FindAll(e => e is EVENTS.UNSET).Count() != 0) return EVENTS.CANCEL;
+            // 5th priority evaluation:
+            // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
+            // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
+            if (groupEvents.FindAll(e => e is EVENTS.FAIL).Count() != 0) return EVENTS.FAIL;
+            // 6th priority evaluation:
+            // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
+
+            // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (TG tg in TestSelection.TO.TestGroups)
+                foreach (M m in tg.Methods)
+                    switch (m.Event) {
+                        case EVENTS.CANCEL:
+                        case EVENTS.EMERGENCY_STOP:
+                        case EVENTS.ERROR:
+                        case EVENTS.FAIL:
+                        case EVENTS.IGNORE:
+                        case EVENTS.PASS:
+                        case EVENTS.UNSET:
+                            break; // Above EVENTS are all handled in this method.
+                        default:
+                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TO.NamespaceLeaf}', Class '{tg.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
+                            Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
+                            break; // Above EVENTS aren't yet handled in this method.
+                    }
+            return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
+        }
+
+        private Int32 MeasurementEventsCount(TG tg, EVENTS Event) { return (from m in tg.Methods where (m.Event == Event) select m).Count(); }
         #endregion Measurements
 
         #region Logging methods.
@@ -757,10 +791,10 @@ namespace ABT.Test.TestExec {
 
         private void StatusModeUpdate(MODES mode) {
             Dictionary<MODES, Color> ModeColors = new Dictionary<MODES, Color>() {
-                { MODES.Resetting, SystemColors.ControlLight }, // Invisible ink!
-                { MODES.Running, Color.Green },
-                { MODES.Cancelling, Color.Yellow },
-                { MODES.Emergency_Stopping, Color.Firebrick },
+                { MODES.Resetting, EventColors[EVENTS.UNSET] },
+                { MODES.Running, EventColors[EVENTS.PASS] },
+                { MODES.Cancelling, EventColors[EVENTS.CANCEL] },
+                { MODES.Emergency_Stopping, EventColors[EVENTS.EMERGENCY_STOP] },
                 { MODES.Waiting, Color.Black },
             };
 
