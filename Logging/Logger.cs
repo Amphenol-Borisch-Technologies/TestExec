@@ -63,9 +63,7 @@ namespace ABT.Test.TestExec.Logging {
         public static void LogTest(Boolean isOperation, M m, ref RichTextBox rtfResults) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(FormatMessage("Method", m.Method));
-#if VERBOSE
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", m.CancelNotPassed.ToString()));
-#endif
             stringBuilder.AppendLine(FormatMessage("Description", m.Description));
 
             if (m is MC) { } // NOTE: Call LogMessage from Tests project to log any MeasurementCustom desired detail.

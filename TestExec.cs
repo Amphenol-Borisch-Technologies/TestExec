@@ -581,13 +581,12 @@ namespace ABT.Test.TestExec {
 
         #region Measurements
         private void MeasurementsPreRun() {
-            foreach (TO to in TestSelection.TS.TestOperations)
-                foreach (TG tg in to.TestGroups)
-                    foreach (M m in tg.Methods) {
-                        m.Event = EVENTS.UNSET;
-                        m.Log.Clear();
-                        m.Value = null;
-                    }
+            foreach (TG tg in TestSelection.TO.TestGroups)
+                foreach (M m in tg.Methods) {
+                    m.Event = EVENTS.UNSET;
+                    m.Log.Clear();
+                    m.Value = null;
+                }
             TestIndex.Nullify();
             Logger.Start(this, ref rtfResults);
             SystemReset();
