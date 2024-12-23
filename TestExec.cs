@@ -145,7 +145,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             TestLib.TestLib.BaseDirectory = BaseDirectory;
-            TestSpec = Serializing.Deserialize(TestSpecXML: $"{BaseDirectory}TestSpec.xml");
+            TestSelection.TS = Serializing.Deserialize(TestSpecXML: $"{BaseDirectory}TestSpec.xml");
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
@@ -402,8 +402,8 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            (TestLib.TestLib.TestOperation, TestLib.TestLib.TestGroup) = TestSelect.Get();
-            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestLib.TestLib.TestGroup != null) ? TestLib.TestLib.TestGroup.Class : TestLib.TestLib.TestOperation.NamespaceLeaf)}";
+            (TestSelection.TO, TestSelection.TG) = TestSelect.Get();
+            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TG.Class : TestSelection.TO.NamespaceLeaf)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -453,7 +453,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{TestLib.TestLib.TestOperation.NamespaceLeaf}_{ConfigUUT.SerialNumber}",
+                FileName = $"{ConfigUUT.Number}_{TestSelection.TO.NamespaceLeaf}_{ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -557,8 +557,8 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{ConfigUUT.Number}, {TestLib.TestLib.TestOperation.NamespaceLeaf}, {TestSpec.StatusTime()}",
-                Text: TestSpec.StatisticsDisplay(),
+                Title: $"{ConfigUUT.Number}, {TestSelection.TO.NamespaceLeaf}, {TestSelection.TS.StatusTime()}",
+                Text: TestSelection.TS.StatisticsDisplay(),
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
@@ -566,7 +566,7 @@ namespace ABT.Test.TestExec {
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            TestSpec.Statistics = new Statistics();
+            TestSelection.TS.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
@@ -584,25 +584,25 @@ namespace ABT.Test.TestExec {
 
         #region Measurements
         private void MeasurementsPreRun() {
-            foreach (TO to in TestSpec.TestOperations)
+            foreach (TO to in TestSelection.TS.TestOperations)
                 foreach (TG tg in to.TestGroups)
                     foreach (M m in tg.Methods) {
                         m.Event = EVENTS.UNSET;
                         m.Log.Clear();
                         m.Value = null;
                     }
-            Current.Nullify();
+            TestIndex.Nullify();
             Logger.Start(this, ref rtfResults);
             SystemReset();
         }
 
         private async Task MeasurementsRun() {
-            Current.TO = TestLib.TestLib.TestOperation;
-            if (TestLib.TestLib.TestGroup == null) {
-                foreach (TG tg in Current.TO.TestGroups) {
-                    Current.TG = tg;
-                    foreach (M m in Current.TG.Methods) {
-                        Current.M = m;
+            TestIndex.TO = TestSelection.TO;
+            if (TestSelection.IsOperation()) {
+                foreach (TG tg in TestSelection.TO.TestGroups) {
+                    TestIndex.TG = tg;
+                    foreach (M m in tg.Methods) {
+                        TestIndex.M = m;
                         try {
                             StatusStatisticsUpdate(null, null);
                             m.Value = await Task.Run(() => MeasurementRun(m));
@@ -630,7 +630,7 @@ namespace ABT.Test.TestExec {
                             if (CT_EmergencyStop.IsCancellationRequested) m.Event = EVENTS.EMERGENCY_STOP;
                             else if (CT_Cancel.IsCancellationRequested) m.Event = EVENTS.CANCEL;
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((TestLib.TestLib.TestGroup == null), m, ref rtfResults);
+                            Logger.LogTest((TestSelection.TG == null), m, ref rtfResults);
                         }
                         if (MeasurementCancelNotPassed(m)) return;
                     }
@@ -648,7 +648,7 @@ namespace ABT.Test.TestExec {
             ConfigUUT.Event = MeasurementsEvaluate(ConfigTest.Measurements);
             TextTest.Text = ConfigUUT.Event.ToString();
             TextTest.BackColor = EventColors[ConfigUUT.Event];
-            TestSpec.Statistics.Update(ConfigUUT.Event);
+            TestSelection.TS.Statistics.Update(ConfigUUT.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
@@ -749,9 +749,9 @@ namespace ABT.Test.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSpec.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSelection.TS.StatusTime())); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSpec.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSelection.TS.StatisticsStatus())); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
