@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
-using ABT.Test.TestLib.TestSpec;
+using ABT.Test.TestLib.TestDefinition;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -133,7 +133,7 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tMachineName       : {Environment.MachineName}");
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-            Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestSpec}");
+            Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestDefinition}");
             Log.Information($"\tID                : {TestSelection.TO.NamespaceLeaf}");
             Log.Information($"\tDescription       : {TestSelection.TO.Description}\n");
 

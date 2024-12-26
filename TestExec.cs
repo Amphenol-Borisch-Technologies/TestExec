@@ -24,7 +24,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
-using ABT.Test.TestLib.TestSpec;
+using ABT.Test.TestLib.TestDefinition;
 using static ABT.Test.TestLib.TestLib;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
@@ -142,7 +142,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             TestLib.TestLib.BaseDirectory = BaseDirectory;
-            TestSelection.TS = Serializing.Deserialize(TestSpecXML: $"{BaseDirectory}TestSpec.xml");
+            TestSelection.TS = Serializing.Deserialize(TestDefinitionXML: $"{BaseDirectory}TestDefinition.xml");
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
@@ -459,16 +459,16 @@ namespace ABT.Test.TestExec {
         }
 
         private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
+            (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
             if (DR != DialogResult.OK) return;
-            if (!Validator.ValidSpecification(TestSpecXSD: TestSpecXSD, TestSpecXML)) return;
-            Generator.Generate(TestSpecXML);
+            if (!Validator.ValidSpecification(TestDefinitionXSD: TestDefinitionXSD, TestDefinitionXML)) return;
+            Generator.Generate(TestDefinitionXML);
         }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestSpecXML) = GetTestSpecXML();
-            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestSpecXSD: TestSpecXSD, TestSpecXML);
+            (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
+            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestDefinitionXSD: TestDefinitionXSD, TestDefinitionXML);
         }
-        private (DialogResult DR, String TestSpecXML) GetTestSpecXML() {
+        private (DialogResult DR, String TestDefinitionXML) GetTestDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = BaseDirectory;
                 openFileDialog.Filter = "XML files (*.xml)|*.xml";
