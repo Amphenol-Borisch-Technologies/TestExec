@@ -134,7 +134,7 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestDefinition}");
-            Log.Information($"\tID                : {TestSelection.TO.NamespaceLeaf}");
+            Log.Information($"\tID                : {TestSelection.TO.NamespaceTrunk}");
             Log.Information($"\tDescription       : {TestSelection.TO.Description}\n");
 
             StringBuilder sb = new StringBuilder();
@@ -168,7 +168,7 @@ namespace ABT.Test.TestExec.Logging {
 
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TO.NamespaceLeaf}";
+            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TO.NamespaceTrunk}";
             String[] files = Directory.GetFiles(GetFilePath(), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TO.NamespaceLeaf_*.rtf.
@@ -194,7 +194,7 @@ namespace ABT.Test.TestExec.Logging {
             rtfResults.SaveFile($"{GetFilePath()}{fileName}");
         }
         
-        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TO.NamespaceLeaf}\\"; }
+        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TO.NamespaceTrunk}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);

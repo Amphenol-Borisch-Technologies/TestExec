@@ -400,7 +400,7 @@ namespace ABT.Test.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             (TestSelection.TO, TestSelection.TG) = TestSelect.Get();
-            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TG.Class : TestSelection.TO.NamespaceLeaf)}";
+            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TG.Class : TestSelection.TO.NamespaceTrunk)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -450,7 +450,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{TestSelection.TO.NamespaceLeaf}_{ConfigUUT.SerialNumber}",
+                FileName = $"{ConfigUUT.Number}_{TestSelection.TO.NamespaceTrunk}_{ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -554,7 +554,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{ConfigUUT.Number}, {TestSelection.TO.NamespaceLeaf}, {TestSelection.TS.StatusTime()}",
+                Title: $"{ConfigUUT.Number}, {TestSelection.TO.NamespaceTrunk}, {TestSelection.TS.StatusTime()}",
                 Text: TestSelection.TS.StatisticsDisplay(),
                 Link: String.Empty
             );
@@ -750,7 +750,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TO.NamespaceLeaf}', Class '{tg.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
+                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TO.NamespaceTrunk}', Class '{tg.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
