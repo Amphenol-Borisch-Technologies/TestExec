@@ -650,15 +650,15 @@ namespace ABT.Test.TestExec {
         private EVENTS MeasurementEvaluate(M m) {
             if (m is MethodCustom) return m.Event;
             else if (m is MethodInterval methodInterval) {
-                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Method}' Value '{m.Value}' ≠ System.Double.");
+                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Name}' Value '{m.Value}' ≠ System.Double.");
                 if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
+                throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
             } else if (m is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else if (m is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, (String)methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
+            else throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
         }
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
@@ -698,7 +698,7 @@ namespace ABT.Test.TestExec {
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
                     default:
-                        invalidTests.AppendLine($"Method: '{m.Method}', Description '{m.Description}', Event: '{m.Event}'.");
+                        invalidTests.AppendLine($"Method: '{m.Name}', Description '{m.Description}', Event: '{m.Event}'.");
                         Logger.LogError($"{Environment.NewLine}Invalid methods to enum EVENTS:{Environment.NewLine}{invalidTests}");
                         break; // Above EVENTS aren't yet handled in this method.
                 }
@@ -750,7 +750,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
+                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{m.Name}' Event: '{m.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }

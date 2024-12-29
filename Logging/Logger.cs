@@ -62,7 +62,7 @@ namespace ABT.Test.TestExec.Logging {
 
         public static void LogTest(Boolean isOperation, M m, ref RichTextBox rtfResults) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("Method", m.Method));
+            stringBuilder.AppendLine(FormatMessage("Method", m.Name));
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", m.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage("Description", m.Description));
 
@@ -70,11 +70,11 @@ namespace ABT.Test.TestExec.Logging {
             else if (m is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
             else if (m is MethodProcess methodProcess) stringBuilder.AppendLine(FormatProcess(methodProcess));
             else if (m is MethodTextual methodTextual) stringBuilder.AppendLine(FormatTextual(methodTextual));
-            else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
+            else throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, m.Event.ToString()));
             stringBuilder.Append(m.Log.ToString());
             Log.Information(stringBuilder.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, m.Method, TestLib.TestLib.EventColors[m.Event]);
+            if (isOperation) SetBackColor(ref rtfResults, 0, m.Name, TestLib.TestLib.EventColors[m.Event]);
         }
 
         public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
@@ -140,7 +140,7 @@ namespace ABT.Test.TestExec.Logging {
             StringBuilder sb = new StringBuilder();
             foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
                 sb.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
-                foreach (M m in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", m.Method, m.Description));
+                foreach (M m in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", m.Name, m.Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
         }
