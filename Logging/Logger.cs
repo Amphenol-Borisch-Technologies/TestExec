@@ -42,17 +42,17 @@ namespace ABT.Test.TestExec.Logging {
             return sb.ToString();
         }
 
-        public static String FormatProcess(MP mp) {
+        public static String FormatProcess(MethodProcess methodProcess) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", mp.Expected));
-            sb.Append(FormatMessage("Actual", (String)mp.Value));
+            sb.AppendLine(FormatMessage("Expected", methodProcess.Expected));
+            sb.Append(FormatMessage("Actual", (String)methodProcess.Value));
             return sb.ToString();
         }
 
-        public static String FormatTextual(MT mt) {
+        public static String FormatTextual(MethodTextual methodTextual) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", mt.Text));
-            sb.Append(FormatMessage("Actual", (String)mt.Value));
+            sb.AppendLine(FormatMessage("Expected", methodTextual.Text));
+            sb.Append(FormatMessage("Actual", (String)methodTextual.Value));
             return sb.ToString();
         }
 
@@ -68,8 +68,8 @@ namespace ABT.Test.TestExec.Logging {
 
             if (m is MethodCustom) { } // NOTE: Call LogMessage from Tests project to log any MethodCustom desired detail.
             else if (m is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
-            else if (m is MP mp) stringBuilder.AppendLine(FormatProcess(mp));
-            else if (m is MT mt) stringBuilder.AppendLine(FormatTextual(mt));
+            else if (m is MethodProcess methodProcess) stringBuilder.AppendLine(FormatProcess(methodProcess));
+            else if (m is MethodTextual methodTextual) stringBuilder.AppendLine(FormatTextual(methodTextual));
             else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, m.Event.ToString()));
             stringBuilder.Append(m.Log.ToString());

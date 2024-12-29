@@ -656,8 +656,8 @@ namespace ABT.Test.TestExec {
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
-            } else if (m is MP mp) return (String.Equals(mp.Expected, (String)mp.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else if (m is MT mt) return (String.Equals(mt.Text, (String)mt.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            } else if (m is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            else if (m is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, (String)methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
         }
 
