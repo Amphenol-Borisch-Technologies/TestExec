@@ -31,13 +31,13 @@ namespace ABT.Test.TestExec.Logging {
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
-        public static String FormatNumeric(MI mi) {
+        public static String FormatNumeric(MethodInterval methodInterval) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("High Limit", $"{mi.High:G}"));
-            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)mi.Value), (Int32)mi.FractionalDigits, MidpointRounding.ToEven)}"));
-            sb.AppendLine(FormatMessage("Low Limit", $"{mi.Low:G}"));
-            String units = $"{Enum.GetName(typeof(MI_Units), mi.Units)}";
-            if (mi.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), mi.UnitSuffix)}";
+            sb.AppendLine(FormatMessage("High Limit", $"{methodInterval.High:G}"));
+            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
+            sb.AppendLine(FormatMessage("Low Limit", $"{methodInterval.Low:G}"));
+            String units = $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
+            if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
             sb.Append(FormatMessage("Units", units));
             return sb.ToString();
         }
@@ -66,8 +66,8 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", m.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage("Description", m.Description));
 
-            if (m is MC) { } // NOTE: Call LogMessage from Tests project to log any MeasurementCustom desired detail.
-            else if (m is MI mi) stringBuilder.AppendLine(FormatNumeric(mi));
+            if (m is MethodCustom) { } // NOTE: Call LogMessage from Tests project to log any MethodCustom desired detail.
+            else if (m is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
             else if (m is MP mp) stringBuilder.AppendLine(FormatProcess(mp));
             else if (m is MT mt) stringBuilder.AppendLine(FormatTextual(mt));
             else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
@@ -89,8 +89,8 @@ namespace ABT.Test.TestExec.Logging {
                 Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.ConfigUUT.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.ConfigUUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.ConfigUUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ", $"{TestSelection.TG.Class}"));
-                Log.Information(FormatMessage($"Description", $"{TestSelection.TG.Description}"));
+                Log.Information(FormatMessage($"TestGroup ", $"{TestSelection.TestGroup.Class}"));
+                Log.Information(FormatMessage($"Description", $"{TestSelection.TestGroup.Description}"));
                 Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
                 return;
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
@@ -134,13 +134,13 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
             Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestDefinition}");
-            Log.Information($"\tID                : {TestSelection.TO.NamespaceTrunk}");
-            Log.Information($"\tDescription       : {TestSelection.TO.Description}\n");
+            Log.Information($"\tID                : {TestSelection.TestOperation.NamespaceTrunk}");
+            Log.Information($"\tDescription       : {TestSelection.TestOperation.Description}\n");
 
             StringBuilder sb = new StringBuilder();
-            foreach (TG tg in TestSelection.TO.TestGroups) {
-                sb.Append(String.Format("\t{0,-" + tg.FormattingLengthGroupID + "} : {1}\n", tg.Class, tg.Description));
-                foreach (M m in tg.Methods) sb.Append(String.Format("\t\t{0,-" + tg.FormattingLengthMeasurementID + "} : {1}\n", m.Method, m.Description));
+            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
+                sb.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
+                foreach (M m in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", m.Method, m.Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
         }
@@ -168,10 +168,10 @@ namespace ABT.Test.TestExec.Logging {
 
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TO.NamespaceTrunk}";
+            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
             String[] files = Directory.GetFiles(GetFilePath(), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
-            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TO.NamespaceLeaf_*.rtf.
+            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TestOperation.NamespaceLeaf_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
@@ -194,7 +194,7 @@ namespace ABT.Test.TestExec.Logging {
             rtfResults.SaveFile($"{GetFilePath()}{fileName}");
         }
         
-        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TO.NamespaceTrunk}\\"; }
+        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TestOperation.NamespaceTrunk}\\"; }
 
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);

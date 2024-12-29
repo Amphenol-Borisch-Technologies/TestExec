@@ -142,7 +142,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             TestLib.TestLib.BaseDirectory = BaseDirectory;
-            TestSelection.TS = Serializing.Deserialize(TestDefinitionXML: $"{BaseDirectory}TestDefinition.xml");
+            TestSelection.TestSpace = Serializing.Deserialize(TestDefinitionXML: $"{BaseDirectory}TestDefinition.xml");
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
             else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
 
@@ -399,8 +399,8 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            (TestSelection.TO, TestSelection.TG) = TestSelect.Get();
-            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TG.Class : TestSelection.TO.NamespaceTrunk)}";
+            (TestSelection.TestOperation, TestSelection.TestGroup) = TestSelect.Get();
+            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TestGroup.Class : TestSelection.TestOperation.NamespaceTrunk)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -450,7 +450,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{TestSelection.TO.NamespaceTrunk}_{ConfigUUT.SerialNumber}",
+                FileName = $"{ConfigUUT.Number}_{TestSelection.TestOperation.NamespaceTrunk}_{ConfigUUT.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -554,8 +554,8 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{ConfigUUT.Number}, {TestSelection.TO.NamespaceTrunk}, {TestSelection.TS.StatusTime()}",
-                Text: TestSelection.TS.StatisticsDisplay(),
+                Title: $"{ConfigUUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {TestSelection.TestSpace.StatusTime()}",
+                Text: TestSelection.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
@@ -563,7 +563,7 @@ namespace ABT.Test.TestExec {
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            TestSelection.TS.Statistics = new Statistics();
+            TestSelection.TestSpace.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
@@ -581,8 +581,8 @@ namespace ABT.Test.TestExec {
 
         #region Measurements
         private void MeasurementsPreRun() {
-            foreach (TG tg in TestSelection.TO.TestGroups)
-                foreach (M m in tg.Methods) {
+            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
+                foreach (M m in testGroup.Methods) {
                     m.Event = EVENTS.UNSET;
                     m.Log.Clear();
                     m.Value = null;
@@ -593,11 +593,11 @@ namespace ABT.Test.TestExec {
         }
 
         private async Task MeasurementsRun() {
-            TestIndex.TO = TestSelection.TO;
+            TestIndex.TestOperation = TestSelection.TestOperation;
             if (TestSelection.IsOperation()) { // TODO: Accomodate if(TestSelection.IsGroup())
-                foreach (TG tg in TestSelection.TO.TestGroups) {
-                    TestIndex.TG = tg;
-                    foreach (M m in tg.Methods) {
+                foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
+                    TestIndex.TestGroup = testGroup;
+                    foreach (M m in testGroup.Methods) {
                         TestIndex.M = m;
                         try {
                             StatusStatisticsUpdate(null, null);
@@ -626,11 +626,11 @@ namespace ABT.Test.TestExec {
                             if (CT_EmergencyStop.IsCancellationRequested) m.Event = EVENTS.EMERGENCY_STOP;
                             else if (CT_Cancel.IsCancellationRequested) m.Event = EVENTS.CANCEL;
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((TestSelection.TG == null), m, ref rtfResults);
+                            Logger.LogTest((TestSelection.TestGroup == null), m, ref rtfResults);
                         }
                         if (m.Event != EVENTS.PASS && m.CancelNotPassed) return;
                     }
-                    if (GroupEvaluate(tg) != EVENTS.PASS && tg.CancelNotPassed) return;
+                    if (GroupEvaluate(testGroup) != EVENTS.PASS && testGroup.CancelNotPassed) return;
                 }
             }
         }
@@ -642,52 +642,52 @@ namespace ABT.Test.TestExec {
             ConfigUUT.Event = OperationEvaluate();
             TextTest.Text = ConfigUUT.Event.ToString();
             TextTest.BackColor = EventColors[ConfigUUT.Event];
-            TestSelection.TS.Statistics.Update(ConfigUUT.Event);
+            TestSelection.TestSpace.Statistics.Update(ConfigUUT.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
 
         private EVENTS MeasurementEvaluate(M m) {
-            if (m is MC) return m.Event;
-            else if (m is MI mi) {
-                if (!Double.TryParse((String)mi.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Method}' Value '{m.Value}' ≠ System.Double.");
-                if (mi.LowComparator is MI_LowComparator.GE && mi.HighComparator is MI_HighComparator.LE) return ((mi.Low <= dMeasurement) && (dMeasurement <= mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (mi.LowComparator is MI_LowComparator.GE && mi.HighComparator is MI_HighComparator.LT) return ((mi.Low <= dMeasurement) && (dMeasurement < mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (mi.LowComparator is MI_LowComparator.GT && mi.HighComparator is MI_HighComparator.LE) return ((mi.Low < dMeasurement) && (dMeasurement <= mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (mi.LowComparator is MI_LowComparator.GT && mi.HighComparator is MI_HighComparator.LT) return ((mi.Low < dMeasurement) && (dMeasurement < mi.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', contains unimplemented comparators '{mi.LowComparator}' and/or '{mi.HighComparator}'.");
+            if (m is MethodCustom) return m.Event;
+            else if (m is MethodInterval methodInterval) {
+                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Method}' Value '{m.Value}' ≠ System.Double.");
+                if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
             } else if (m is MP mp) return (String.Equals(mp.Expected, (String)mp.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else if (m is MT mt) return (String.Equals(mt.Text, (String)mt.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else throw new NotImplementedException($"Method '{m.Method}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
         }
 
-        private EVENTS GroupEvaluate(TG tg) {
-            if (MeasurementEventsCount(tg, EVENTS.IGNORE) == tg.Methods.Count) return EVENTS.IGNORE;
+        private EVENTS GroupEvaluate(TestGroup testGroup) {
+            if (MeasurementEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.IGNORE;
             // 0th priority evaluation:
             // All measurement Events are IGNORE, so UUT Event is IGNORE.
-            if (MeasurementEventsCount(tg, EVENTS.PASS) + MeasurementEventsCount(tg, EVENTS.IGNORE) == tg.Methods.Count) return EVENTS.PASS;
+            if (MeasurementEventsCount(testGroup, EVENTS.PASS) + MeasurementEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
-            if (MeasurementEventsCount(tg, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
+            if (MeasurementEventsCount(testGroup, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
             // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
-            if (MeasurementEventsCount(tg, EVENTS.ERROR) != 0) return EVENTS.ERROR;
+            if (MeasurementEventsCount(testGroup, EVENTS.ERROR) != 0) return EVENTS.ERROR;
             // 3rd priority evaluation:
             // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
-            if (MeasurementEventsCount(tg, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
+            if (MeasurementEventsCount(testGroup, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
             // 4th priority evaluation:
             // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
-            if (MeasurementEventsCount(tg, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
+            if (MeasurementEventsCount(testGroup, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
             // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
             // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
-            if (MeasurementEventsCount(tg, EVENTS.FAIL) != 0) return EVENTS.FAIL;
+            if (MeasurementEventsCount(testGroup, EVENTS.FAIL) != 0) return EVENTS.FAIL;
             // 6th priority evaluation:
             // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder invalidTests = new StringBuilder();
-            foreach (M m in tg.Methods) {
+            foreach (M m in testGroup.Methods) {
                 switch (m.Event) {
                     case EVENTS.CANCEL:
                     case EVENTS.EMERGENCY_STOP:
@@ -709,9 +709,9 @@ namespace ABT.Test.TestExec {
         private EVENTS OperationEvaluate() {
             List<EVENTS> groupEvents = new List<EVENTS>();
             Int32 methodsCount = 0;
-            foreach (TG tg in TestSelection.TO.TestGroups) {
-                groupEvents.Add(GroupEvaluate(tg));
-                methodsCount += tg.Methods.Count();
+            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
+                groupEvents.Add(GroupEvaluate(testGroup));
+                methodsCount += testGroup.Methods.Count();
             }
             if (groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.IGNORE;
             // 0th priority evaluation:
@@ -738,8 +738,8 @@ namespace ABT.Test.TestExec {
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (TG tg in TestSelection.TO.TestGroups)
-                foreach (M m in tg.Methods)
+            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
+                foreach (M m in testGroup.Methods)
                     switch (m.Event) {
                         case EVENTS.CANCEL:
                         case EVENTS.EMERGENCY_STOP:
@@ -750,14 +750,14 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TO.NamespaceTrunk}', Class '{tg.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
+                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{m.Method}' Event: '{m.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
             return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
         }
 
-        private Int32 MeasurementEventsCount(TG tg, EVENTS Event) { return (from m in tg.Methods where (m.Event == Event) select m).Count(); }
+        private Int32 MeasurementEventsCount(TestGroup testGroup, EVENTS Event) { return (from m in testGroup.Methods where (m.Event == Event) select m).Count(); }
         #endregion Measurements
 
         #region Logging methods.
@@ -779,9 +779,9 @@ namespace ABT.Test.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSelection.TS.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSelection.TestSpace.StatusTime())); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSelection.TS.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSelection.TestSpace.StatisticsStatus())); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
