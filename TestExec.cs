@@ -161,6 +161,7 @@ namespace ABT.Test.TestExec {
             CT_EmergencyStop = _CTS_EmergencyStop.Token;
 
             if (!testDefinition.TestSpace.Simulate) {
+                TestInstruments = null;
                 testDefinition.Instruments.Instrument = testDefinition.Instruments.GetInstruments(_ConfigurationTestExec);
                 if (testDefinition.TestData.IsEnabled()) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
             }
@@ -820,4 +821,3 @@ namespace ABT.Test.TestExec {
         #endregion Status Strip methods.
     }
 }
-
