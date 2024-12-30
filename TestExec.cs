@@ -582,10 +582,10 @@ namespace ABT.Test.TestExec {
         #region Measurements
         private void MeasurementsPreRun() {
             foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
-                foreach (M m in testGroup.Methods) {
-                    m.Event = EVENTS.UNSET;
-                    m.Log.Clear();
-                    m.Value = null;
+                foreach (Method method in testGroup.Methods) {
+                    method.Event = EVENTS.UNSET;
+                    method.Log.Clear();
+                    method.Value = null;
                 }
             TestIndex.Nullify();
             Logger.Start(this, ref rtfResults);
@@ -597,12 +597,12 @@ namespace ABT.Test.TestExec {
             if (TestSelection.IsOperation()) { // TODO: Accomodate if(TestSelection.IsGroup())
                 foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
                     TestIndex.TestGroup = testGroup;
-                    foreach (M m in testGroup.Methods) {
-                        TestIndex.M = m;
+                    foreach (Method method in testGroup.Methods) {
+                        TestIndex.Method = method;
                         try {
                             StatusStatisticsUpdate(null, null);
-                            m.Value = await Task.Run(() => MeasurementRun(m));
-                            m.Event = MeasurementEvaluate(m);
+                            method.Value = await Task.Run(() => MeasurementRun(method));
+                            method.Event = MeasurementEvaluate(method);
                             if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                                 SystemReset();
                                 return;
@@ -610,32 +610,32 @@ namespace ABT.Test.TestExec {
                         } catch (Exception e) {
                             SystemReset();
                             if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
-                                m.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
+                                method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
                                 while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                                m.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
+                                method.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
                             }
                             if (!CT_EmergencyStop.IsCancellationRequested && !CT_Cancel.IsCancellationRequested) {
-                                m.Event = EVENTS.ERROR;
-                                m.Log.AppendLine($"{Environment.NewLine}{e}");
+                                method.Event = EVENTS.ERROR;
+                                method.Log.AppendLine($"{Environment.NewLine}{e}");
                                 ErrorMessage(e);
                             }
                             return;
                         } finally {
                             // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
                             // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
-                            if (CT_EmergencyStop.IsCancellationRequested) m.Event = EVENTS.EMERGENCY_STOP;
-                            else if (CT_Cancel.IsCancellationRequested) m.Event = EVENTS.CANCEL;
+                            if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
+                            else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((TestSelection.TestGroup == null), m, ref rtfResults);
+                            Logger.LogTest((TestSelection.TestGroup == null), method, ref rtfResults);
                         }
-                        if (m.Event != EVENTS.PASS && m.CancelNotPassed) return;
+                        if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                     }
                     if (GroupEvaluate(testGroup) != EVENTS.PASS && testGroup.CancelNotPassed) return;
                 }
             }
         }
 
-        protected abstract Task<String> MeasurementRun(M m);
+        protected abstract Task<String> MeasurementRun(Method method);
 
         private void MeasurementsPostRun() {
             SystemReset();
@@ -647,18 +647,18 @@ namespace ABT.Test.TestExec {
             Logger.Stop(this, ref rtfResults);
         }
 
-        private EVENTS MeasurementEvaluate(M m) {
-            if (m is MethodCustom) return m.Event;
-            else if (m is MethodInterval methodInterval) {
-                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{m.Name}' Value '{m.Value}' ≠ System.Double.");
+        private EVENTS MeasurementEvaluate(Method method) {
+            if (method is MethodCustom) return method.Event;
+            else if (method is MethodInterval methodInterval) {
+                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
                 if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
-            } else if (m is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else if (m is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, (String)methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
+                throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
+            } else if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            else if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, (String)methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
         }
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
@@ -687,8 +687,8 @@ namespace ABT.Test.TestExec {
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder invalidTests = new StringBuilder();
-            foreach (M m in testGroup.Methods) {
-                switch (m.Event) {
+            foreach (Method method in testGroup.Methods) {
+                switch (method.Event) {
                     case EVENTS.CANCEL:
                     case EVENTS.EMERGENCY_STOP:
                     case EVENTS.ERROR:
@@ -698,7 +698,7 @@ namespace ABT.Test.TestExec {
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
                     default:
-                        invalidTests.AppendLine($"Method: '{m.Name}', Description '{m.Description}', Event: '{m.Event}'.");
+                        invalidTests.AppendLine($"Method: '{method.Name}', Description '{method.Description}', Event: '{method.Event}'.");
                         Logger.LogError($"{Environment.NewLine}Invalid methods to enum EVENTS:{Environment.NewLine}{invalidTests}");
                         break; // Above EVENTS aren't yet handled in this method.
                 }
@@ -739,8 +739,8 @@ namespace ABT.Test.TestExec {
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder stringBuilder = new StringBuilder();
             foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
-                foreach (M m in testGroup.Methods)
-                    switch (m.Event) {
+                foreach (Method method in testGroup.Methods)
+                    switch (method.Event) {
                         case EVENTS.CANCEL:
                         case EVENTS.EMERGENCY_STOP:
                         case EVENTS.ERROR:
@@ -750,14 +750,14 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{m.Name}' Event: '{m.Event}'.");
+                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
             return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
         }
 
-        private Int32 MeasurementEventsCount(TestGroup testGroup, EVENTS Event) { return (from m in testGroup.Methods where (m.Event == Event) select m).Count(); }
+        private Int32 MeasurementEventsCount(TestGroup testGroup, EVENTS Event) { return (from method in testGroup.Methods where (method.Event == Event) select method).Count(); }
         #endregion Measurements
 
         #region Logging methods.
@@ -769,11 +769,11 @@ namespace ABT.Test.TestExec {
 
         public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
-        public void MessageAppend(String Message) { TestIndex.M.Log.Append(Message); }
+        public void MessageAppend(String Message) { TestIndex.Method.Log.Append(Message); }
 
-        public void MessageAppendLine(String Message) { TestIndex.M.Log.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { TestIndex.Method.Log.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { TestIndex.M.Log.AppendLine(MessageFormat(Label, Message)); }
+        public void MessageAppendLine(String Label, String Message) { TestIndex.Method.Log.AppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.

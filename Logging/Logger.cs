@@ -60,21 +60,21 @@ namespace ABT.Test.TestExec.Logging {
 
         public static void LogMessage(String Message) { Log.Information(Message); }
 
-        public static void LogTest(Boolean isOperation, M m, ref RichTextBox rtfResults) {
+        public static void LogTest(Boolean isOperation, Method method, ref RichTextBox rtfResults) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("Method", m.Name));
-            stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", m.CancelNotPassed.ToString()));
-            stringBuilder.AppendLine(FormatMessage("Description", m.Description));
+            stringBuilder.AppendLine(FormatMessage("Method", method.Name));
+            stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", method.CancelNotPassed.ToString()));
+            stringBuilder.AppendLine(FormatMessage("Description", method.Description));
 
-            if (m is MethodCustom) { } // NOTE: Call LogMessage from Tests project to log any MethodCustom desired detail.
-            else if (m is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
-            else if (m is MethodProcess methodProcess) stringBuilder.AppendLine(FormatProcess(methodProcess));
-            else if (m is MethodTextual methodTextual) stringBuilder.AppendLine(FormatTextual(methodTextual));
-            else throw new NotImplementedException($"Method '{m.Name}', description '{m.Description}', with classname '{nameof(m)}' not implemented.");
-            stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, m.Event.ToString()));
-            stringBuilder.Append(m.Log.ToString());
+            if (method is MethodCustom) { } // NOTE: Call LogMessage from Tests project to log any MethodCustom desired detail.
+            else if (method is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
+            else if (method is MethodProcess methodProcess) stringBuilder.AppendLine(FormatProcess(methodProcess));
+            else if (method is MethodTextual methodTextual) stringBuilder.AppendLine(FormatTextual(methodTextual));
+            else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
+            stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
+            stringBuilder.Append(method.Log.ToString());
             Log.Information(stringBuilder.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, m.Name, TestLib.TestLib.EventColors[m.Event]);
+            if (isOperation) SetBackColor(ref rtfResults, 0, method.Name, TestLib.TestLib.EventColors[method.Event]);
         }
 
         public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
@@ -140,7 +140,7 @@ namespace ABT.Test.TestExec.Logging {
             StringBuilder sb = new StringBuilder();
             foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
                 sb.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
-                foreach (M m in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", m.Name, m.Description));
+                foreach (Method method in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", method.Name, method.Description));
             }
             Log.Information($"TestMeasurements:\n{sb}");
         }
