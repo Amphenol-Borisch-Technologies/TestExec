@@ -24,7 +24,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
-using ABT.Test.TestLib.TestDefinition;
+using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.TestLib;
 
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
@@ -138,13 +138,13 @@ namespace ABT.Test.TestExec {
         private CancellationTokenSource _CTS_Cancel;
         private CancellationTokenSource _CTS_EmergencyStop;
 
-        protected TestExec(Icon icon, String BaseDirectory) {
+        protected TestExec(Icon icon, String baseDirectory) {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            TestLib.TestLib.BaseDirectory = BaseDirectory;
-            TestSelection.TestSpace = Serializing.Deserialize(TestDefinitionXML: $"{BaseDirectory}TestDefinition.xml");
+            BaseDirectory = baseDirectory;
+            testDefinition = Serializing.Deserialize(TestDefinitionXML: $"{baseDirectory}TestDefinition.xml");
             if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
-            else _serialNumberRegEx = ConfigUUT.SerialNumberRegExCustom;
+            else _serialNumberRegEx = testDefinition.TestData.Item
 
             if (RegexInvalid(_serialNumberRegEx)) {
                 StringBuilder sb = new StringBuilder();
