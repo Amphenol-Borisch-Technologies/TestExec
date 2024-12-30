@@ -86,9 +86,9 @@ namespace ABT.Test.TestExec.Logging {
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.ConfigUUT.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.ConfigUUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.ConfigUUT.Revision}"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testDefinition.UUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testDefinition.UUT.Revision}"));
                 Log.Information(FormatMessage($"TestGroup ", $"{TestSelection.TestGroup.Class}"));
                 Log.Information(FormatMessage($"Description", $"{TestSelection.TestGroup.Description}"));
                 Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
@@ -96,18 +96,15 @@ namespace ABT.Test.TestExec.Logging {
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
-            if (TestLib.TestLib.ConfigLogger.FileEnabled && !TestLib.TestLib.ConfigLogger.SQLEnabled) {
+            if (TestLib.TestLib.testDefinition.TestData.Item is TextFiles textFiles) {
                 // When TestOperations are executed, measurement data is always & automatically saved as Rich Text.
                 // RichTextBox + File.
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                     .CreateLogger();
-            } else if (!TestLib.TestLib.ConfigLogger.FileEnabled && TestLib.TestLib.ConfigLogger.SQLEnabled) {
+            } else if (TestLib.TestLib.testDefinition.TestData.Item is SQLDB sqlDB) {
                 // TODO:  Eventually; RichTextBox + SQL.
-                SQLStart();
-            } else if (TestLib.TestLib.ConfigLogger.FileEnabled && TestLib.TestLib.ConfigLogger.SQLEnabled) {
-                // TODO:  Eventually; RichTextBox + File + SQL.
                 SQLStart();
             } else {
                 // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but potentially not for other testing methodologies.
@@ -118,12 +115,12 @@ namespace ABT.Test.TestExec.Logging {
             }
             Log.Information($"UUT:");
             Log.Information($"\t{MESSAGE_UUT_EVENT}");
-            Log.Information($"\tSerial Number     : {TestLib.TestLib.ConfigUUT.SerialNumber}");
-            Log.Information($"\tNumber            : {TestLib.TestLib.ConfigUUT.Number}");
-            Log.Information($"\tRevision          : {TestLib.TestLib.ConfigUUT.Revision}");
-            Log.Information($"\tDescription       : {TestLib.TestLib.ConfigUUT.Description}");
-            Log.Information($"\tType              : {TestLib.TestLib.ConfigUUT.Type}");
-            Log.Information($"\tCustomer          : {TestLib.TestLib.ConfigUUT.Customer}\n");
+            Log.Information($"\tSerial Number     : {TestLib.TestLib.testDefinition.TestSpace.SerialNumber}");
+            Log.Information($"\tNumber            : {TestLib.TestLib.testDefinition.UUT.Number}");
+            Log.Information($"\tRevision          : {TestLib.TestLib.testDefinition.UUT.Revision}");
+            Log.Information($"\tDescription       : {TestLib.TestLib.testDefinition.UUT.Description}");
+            Log.Information($"\tType              : {TestLib.TestLib.testDefinition.UUT.Category}");
+            Log.Information($"\tCustomer          : {TestLib.TestLib.testDefinition.UUT.Customer}\n");
 
             Log.Information($"TestOperation:");
             Log.Information($"\tStart             : {DateTime.Now}");
@@ -133,7 +130,7 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\tMachineName       : {Environment.MachineName}");
             Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
             Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-            Log.Information($"\tSpecification     : {TestLib.TestLib.ConfigUUT.TestDefinition}");
+            Log.Information($"\tSpecification     : {TestLib.TestLib.testDefinition.UUT.TestSpecification}");
             Log.Information($"\tID                : {TestSelection.TestOperation.NamespaceTrunk}");
             Log.Information($"\tDescription       : {TestSelection.TestOperation.Description}\n");
 
@@ -154,13 +151,13 @@ namespace ABT.Test.TestExec.Logging {
             if (TestSelection.IsGroup()) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestLib.TestLib.ConfigUUT.Event.ToString());
-                SetBackColor(ref rtfResults, 0, TestLib.TestLib.ConfigUUT.Event.ToString(), TestLib.TestLib.EventColors[TestLib.TestLib.ConfigUUT.Event]);
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestLib.TestLib.testDefinition.TestSpace.Event.ToString());
+                SetBackColor(ref rtfResults, 0, TestLib.TestLib.testDefinition.TestSpace.Event.ToString(), TestLib.TestLib.EventColors[TestLib.TestLib.testDefinition.TestSpace.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
-                if (TestLib.TestLib.ConfigUUT.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
-                    if (TestLib.TestLib.ConfigLogger.FileEnabled) FileStop(testExec, ref rtfResults);
-                    if (TestLib.TestLib.ConfigLogger.SQLEnabled) SQLStop();
+                if (TestLib.TestLib.testDefinition.TestSpace.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
+                    if (TestLib.TestLib.testDefinition.TestData.Item is TextFiles textFiles) FileStop(testExec, ref rtfResults);
+                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQLDB sqlDB) SQLStop();
                 }
             }
         }
@@ -168,14 +165,16 @@ namespace ABT.Test.TestExec.Logging {
 
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            String fileName = $"{TestLib.TestLib.ConfigUUT.Number}_{TestLib.TestLib.ConfigUUT.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
-            String[] files = Directory.GetFiles(GetFilePath(), $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
+            TextFiles textFiles = (TextFiles)TestLib.TestLib.testDefinition.TestData.Item;
+            String textFilesFolder = $"{textFiles.Folder}{TestSelection.TestOperation.NamespaceTrunk}\\";
+            String fileName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
+            String[] files = Directory.GetFiles(textFilesFolder, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
             // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TestOperation.NamespaceLeaf_*.rtf.
             Int32 maxNumber = 0; String s;
             foreach (String f in files) {
                 s = f;
-                s = s.Replace($"{GetFilePath()}{fileName}", String.Empty);
+                s = s.Replace($"{textFilesFolder}{fileName}", String.Empty);
                 s = s.Replace(".rtf", String.Empty);
                 s = s.Replace("_", String.Empty);
 
@@ -190,12 +189,10 @@ namespace ABT.Test.TestExec.Logging {
                 //   foreach (FieldInfo  : '3'
                 //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{TestLib.TestLib.ConfigUUT.Event}.rtf";
-            rtfResults.SaveFile($"{GetFilePath()}{fileName}");
+            fileName += $"_{++maxNumber}_{TestLib.TestLib.testDefinition.TestSpace.Event}.rtf";
+            rtfResults.SaveFile($"{textFilesFolder}{fileName}");
         }
         
-        private static String GetFilePath() { return $"{TestLib.TestLib.ConfigLogger.FilePath}{TestSelection.TestOperation.NamespaceTrunk}\\"; }
-
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
             if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");

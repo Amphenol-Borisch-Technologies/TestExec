@@ -143,21 +143,16 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             testDefinition = Serializing.Deserialize(TestDefinitionXML: $"{baseDirectory}TestDefinition.xml");
-            if (String.Equals(ConfigUUT.SerialNumberRegExCustom, _NOT_APPLICABLE)) _serialNumberRegEx = XElement.Load(_ConfigurationTestExec).Element("SerialNumberRegExDefault").Value;
-            else _serialNumberRegEx = testDefinition.TestData.Item
+            foreach (Developer developer in testDefinition.Development.Developer) developer.EMailAddress = GetAddress(developer.Name);
 
-            if (RegexInvalid(_serialNumberRegEx)) {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"Invalid Serial Number Regular Expression '{_serialNumberRegEx}':");
-                sb.AppendLine($"   Check {_ConfigurationTestExec}/SerialNumberRegExDefault or App.config/UUT_SerialNumberRegExCustom for valid Regular Expression syntax.");
-                sb.AppendLine($"   Thank you & have a nice day {UserPrincipal.Current.DisplayName}!");
-                throw new ArgumentException(sb.ToString());
+            if (testDefinition.TestData.IsEnabled()) {
+                if (testDefinition.TestData.Item is SerialNumber serialNumber) _serialNumberRegEx = serialNumber.SerialNumberRegEx;
+                else throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
+                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{baseDirectory}TestDefinition.xml'.");
+                _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{RegistryKey(testDefinition.UUT.Customer.Name)}\\{RegistryKey(testDefinition.UUT.Number)}\\SerialNumber");
+                testDefinition.TestSpace.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
             }
 
-            _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{ConfigUUT.Customer}\\{ConfigUUT.Number}\\SerialNumber");
-            ConfigUUT.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
-            // NOTE:  Writing into Application Settings is generally advisable over writing into Windows' Registry, but doing so permits all app users to write the App.config file.
-            // - This means all users can also modify App.config's TestOperations, TestGroups & TestMeasurements, which is a no-no.
             _statusTime.Elapsed += StatusTimeUpdate;
             _statusTime.AutoReset = true;
             _CTS_Cancel = new CancellationTokenSource();
@@ -165,20 +160,22 @@ namespace ABT.Test.TestExec {
             _CTS_EmergencyStop = new CancellationTokenSource();
             CT_EmergencyStop = _CTS_EmergencyStop.Token;
 
-            if (!ConfigUUT.Simulate) {
-                TestLib.TestLib.InstrumentDrivers = TestLib.AppConfig.InstrumentDrivers.Get(_ConfigurationTestExec);
-                if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
+            if (!testDefinition.TestSpace.Simulate) {
+                testDefinition.Instruments.Instrument = testDefinition.Instruments.GetInstruments(_ConfigurationTestExec);
+                if (testDefinition.TestData.IsEnabled()) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
             }
         }
 
         #region Form Miscellaneous
+        private static String RegistryKey(String text) { return Regex.Replace(text, @"[\\\/\:\*\?\""\<\>\|]+", "_"); }
+
         public static void ErrorMessage(String Error) {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public static void ErrorMessage(Exception Ex) {
-            if (!String.Equals(ConfigUUT.EMailTestEngineer, _NOT_APPLICABLE)) {
-                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {ConfigUUT.EMailTestEngineer}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+        public static void ErrorMessage(System.Exception Ex) {
+            if (!String.Equals(testDefinition.Development.Developer[0].EMailAddress, String.Empty)) {
+                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.Developer[0].EMailAddress}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendAdministratorMailMessage("Exception caught!", Ex);
             }
         }
@@ -244,25 +241,25 @@ namespace ABT.Test.TestExec {
         }
 
         public virtual void SystemReset() {
-            if (ConfigUUT.Simulate) return;
+            if (testDefinition.TestSpace.Simulate) return;
             IPowerSuppliesOutputsOff();
             IRelaysOpenAll();
             IInstrumentsResetClear();
         }
 
         public virtual void IInstrumentsResetClear() {
-            if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestLib.TestLib.InstrumentDrivers) if (kvp.Value is IInstruments ii) ii.ResetClear();
+            if (testDefinition.TestSpace.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments ii) ii.ResetClear();
         }
 
         public virtual void IRelaysOpenAll() {
-            if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestLib.TestLib.InstrumentDrivers) if (kvp.Value is IRelays ir) ir.OpenAll();
+            if (testDefinition.TestSpace.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays ir) ir.OpenAll();
         }
 
         public virtual void IPowerSuppliesOutputsOff() {
-            if (ConfigUUT.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in TestLib.TestLib.InstrumentDrivers) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
+            if (testDefinition.TestSpace.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -301,7 +298,7 @@ namespace ABT.Test.TestExec {
 
         private void PreApplicationExit() {
             SystemReset();
-            if (ConfigLogger.SerialNumberDialogEnabled) _serialNumberDialog.Close();
+            _serialNumberDialog?.Close();
             MutexTest.ReleaseMutex();
             MutexTest.Dispose();
         }
@@ -316,7 +313,7 @@ namespace ABT.Test.TestExec {
             return false;
         }
 
-        public static void SendAdministratorMailMessage(String Subject, Exception Ex) {
+        public static void SendAdministratorMailMessage(String Subject, System.Exception Ex) {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"MachineName           : {Environment.MachineName}");
             sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
@@ -328,7 +325,7 @@ namespace ABT.Test.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = String.Equals(_NOT_APPLICABLE, ConfigUUT.EMailTestEngineer) ? String.Empty : ConfigUUT.EMailTestEngineer;
+                mailItem.To = testDefinition.Development.Developer[0].EMailAddress;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -342,20 +339,32 @@ namespace ABT.Test.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = String.Equals(_NOT_APPLICABLE, ConfigUUT.EMailTestEngineer) ? String.Empty : ConfigUUT.EMailTestEngineer;
+                mailItem.To = testDefinition.Development.Developer[0].EMailAddress;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
                     $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
                     $" - Be specific!  Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}";
-                String rtfTempFile = $"{Path.GetTempPath()}\\{ConfigUUT.Number}.rtf";
+                String rtfTempFile = $"{Path.GetTempPath()}\\{testDefinition.UUT.Number}.rtf";
                 rtfResults.SaveFile(rtfTempFile);
-                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{ConfigUUT.Number}.rtf");
+                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{testDefinition.UUT.Number}.rtf");
                 mailItem.Display();
             } catch {
                 Logger.LogError(subject);
             }
         }
+
+        private static String GetAddress(String Name) {
+            Outlook.Application outlookApp = new Outlook.Application();
+            Outlook.NameSpace outlookNamespace = outlookApp.GetNamespace("MAPI");
+            Outlook.AddressList addressList = outlookNamespace.AddressLists["Global Address List"];
+
+            if (addressList != null) {
+                foreach (Outlook.AddressEntry entry in addressList.AddressEntries) if (entry.Name == Name) return entry.Address;
+            }
+            return String.Empty;
+        }
+
         #endregion Form Miscellaneous
 
         #region Form Command Buttons
@@ -400,7 +409,7 @@ namespace ABT.Test.TestExec {
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             (TestSelection.TestOperation, TestSelection.TestGroup) = TestSelect.Get();
-            base.Text = $"{ConfigUUT.Number}, {ConfigUUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TestGroup.Class : TestSelection.TestOperation.NamespaceTrunk)}";
+            base.Text = $"{testDefinition.UUT.Number}, {testDefinition.UUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TestGroup.Class : TestSelection.TestOperation.NamespaceTrunk)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -408,17 +417,17 @@ namespace ABT.Test.TestExec {
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
             String serialNumber;
-            if (ConfigLogger.SerialNumberDialogEnabled) {
-                _serialNumberDialog.Set(ConfigUUT.SerialNumber);
+            if (_serialNumberDialog != null) {
+                _serialNumberDialog.Set(testDefinition.TestSpace.SerialNumber);
                 serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                 _serialNumberDialog.Hide();
             } else {
-                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: ConfigUUT.SerialNumber).Trim().ToUpper();
+                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: testDefinition.TestSpace.SerialNumber).Trim().ToUpper();
                 serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
             }
             if (String.Equals(serialNumber, String.Empty)) return;
             _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
-            ConfigUUT.SerialNumber = serialNumber;
+            testDefinition.TestSpace.SerialNumber = serialNumber;
 
             FormModeReset();
             FormModeRun();
@@ -450,7 +459,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{ConfigUUT.Number}_{TestSelection.TestOperation.NamespaceTrunk}_{ConfigUUT.SerialNumber}",
+                FileName = $"{testDefinition.UUT.Number}_{TestSelection.TestOperation.NamespaceTrunk}_{testDefinition.TestSpace.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -488,8 +497,8 @@ namespace ABT.Test.TestExec {
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {ConfigUUT.Number}, {ConfigUUT.Description}."); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
@@ -550,11 +559,15 @@ namespace ABT.Test.TestExec {
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
-        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.DocumentationFolder); }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(ConfigUUT.ManualsFolder); }
+        private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
+            foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
+        }
+        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) {
+            foreach (Documentation documentation in testDefinition.Development.Documentation) OpenFolder(documentation.Folder);
+        }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{ConfigUUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {TestSelection.TestSpace.StatusTime()}",
+                Title: $"{testDefinition.UUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {TestSelection.TestSpace.StatusTime()}",
                 Text: TestSelection.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
@@ -567,7 +580,9 @@ namespace ABT.Test.TestExec {
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
-        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) { OpenFolder(ConfigLogger.FilePath); }
+        private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
+            if (testDefinition.TestData.Item is TextFiles textFiles) OpenFolder(textFiles.Folder);
+        }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new Miscellaneous.MessageBoxMonoSpaced(
@@ -607,7 +622,7 @@ namespace ABT.Test.TestExec {
                                 SystemReset();
                                 return;
                             }
-                        } catch (Exception e) {
+                        } catch (System.Exception e) {
                             SystemReset();
                             if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                                 method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
@@ -639,10 +654,10 @@ namespace ABT.Test.TestExec {
 
         private void MeasurementsPostRun() {
             SystemReset();
-            ConfigUUT.Event = OperationEvaluate();
-            TextTest.Text = ConfigUUT.Event.ToString();
-            TextTest.BackColor = EventColors[ConfigUUT.Event];
-            TestSelection.TestSpace.Statistics.Update(ConfigUUT.Event);
+            testDefinition.TestSpace.Event = OperationEvaluate();
+            TextTest.Text = testDefinition.TestSpace.Event.ToString();
+            TextTest.BackColor = EventColors[testDefinition.TestSpace.Event];
+            TestSelection.TestSpace.Statistics.Update(testDefinition.TestSpace.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
