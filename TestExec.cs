@@ -142,7 +142,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
-            testDefinition = Serializing.Deserialize(TestDefinitionXML: $"{baseDirectory}TestDefinition.xml");
+            testDefinition = Serializing.DeserializeFromXml<TestDefinition>(xmlFile: $"{baseDirectory}TestDefinition.xml");
             foreach (Developer developer in testDefinition.Development.Developer) developer.EMailAddress = GetAddress(developer.Name);
 
             if (testDefinition.TestData.IsEnabled()) {
