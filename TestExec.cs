@@ -355,6 +355,7 @@ namespace ABT.Test.TestExec {
         }
 
         private static String GetAddress(String Name) {
+            // TODO: entry.Name is a GUID, not a person's mame in format "John Smith".
             Outlook.Application outlookApp = new Outlook.Application();
             Outlook.NameSpace outlookNamespace = outlookApp.GetNamespace("MAPI");
             Outlook.AddressList addressList = outlookNamespace.AddressLists["Global Address List"];
@@ -475,7 +476,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
-            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestDefinitionXSD: TestDefinitionXSD, TestDefinitionXML);
+            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML);
         }
         private (DialogResult DR, String TestDefinitionXML) GetTestDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
