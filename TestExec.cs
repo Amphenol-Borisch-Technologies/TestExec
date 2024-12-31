@@ -355,17 +355,24 @@ namespace ABT.Test.TestExec {
         }
 
         private static String GetAddress(String Name) {
-            // TODO: entry.Name is a GUID, not a person's mame in format "John Smith".
             Outlook.Application outlookApp = new Outlook.Application();
             Outlook.NameSpace outlookNamespace = outlookApp.GetNamespace("MAPI");
             Outlook.AddressList addressList = outlookNamespace.AddressLists["Global Address List"];
 
             if (addressList != null) {
-                foreach (Outlook.AddressEntry entry in addressList.AddressEntries) if (entry.Name == Name) return entry.Address;
+                Outlook.ExchangeUser exchangeUser = null;
+                foreach (Outlook.AddressEntry entry in addressList.AddressEntries) {
+                    if (entry != null) {
+                        exchangeUser = entry.GetExchangeUser();
+                        if (exchangeUser != null) {
+                            Debug.WriteLine($"AddressEntry.Name : '{entry.Name}', ExchangeUser.Name : '{exchangeUser.Name}', ExchangeUser.Address : '{exchangeUser.PrimarySmtpAddress}'");
+                            if (String.Equals(entry.GetExchangeUser().Name, Name)) return entry.Address;
+                        }
+                    }
+                }
             }
             return String.Empty;
         }
-
         #endregion Form Miscellaneous
 
         #region Form Command Buttons
