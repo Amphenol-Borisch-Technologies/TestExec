@@ -796,7 +796,7 @@ namespace ABT.Test.TestExec {
 
         #region Status Strip methods.
         private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
-        // TODO: Don't invoke timer until a bit later?
+        // TODO: Don't invoke timer until 
 
         private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
 
