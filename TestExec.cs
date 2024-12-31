@@ -567,8 +567,8 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{testDefinition.UUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {TestSelection.TestSpace.StatusTime()}",
-                Text: TestSelection.TestSpace.StatisticsDisplay(),
+                Title: $"{testDefinition.UUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
+                Text: testDefinition.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
@@ -576,7 +576,7 @@ namespace ABT.Test.TestExec {
 
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            TestSelection.TestSpace.Statistics = new Statistics();
+            testDefinition.TestSpace.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
@@ -641,7 +641,7 @@ namespace ABT.Test.TestExec {
                             if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
                             else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((TestSelection.TestGroup == null), method, ref rtfResults);
+                            Logger.LogTest((TestSelection.IsOperation()), method, ref rtfResults);
                         }
                         if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                     }
@@ -657,7 +657,7 @@ namespace ABT.Test.TestExec {
             testDefinition.TestSpace.Event = OperationEvaluate();
             TextTest.Text = testDefinition.TestSpace.Event.ToString();
             TextTest.BackColor = EventColors[testDefinition.TestSpace.Event];
-            TestSelection.TestSpace.Statistics.Update(testDefinition.TestSpace.Event);
+            testDefinition.TestSpace.Statistics.Update(testDefinition.TestSpace.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(this, ref rtfResults);
         }
@@ -794,9 +794,9 @@ namespace ABT.Test.TestExec {
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = TestSelection.TestSpace.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = TestSelection.TestSpace.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
