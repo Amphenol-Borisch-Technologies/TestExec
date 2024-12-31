@@ -368,7 +368,7 @@ namespace ABT.Test.TestExec {
             }
         }
 
-        private static async Task<String> GetAddress(Outlook.AddressList addressList, String Name) {
+        private static String GetAddress(Outlook.AddressList addressList, String Name) {
             Outlook.ExchangeUser exchangeUser;
             foreach (Outlook.AddressEntry entry in addressList.AddressEntries) {
                 if (entry != null) {
