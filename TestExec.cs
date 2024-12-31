@@ -143,7 +143,7 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             testDefinition = Serializing.DeserializeFromXml<TestDefinition>(xmlFile: $"{baseDirectory}TestDefinition.xml");
-            foreach (Developer developer in testDefinition.Development.Developer) developer.EMailAddress = GetAddress(developer.Name);
+            _ = Task.Run(() => GetDeveloperAddresses());
 
             if (testDefinition.TestData.IsEnabled()) {
                 if (testDefinition.TestData.Item is SerialNumber serialNumber) _serialNumberRegEx = serialNumber.SerialNumberRegEx;
@@ -176,7 +176,7 @@ namespace ABT.Test.TestExec {
         public static void ErrorMessage(System.Exception Ex) {
             if (!String.Equals(testDefinition.Development.Developer[0].EMailAddress, String.Empty)) {
                 ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.Developer[0].EMailAddress}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
-                SendAdministratorMailMessage("Exception caught!", Ex);
+                SendDeveloperMailMessage("Exception caught!", Ex);
             }
         }
 
@@ -278,7 +278,7 @@ namespace ABT.Test.TestExec {
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
-                Process.Start(psi);
+                _ = Process.Start(psi);
             } else InvalidPathError(app);
         }
 
@@ -292,7 +292,7 @@ namespace ABT.Test.TestExec {
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
-                Process.Start(psi);
+                _ = Process.Start(psi);
             } else InvalidPathError(FolderPath);
         }
 
@@ -306,22 +306,22 @@ namespace ABT.Test.TestExec {
         public static Boolean RegexInvalid(String RegularExpression) {
             if (String.IsNullOrWhiteSpace(RegularExpression)) return true;
             try {
-                Regex.Match("", RegularExpression);
+                _ = Regex.Match("", RegularExpression);
             } catch (ArgumentException) {
                 return true;
             }
             return false;
         }
 
-        public static void SendAdministratorMailMessage(String Subject, System.Exception Ex) {
+        public static void SendDeveloperMailMessage(String Subject, System.Exception Ex) {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"MachineName           : {Environment.MachineName}");
-            sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
-            sb.AppendLine($"Exception.ToString()  : {Ex}");
-            SendAdministratorMailMessage(Subject, Body: sb.ToString());
+            _ = sb.AppendLine($"MachineName           : {Environment.MachineName}");
+            _ = sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
+            _ = sb.AppendLine($"Exception.ToString()  : {Ex}");
+            SendDeveloperMailMessage(Subject, Body: sb.ToString());
         }
 
-        public static void SendAdministratorMailMessage(String Subject, String Body) {
+        public static void SendDeveloperMailMessage(String Subject, String Body) {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
@@ -354,20 +354,28 @@ namespace ABT.Test.TestExec {
             }
         }
 
-        private static String GetAddress(String Name) {
+        private static async Task GetDeveloperAddresses() {
             Outlook.Application outlookApp = new Outlook.Application();
             Outlook.NameSpace outlookNamespace = outlookApp.GetNamespace("MAPI");
-            Outlook.AddressList addressList = outlookNamespace.AddressLists["Global Address List"];
+            Outlook.AddressList addressList = outlookNamespace.AddressLists["Offline Global Address List"];
 
             if (addressList != null) {
-                Outlook.ExchangeUser exchangeUser = null;
-                foreach (Outlook.AddressEntry entry in addressList.AddressEntries) {
-                    if (entry != null) {
-                        exchangeUser = entry.GetExchangeUser();
-                        if (exchangeUser != null) {
-                            Debug.WriteLine($"AddressEntry.Name : '{entry.Name}', ExchangeUser.Name : '{exchangeUser.Name}', ExchangeUser.Address : '{exchangeUser.PrimarySmtpAddress}'");
-                            if (String.Equals(entry.GetExchangeUser().Name, Name)) return entry.Address;
-                        }
+                Object task;
+                foreach (Developer developer in testDefinition.Development.Developer) {
+                    task = await Task.Run(() => GetAddress(addressList, developer.Name));
+                    developer.EMailAddress = (String)task;
+                }
+            }
+        }
+
+        private static async Task<String> GetAddress(Outlook.AddressList addressList, String Name) {
+            Outlook.ExchangeUser exchangeUser;
+            foreach (Outlook.AddressEntry entry in addressList.AddressEntries) {
+                if (entry != null) {
+                    exchangeUser = entry.GetExchangeUser();
+                    if (exchangeUser != null) {
+                        Debug.WriteLine($"AddressEntry.Name : '{entry.Name}', AddressEntry.Address : '{entry.Address}',ExchangeUser.Name : '{exchangeUser.Name}', ExchangeUser.Address : '{exchangeUser.PrimarySmtpAddress}'");
+                        if (String.Equals(exchangeUser.Name, Name)) return exchangeUser.PrimarySmtpAddress;
                     }
                 }
             }
@@ -515,16 +523,16 @@ namespace ABT.Test.TestExec {
             rtfResults.Clear();
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
             StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
-            sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
-            sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
-            sb.AppendLine($"  - Modify ConfigurationTestExec to use a discovered Barcode Scanner.");
-            sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
-            sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExec/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
-            sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
+            _ = sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
+            _ = sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
+            _ = sb.AppendLine($"  - Modify ConfigurationTestExec to use a discovered Barcode Scanner.");
+            _ = sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
+            _ = sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExec/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
+            _ = sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
             foreach (DeviceInformation di in dic) {
-                sb.AppendLine($"Name: '{di.Name}'.");
-                sb.AppendLine($"Kind: '{di.Kind}'.");
-                sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
+                _ = sb.AppendLine($"Name: '{di.Name}'.");
+                _ = sb.AppendLine($"Kind: '{di.Kind}'.");
+                _ = sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
             }
             rtfResults.Text = sb.ToString();
             SaveFileDialog saveFileDialog = new SaveFileDialog {
@@ -562,8 +570,8 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
             StringBuilder sb = new StringBuilder();
             String EA = Assembly.GetEntryAssembly().GetName().Name;
-            sb.AppendLine($"Please backport any permanently desired '{EA}.exe.config' changes to source repository's 'App.config'.{Environment.NewLine}");
-            sb.AppendLine($"Also please undo any temporary undesired '{EA}.exe.config' changes.");
+            _ = sb.AppendLine($"Please backport any permanently desired '{EA}.exe.config' changes to source repository's 'App.config'.{Environment.NewLine}");
+            _ = sb.AppendLine($"Also please undo any temporary undesired '{EA}.exe.config' changes.");
             DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
         }
@@ -607,7 +615,7 @@ namespace ABT.Test.TestExec {
             foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
                 foreach (Method method in testGroup.Methods) {
                     method.Event = EVENTS.UNSET;
-                    method.Log.Clear();
+                    _ = method.Log.Clear();
                     method.Value = null;
                 }
             TestIndex.Nullify();
@@ -635,11 +643,11 @@ namespace ABT.Test.TestExec {
                             if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                                 method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
                                 while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                                method.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
+                                _ = method.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
                             }
                             if (!CT_EmergencyStop.IsCancellationRequested && !CT_Cancel.IsCancellationRequested) {
                                 method.Event = EVENTS.ERROR;
-                                method.Log.AppendLine($"{Environment.NewLine}{e}");
+                                _ = method.Log.AppendLine($"{Environment.NewLine}{e}");
                                 ErrorMessage(e);
                             }
                             return;
@@ -721,7 +729,7 @@ namespace ABT.Test.TestExec {
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
                     default:
-                        invalidTests.AppendLine($"Method: '{method.Name}', Description '{method.Description}', Event: '{method.Event}'.");
+                        _ = invalidTests.AppendLine($"Method: '{method.Name}', Description '{method.Description}', Event: '{method.Event}'.");
                         Logger.LogError($"{Environment.NewLine}Invalid methods to enum EVENTS:{Environment.NewLine}{invalidTests}");
                         break; // Above EVENTS aren't yet handled in this method.
                 }
@@ -773,7 +781,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
+                            _ = stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
@@ -792,20 +800,20 @@ namespace ABT.Test.TestExec {
 
         public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
-        public void MessageAppend(String Message) { TestIndex.Method.Log.Append(Message); }
+        public void MessageAppend(String Message) { _ = TestIndex.Method.Log.Append(Message); }
 
-        public void MessageAppendLine(String Message) { TestIndex.Method.Log.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { _ = TestIndex.Method.Log.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { TestIndex.Method.Log.AppendLine(MessageFormat(Label, Message)); }
+        public void MessageAppendLine(String Label, String Message) { _ = TestIndex.Method.Log.AppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
         // TODO: Don't invoke timer until b
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
@@ -818,13 +826,13 @@ namespace ABT.Test.TestExec {
         };
 
         private void StatusModeUpdate(MODES mode) {
-            Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
-            Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
+            _ = Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
+            _ = Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
         }
 
         public void StatusCustomWrite(String Message, Color ForeColor) {
-            Invoke((Action)(() => StatusCustomLabel.Text = Message));
-            Invoke((Action)(() => StatusCustomLabel.ForeColor = ForeColor));
+            _ = Invoke((Action)(() => StatusCustomLabel.Text = Message));
+            _ = Invoke((Action)(() => StatusCustomLabel.ForeColor = ForeColor));
         }
         #endregion Status Strip methods.
     }
