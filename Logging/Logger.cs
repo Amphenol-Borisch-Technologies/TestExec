@@ -166,7 +166,7 @@ namespace ABT.Test.TestExec.Logging {
         #region Private Methods
         private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
             TextFiles textFiles = (TextFiles)TestLib.TestLib.testDefinition.TestData.Item;
-            String textFilesFolder = $"{textFiles.Folder}{TestSelection.TestOperation.NamespaceTrunk}\\";
+            String textFilesFolder = $"{textFiles.Folder}\\{TestSelection.TestOperation.NamespaceTrunk}\\";
             String fileName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
             String[] files = Directory.GetFiles(textFilesFolder, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
             // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
