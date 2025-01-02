@@ -6,9 +6,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
+using Windows.Storage.Streams;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -130,7 +133,7 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"TestMeasurements:\n{sb}");
         }
 
-        public static String BuildDate(Version version) { 
+        public static String BuildDate(Version version) {
             DateTime Y2K = new DateTime(year: 2000, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Local);
             return $"{Y2K + new TimeSpan(days: version.Build, hours: 0, minutes: 0, seconds: 2 * version.Revision):g}";
         }
@@ -150,7 +153,7 @@ namespace ABT.Test.TestExec.Logging {
                 }
             }
         }
-#endregion Public Methods
+        #endregion Public Methods
 
         #region Private Methods
         private static void StopXML(ref RichTextBox rtfResults) {
@@ -170,10 +173,19 @@ namespace ABT.Test.TestExec.Logging {
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
-            String xmlFile = $"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testDefinition.TestSpace.Event}.xml";
-            Serializing.SerializeToFile<TestSpace>(TestLib.TestLib.testDefinition.TestSpace, xmlFile, FileMode.CreateNew);
+            using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testDefinition.TestSpace.Event}.xml", FileMode.CreateNew)) {
+                using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
+                    xmlTextWriter.Formatting = Formatting.Indented;
+                    xmlTextWriter.WriteStartElement("TestOutput");
+                    xmlTextWriter.WriteAttributeString("xsi", "noNamespaceSchemaLocation", null, "file://C://Users//phils//source//repos//ABT//Test//TestLib//TestConfiguration//TestOutput.xsd");
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestOutput));
+                    xmlSerializer.Serialize(xmlTextWriter, new TestOutput(TestLib.TestLib.testDefinition.UUT, TestLib.TestLib.testDefinition.TestSpace));
+                    xmlTextWriter.WriteEndElement();
+                    xmlTextWriter.Close();
+                }
+            }
         }
-        
+
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
             Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
             if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");

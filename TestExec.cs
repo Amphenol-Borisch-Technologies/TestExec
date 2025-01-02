@@ -611,7 +611,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: "About Tests",
+                Title: "About",
                 Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {Logger.BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
                 Link: "https://github.com/Amphenol-Borisch-Technologies/TestPlan"
             );
