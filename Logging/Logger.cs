@@ -96,23 +96,11 @@ namespace ABT.Test.TestExec.Logging {
                 // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
             }
 
-            if (TestLib.TestLib.testDefinition.TestData.Item is TextFiles textFiles) {
-                // When TestOperations are executed, measurement data is always & automatically saved as Rich Text.
-                // RichTextBox + File.
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-                    .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
-                    .CreateLogger();
-            } else if (TestLib.TestLib.testDefinition.TestData.Item is SQLDB sqlDB) {
-                // TODO:  Eventually; RichTextBox + SQL.
-                SQLStart();
-            } else {
-                // RichTextBox only; customer doesn't require saved measurement data, unusual for Functional testing, but potentially not for other testing methodologies.
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-                    .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
-                    .CreateLogger();
-            }
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
+                .CreateLogger();
+
             Log.Information($"UUT:");
             Log.Information($"\t{MESSAGE_UUT_EVENT}");
             Log.Information($"\tSerial Number     : {TestLib.TestLib.testDefinition.TestSpace.SerialNumber}");
@@ -147,7 +135,7 @@ namespace ABT.Test.TestExec.Logging {
             return $"{Y2K + new TimeSpan(days: version.Build, hours: 0, minutes: 0, seconds: 2 * version.Revision):g}";
         }
 
-        public static void Stop(TestExec testExec, ref RichTextBox rtfResults) {
+        public static void Stop(ref RichTextBox rtfResults) {
             if (TestSelection.IsGroup()) Log.CloseAndFlush();
             // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
             else {
@@ -156,41 +144,34 @@ namespace ABT.Test.TestExec.Logging {
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
                 if (TestLib.TestLib.testDefinition.TestSpace.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
-                    if (TestLib.TestLib.testDefinition.TestData.Item is TextFiles textFiles) FileStop(testExec, ref rtfResults);
-                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQLDB sqlDB) SQLStop();
+                    if (TestLib.TestLib.testDefinition.TestData.Item is XML) XMLStop(ref rtfResults);
+                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQL) SQLStop();
+                    else throw new ArgumentException($"Unknown TestData Item '{TestLib.TestLib.testDefinition.TestData.Item}'.");
                 }
             }
         }
 #endregion Public Methods
 
         #region Private Methods
-        private static void FileStop(TestExec testExec, ref RichTextBox rtfResults) {
-            TextFiles textFiles = (TextFiles)TestLib.TestLib.testDefinition.TestData.Item;
-            String textFilesFolder = $"{textFiles.Folder}\\{TestSelection.TestOperation.NamespaceTrunk}\\";
-            String fileName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
-            String[] files = Directory.GetFiles(textFilesFolder, $"{fileName}_*.rtf", SearchOption.TopDirectoryOnly);
-            // Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in App.config.
-            // Otherwise, files is the set of all files like config.configUUT.Number_Config.configUUT.SerialNumber_TestSelection.TestOperation.NamespaceLeaf_*.rtf.
+        private static void XMLStop(ref RichTextBox rtfResults) {
+            XML xml = (XML)TestLib.TestLib.testDefinition.TestData.Item;
+            String xmlFolder = $"{xml.Folder}\\{TestSelection.TestOperation.NamespaceTrunk}";
+            String xmlBaseName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
+            String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*.xml", SearchOption.TopDirectoryOnly);
+            // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinition.xml.
             Int32 maxNumber = 0; String s;
-            foreach (String f in files) {
-                s = f;
-                s = s.Replace($"{textFilesFolder}{fileName}", String.Empty);
-                s = s.Replace(".rtf", String.Empty);
+            foreach (String xmlFileName in xmlFileNames) {
+                s = xmlFileName;
+                s = s.Replace($"{xmlFolder}\\{xmlBaseName}", String.Empty);
+                s = s.Replace(".xml", String.Empty);
                 s = s.Replace("_", String.Empty);
 
                 foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) s = s.Replace(Event.ToString(), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
-                // Example for final (3rd) iteration of foreach (String f in files):
-                //   FileName            : 'UUTNumber_TestElementID_SerialNumber'
-                //   Initially           : 'P:\Test\TDR\D4522142-1\T-30\UUTNumber_TestElementID_SerialNumber_3_PASS.rtf'
-                //   FilePath + fileName : '_3_PASS.rtf'
-                //   .txt                : '_3_PASS'
-                //   _                   : '3PASS'
-                //   foreach (FieldInfo  : '3'
-                //   maxNumber           : '3'
             }
-            fileName += $"_{++maxNumber}_{TestLib.TestLib.testDefinition.TestSpace.Event}.rtf";
-            rtfResults.SaveFile($"{textFilesFolder}{fileName}");
+
+            String xmlFile = $"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testDefinition.TestSpace.Event}.xml";
+            Serializing.SerializeToFile<TestSpace>(TestLib.TestLib.testDefinition.TestSpace, xmlFile, FileMode.CreateNew);
         }
         
         private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {

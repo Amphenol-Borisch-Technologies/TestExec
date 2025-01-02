@@ -143,6 +143,12 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{baseDirectory}TestDefinition.xml");
+            if (testDefinition.TestData.Item is null) TSMI_UUT_TestData.Enabled = false;
+            else {
+                TSMI_UUT_TestData.Enabled = true;
+                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (testDefinition.TestData.Item is XML);
+                TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (testDefinition.TestData.Item is SQL);
+            }
             _ = Task.Run(() => GetDeveloperAddresses());
 
             if (testDefinition.TestData.IsEnabled()) {
@@ -597,9 +603,12 @@ namespace ABT.Test.TestExec {
             StatusStatisticsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
-            if (testDefinition.TestData.Item is TextFiles textFiles) OpenFolder(textFiles.Folder);
+            Debug.Assert(testDefinition.TestData.Item is XML);
+            OpenFolder(((XML)testDefinition.TestData.Item).Folder);
         }
-        private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) { }
+        private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
+            Debug.Assert(testDefinition.TestData.Item is XML);
+        }
         private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
             Form about = new Miscellaneous.MessageBoxMonoSpaced(
                 Title: "About Tests",
