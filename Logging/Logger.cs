@@ -144,8 +144,8 @@ namespace ABT.Test.TestExec.Logging {
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
                 if (TestLib.TestLib.testDefinition.TestSpace.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
-                    if (TestLib.TestLib.testDefinition.TestData.Item is XML) XMLStop(ref rtfResults);
-                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQL) SQLStop();
+                    if (TestLib.TestLib.testDefinition.TestData.Item is XML) StopXML(ref rtfResults);
+                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQL) StopSQL();
                     else throw new ArgumentException($"Unknown TestData Item '{TestLib.TestLib.testDefinition.TestData.Item}'.");
                 }
             }
@@ -153,7 +153,7 @@ namespace ABT.Test.TestExec.Logging {
 #endregion Public Methods
 
         #region Private Methods
-        private static void XMLStop(ref RichTextBox rtfResults) {
+        private static void StopXML(ref RichTextBox rtfResults) {
             XML xml = (XML)TestLib.TestLib.testDefinition.TestData.Item;
             String xmlFolder = $"{xml.Folder}\\{TestSelection.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
@@ -194,11 +194,11 @@ namespace ABT.Test.TestExec.Logging {
             }
         }
 
-        private static void SQLStart() {
+        private static void StartSQL() {
             // TODO:  Eventually; SQL Server Express: SQLStart.
         }
 
-        private static void SQLStop() {
+        private static void StopSQL() {
             // TODO:  Eventually; SQL Server Express: SQLStop.
         }
         #endregion Private

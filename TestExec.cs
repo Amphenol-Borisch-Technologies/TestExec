@@ -684,7 +684,7 @@ namespace ABT.Test.TestExec {
             TextTest.BackColor = EventColors[testDefinition.TestSpace.Event];
             testDefinition.TestSpace.Statistics.Update(testDefinition.TestSpace.Event);
             StatusStatisticsUpdate(null, null);
-            Logger.Stop(this, ref rtfResults);
+            Logger.Stop(ref rtfResults);
         }
 
         private EVENTS MeasurementEvaluate(Method method) {
