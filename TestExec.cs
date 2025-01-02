@@ -491,7 +491,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
-            if (DR == DialogResult.OK) _ = Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML);
+            if (DR == DialogResult.OK && Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private (DialogResult DR, String TestDefinitionXML) GetTestDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
