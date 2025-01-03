@@ -265,7 +265,7 @@ namespace ABT.Test.TestExec {
 
         public virtual void IPowerSuppliesOutputsOff() {
             if (testDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IPowerSupply ips) ips.OutputsOff();
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IPowerSupply iIPowerSupply) iIPowerSupply.OutputsOff();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -691,9 +691,9 @@ namespace ABT.Test.TestExec {
             if (method is MethodCustom) return method.Event;
             else if (method is MethodInterval methodInterval) {
                 if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
-                if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
             } else if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
