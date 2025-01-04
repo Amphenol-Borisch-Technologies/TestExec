@@ -80,57 +80,49 @@ namespace ABT.Test.TestExec.Logging {
             if (isOperation) SetBackColor(ref rtfResults, 0, method.Name, TestLib.TestLib.EventColors[method.Event]);
         }
 
-        public static void Start(TestExec testExec, ref RichTextBox rtfResults) {
-            if (TestSelection.IsGroup()) {
-                // When TestGroups are executed, measurement data is never saved as Rich Text.
-                // RichTextBox only. 
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-                    .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
-                    .CreateLogger();
-                Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testDefinition.UUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testDefinition.UUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ", $"{TestSelection.TestGroup.Class}"));
-                Log.Information(FormatMessage($"Description", $"{TestSelection.TestGroup.Description}"));
-                Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
-                return;
-                // Log Header isn't written to Console when TestGroups are executed, further emphasizing measurements are invalid for pass verdict/$hip disposition, only troubleshooting failures.
-            }
-
+        public static void Start(ref RichTextBox rtfResults) {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            Log.Information($"UUT:");
-            Log.Information($"\t{MESSAGE_UUT_EVENT}");
-            Log.Information($"\tSerial Number     : {TestLib.TestLib.testDefinition.TestSpace.SerialNumber}");
-            Log.Information($"\tNumber            : {TestLib.TestLib.testDefinition.UUT.Number}");
-            Log.Information($"\tRevision          : {TestLib.TestLib.testDefinition.UUT.Revision}");
-            Log.Information($"\tDescription       : {TestLib.TestLib.testDefinition.UUT.Description}");
-            Log.Information($"\tType              : {TestLib.TestLib.testDefinition.UUT.Category}");
-            Log.Information($"\tCustomer          : {TestLib.TestLib.testDefinition.UUT.Customer}\n");
+            if (TestLib.TestLib.testSpace.IsOperation) {
+                Log.Information($"UUT:");
+                Log.Information($"\t{MESSAGE_UUT_EVENT}");
+                Log.Information($"\tSerial Number     : {TestLib.TestLib.testDefinition.TestSpace.SerialNumber}");
+                Log.Information($"\tNumber            : {TestLib.TestLib.testDefinition.UUT.Number}");
+                Log.Information($"\tRevision          : {TestLib.TestLib.testDefinition.UUT.Revision}");
+                Log.Information($"\tDescription       : {TestLib.TestLib.testDefinition.UUT.Description}");
+                Log.Information($"\tType              : {TestLib.TestLib.testDefinition.UUT.Category}");
+                Log.Information($"\tCustomer          : {TestLib.TestLib.testDefinition.UUT.Customer}\n");
 
-            Log.Information($"TestOperation:");
-            Log.Information($"\tStart             : {DateTime.Now}");
-            Log.Information($"\t{MESSAGE_STOP}");
-            Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
-            // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-            Log.Information($"\tMachineName       : {Environment.MachineName}");
-            Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
-            Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-            Log.Information($"\tSpecification     : {TestLib.TestLib.testDefinition.UUT.TestSpecification}");
-            Log.Information($"\tID                : {TestSelection.TestOperation.NamespaceTrunk}");
-            Log.Information($"\tDescription       : {TestSelection.TestOperation.Description}\n");
+                Log.Information($"TestOperation:");
+                Log.Information($"\tStart             : {DateTime.Now}");
+                Log.Information($"\t{MESSAGE_STOP}");
+                Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
+                // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+                Log.Information($"\tMachineName       : {Environment.MachineName}");
+                Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
+                Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
+                Log.Information($"\tSpecification     : {TestLib.TestLib.testDefinition.UUT.TestSpecification}");
+                Log.Information($"\tID                : {TestLib.TestLib.testSpace.TestOperations[0].NamespaceTrunk}");
+                Log.Information($"\tDescription       : {TestLib.TestLib.testSpace.TestOperations[0].Description}\n");
 
-            StringBuilder sb = new StringBuilder();
-            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
-                sb.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
-                foreach (Method method in testGroup.Methods) sb.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", method.Name, method.Description));
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (TestGroup testGroup in TestLib.TestLib.testSpace.TestOperations[0].TestGroups) {
+                    stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
+                    foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", method.Name, method.Description));
+                }
+                Log.Information($"TestMeasurements:\n{stringBuilder}");
+            } else { // Not a TestOperation, just a TestGroup.  When TestGroups are executed, test data isn't saved, thus forego header.
+                Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
+                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testDefinition.UUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testDefinition.UUT.Revision}"));
+                Log.Information(FormatMessage($"TestGroup ", $"{TestLib.TestLib.testSpace.TestOperations[0].TestGroups[0].Class}"));
+                Log.Information(FormatMessage($"Description", $"{TestLib.TestLib.testSpace.TestOperations[0].TestGroups[0].Description}"));
+                Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
             }
-            Log.Information($"TestMeasurements:\n{sb}");
         }
 
         public static String BuildDate(Version version) {
@@ -139,9 +131,7 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
-            if (TestSelection.IsGroup()) Log.CloseAndFlush();
-            // Log Trailer isn't written when not a TestOperation, further emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
-            else {
+            if (TestLib.TestLib.testSpace.IsOperation) {
                 ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestLib.TestLib.testDefinition.TestSpace.Event.ToString());
                 SetBackColor(ref rtfResults, 0, TestLib.TestLib.testDefinition.TestSpace.Event.ToString(), TestLib.TestLib.EventColors[TestLib.TestLib.testDefinition.TestSpace.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
@@ -151,17 +141,42 @@ namespace ABT.Test.TestExec.Logging {
                     else if (TestLib.TestLib.testDefinition.TestData.Item is SQL) StopSQL();
                     else throw new ArgumentException($"Unknown TestData Item '{TestLib.TestLib.testDefinition.TestData.Item}'.");
                 }
-            }
+            } else Log.CloseAndFlush();
+            // Log header isn't written nor test data saved when not a TestOperation, emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
         }
         #endregion Public Methods
 
         #region Private Methods
+        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
+            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
+            else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = originalText.Length;
+                richTextBox.SelectedText = replacementText;
+            }
+        }
+
+        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
+            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
+            else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findText.Length;
+                richTextBox.SelectionBackColor = backColor;
+            }
+        }
+
+        private static void StopSQL() {
+            // TODO:  Eventually; SQL Server Express: SQLStop.
+        }
+
         private static void StopXML(ref RichTextBox rtfResults) {
             XML xml = (XML)TestLib.TestLib.testDefinition.TestData.Item;
-            String xmlFolder = $"{xml.Folder}\\{TestSelection.TestOperation.NamespaceTrunk}";
-            String xmlBaseName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestSelection.TestOperation.NamespaceTrunk}";
+            String xmlFolder = $"{xml.Folder}\\{TestLib.TestLib.testSpace.TestOperations[0].NamespaceTrunk}";
+            String xmlBaseName = $"{TestLib.TestLib.testDefinition.UUT.Number}_{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}_{TestLib.TestLib.testSpace.TestOperations[0].NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*.xml", SearchOption.TopDirectoryOnly);
-            // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinition.xml.
+            // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
             Int32 maxNumber = 0; String s;
             foreach (String xmlFileName in xmlFileNames) {
                 s = xmlFileName;
@@ -184,34 +199,6 @@ namespace ABT.Test.TestExec.Logging {
                     xmlTextWriter.Close();
                 }
             }
-        }
-
-        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
-            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
-            else {
-                richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = originalText.Length;
-                richTextBox.SelectedText = replacementText;
-            }
-        }
-
-        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
-            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
-            else {
-                richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = findText.Length;
-                richTextBox.SelectionBackColor = backColor;
-            }
-        }
-
-        private static void StartSQL() {
-            // TODO:  Eventually; SQL Server Express: SQLStart.
-        }
-
-        private static void StopSQL() {
-            // TODO:  Eventually; SQL Server Express: SQLStop.
         }
         #endregion Private
     }

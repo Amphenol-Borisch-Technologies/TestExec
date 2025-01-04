@@ -142,7 +142,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
-            testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{baseDirectory}TestDefinition.xml");
+            testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             if (testDefinition.TestData.Item is null) TSMI_UUT_TestData.Enabled = false;
             else {
                 TSMI_UUT_TestData.Enabled = true;
@@ -154,7 +154,7 @@ namespace ABT.Test.TestExec {
             if (testDefinition.TestData.IsEnabled()) {
                 if (testDefinition.TestData.Item is SerialNumber serialNumber) _serialNumberRegEx = serialNumber.SerialNumberRegEx;
                 else throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
-                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{baseDirectory}TestDefinition.xml'.");
+                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
                 _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{RegistryKey(testDefinition.UUT.Customer.Name)}\\{RegistryKey(testDefinition.UUT.Number)}\\SerialNumber");
                 testDefinition.TestSpace.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
             }
@@ -218,7 +218,7 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: false);
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
-            ButtonRunReset(enabled: TestSelection.IsNotNull());
+            ButtonRunReset(enabled: testSpace != null);
             TSMI_System_SelfTests.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
@@ -430,8 +430,8 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            (TestSelection.TestOperation, TestSelection.TestGroup) = TestSelect.Get();
-            base.Text = $"{testDefinition.UUT.Number}, {testDefinition.UUT.Description}, {((TestSelection.IsGroup()) ? TestSelection.TestGroup.Class : TestSelection.TestOperation.NamespaceTrunk)}";
+            testSpace = TestSelect.Get();
+            base.Text = $"{testDefinition.UUT.Number}, {testDefinition.UUT.Description}, {(testSpace.IsOperation ? testSpace.TestOperations[0].NamespaceTrunk : testSpace.TestOperations[0].TestGroups[0].Class)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -481,7 +481,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{testDefinition.UUT.Number}_{TestSelection.TestOperation.NamespaceTrunk}_{testDefinition.TestSpace.SerialNumber}",
+                FileName = $"{testDefinition.UUT.Number}_{testSpace.TestOperations[0].NamespaceTrunk}_{testDefinition.TestSpace.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -555,7 +555,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_System_SelfTestsInstruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
             Boolean passed = true;
-            foreach (KeyValuePair<String, Object> kvp in TestLib.TestLib.InstrumentDrivers) passed &= ((IInstruments)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) passed &= ((IInstruments)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
             if (passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
@@ -589,7 +589,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{testDefinition.UUT.Number}, {TestSelection.TestOperation.NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
+                Title: $"{testDefinition.UUT.Number}, {testSpace.TestOperations[0].NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
                 Text: testDefinition.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
@@ -621,21 +621,21 @@ namespace ABT.Test.TestExec {
 
         #region Measurements
         private void MeasurementsPreRun() {
-            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
+            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups)
                 foreach (Method method in testGroup.Methods) {
                     method.Event = EVENTS.UNSET;
                     _ = method.Log.Clear();
                     method.Value = null;
                 }
             TestIndex.Nullify();
-            Logger.Start(this, ref rtfResults);
+            Logger.Start(ref rtfResults);
             SystemReset();
         }
 
         private async Task MeasurementsRun() {
-            TestIndex.TestOperation = TestSelection.TestOperation;
-            if (TestSelection.IsOperation()) { // TODO: Accomodate if(TestSelection.IsGroup())
-                foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
+            TestIndex.TestOperation = testSpace.TestOperations[0];
+            if (testSpace.IsOperation) { // TODO: Accomodate if(TestSelection.IsGroup())
+                foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
                     TestIndex.TestGroup = testGroup;
                     foreach (Method method in testGroup.Methods) {
                         TestIndex.Method = method;
@@ -666,7 +666,7 @@ namespace ABT.Test.TestExec {
                             if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
                             else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
                             // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((TestSelection.IsOperation()), method, ref rtfResults);
+                            Logger.LogTest((testSpace.IsOperation), method, ref rtfResults);
                         }
                         if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                     }
@@ -749,7 +749,7 @@ namespace ABT.Test.TestExec {
         private EVENTS OperationEvaluate() {
             List<EVENTS> groupEvents = new List<EVENTS>();
             Int32 methodsCount = 0;
-            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups) {
+            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
                 groupEvents.Add(GroupEvaluate(testGroup));
                 methodsCount += testGroup.Methods.Count();
             }
@@ -778,7 +778,7 @@ namespace ABT.Test.TestExec {
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (TestGroup testGroup in TestSelection.TestOperation.TestGroups)
+            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups)
                 foreach (Method method in testGroup.Methods)
                     switch (method.Event) {
                         case EVENTS.CANCEL:
@@ -790,7 +790,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            _ = stringBuilder.AppendLine($"TestOperation '{TestSelection.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
+                            _ = stringBuilder.AppendLine($"TestOperation '{testSpace.TestOperations[0].NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
