@@ -143,20 +143,21 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
-            if (testDefinition.TestData.Item is null) TSMI_UUT_TestData.Enabled = false;
-            else {
-                TSMI_UUT_TestData.Enabled = true;
+            _ = Task.Run(() => GetDeveloperAddresses());
+            if (!testDefinition.TestSpace.Simulate) testInstruments = GetInstruments(_ConfigurationTestExec);
+
+            TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
+            if (TSMI_UUT_TestData.Enabled) {
+                if (!(testDefinition.TestData.Item is XML) && !(testDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
                 TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (testDefinition.TestData.Item is XML);
                 TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (testDefinition.TestData.Item is SQL);
-            }
-            _ = Task.Run(() => GetDeveloperAddresses());
 
-            if (testDefinition.TestData.IsEnabled()) {
-                if (testDefinition.TestData.Item is SerialNumber serialNumber) _serialNumberRegEx = serialNumber.SerialNumberRegEx;
-                else throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
+                _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
                 if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
+                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
+
                 _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{RegistryKey(testDefinition.UUT.Customer.Name)}\\{RegistryKey(testDefinition.UUT.Number)}\\SerialNumber");
-                testDefinition.TestSpace.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
+                testSpace.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
             }
 
             _statusTime.Elapsed += StatusTimeUpdate;
@@ -165,11 +166,6 @@ namespace ABT.Test.TestExec {
             CT_Cancel = _CTS_Cancel.Token;
             _CTS_EmergencyStop = new CancellationTokenSource();
             CT_EmergencyStop = _CTS_EmergencyStop.Token;
-
-            if (!testDefinition.TestSpace.Simulate) {
-                testInstruments = GetInstruments(_ConfigurationTestExec);
-                if (testDefinition.TestData.IsEnabled()) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
-            }
         }
 
         #region Form Miscellaneous
@@ -438,18 +434,20 @@ namespace ABT.Test.TestExec {
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
-            String serialNumber;
-            if (_serialNumberDialog != null) {
-                _serialNumberDialog.Set(testDefinition.TestSpace.SerialNumber);
-                serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
-                _serialNumberDialog.Hide();
-            } else {
-                serialNumber = Interaction.InputBox(Prompt: "Please enter ABT Serial Number", Title: "Enter ABT Serial Number", DefaultResponse: testDefinition.TestSpace.SerialNumber).Trim().ToUpper();
-                serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
+            if (testDefinition.TestData.IsEnabled()) {
+                String serialNumber;
+                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) {
+                    _serialNumberDialog.Set(testSpace.SerialNumber);
+                    serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
+                    _serialNumberDialog.Hide();
+                } else {
+                    serialNumber = Interaction.InputBox(Prompt: "Please enter Serial Number", Title: "Enter Serial Number", DefaultResponse: testSpace.SerialNumber).Trim().ToUpper();
+                    serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
+                }
+                if (String.Equals(serialNumber, String.Empty)) return;
+                _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
+                testSpace.SerialNumber = serialNumber;
             }
-            if (String.Equals(serialNumber, String.Empty)) return;
-            _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
-            testDefinition.TestSpace.SerialNumber = serialNumber;
 
             FormModeReset();
             FormModeRun();
@@ -481,7 +479,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{testDefinition.UUT.Number}_{testSpace.TestOperations[0].NamespaceTrunk}_{testDefinition.TestSpace.SerialNumber}",
+                FileName = $"{testDefinition.UUT.Number}_{testSpace.TestOperations[0].NamespaceTrunk}_{testSpace.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true

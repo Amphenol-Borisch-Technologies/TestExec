@@ -89,7 +89,7 @@ namespace ABT.Test.TestExec.Logging {
             if (TestLib.TestLib.testSpace.IsOperation) {
                 Log.Information($"UUT:");
                 Log.Information($"\t{MESSAGE_UUT_EVENT}");
-                Log.Information($"\tSerial Number     : {TestLib.TestLib.testDefinition.TestSpace.SerialNumber}");
+                Log.Information($"\tSerial Number     : {TestLib.TestLib.testSpace.SerialNumber}");
                 Log.Information($"\tNumber            : {TestLib.TestLib.testDefinition.UUT.Number}");
                 Log.Information($"\tRevision          : {TestLib.TestLib.testDefinition.UUT.Revision}");
                 Log.Information($"\tDescription       : {TestLib.TestLib.testDefinition.UUT.Description}");
@@ -116,7 +116,7 @@ namespace ABT.Test.TestExec.Logging {
                 Log.Information($"TestMeasurements:\n{stringBuilder}");
             } else { // Not a TestOperation, just a TestGroup.  When TestGroups are executed, test data isn't saved, thus forego header.
                 Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testDefinition.TestSpace.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testSpace.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testDefinition.UUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testDefinition.UUT.Revision}"));
                 Log.Information(FormatMessage($"TestGroup ", $"{TestLib.TestLib.testSpace.TestOperations[0].TestGroups[0].Class}"));
