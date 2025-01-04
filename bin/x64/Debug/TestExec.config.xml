@@ -21,26 +21,6 @@
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
   
-  <SerialNumberRegExDefault>^01BB2-[0-9]{5}$</SerialNumberRegExDefault>
-  <!-- SerialNumberRegExDefault is the default global Regular Expression an ABT Serial Number is validated against in TestExec.
-                
-         NOTE:  SerialNumberRegExDefault can be locally overridden by a TestExec App.config's UUT_SerialNumberRegExCustom key/value pair.
-         - As Customers sometimes require Serial Number formats that differ from ABT's (or formats that differ even from one Customer UUT to another)
-           SerialNumberRegExDefault is customizable to any/every UUT tested.
-         - When not overridden by an App.config's UUT_SerialNumberRegExCustom, SerialNumberRegExDefault is applied instead.
-         
-         NOTE:  ABT's official Serial Number format is "01BB2-#####", where each "#" is an is an integer in the set {0..9}.
-         - This allows for only 100,000 unique Serial Numbers overall, but those 100,000 are specifically associated to their UUT.
-         - Thus each UUT can have only 100,000 unique Serial Numbers.
-         - Obviously, if ABT builds more than 100,000 of any specific UUT, they're in trouble.
-         
-         NOTE:  Regular Expression ^01BB2-[0-9]{5}$ enforces Serial Numbers that match ABT's Serial Number format of "01BB2-#####".
-         - 01BB2-01234 & 01BB2-56789 are thus valid ABT Serial Numbers.
-         - 01234 is invalid, as it lacks the "01BB2-" prefix.
-         - 01BB2-1234 is invalid, as it lacks 5 digits after the "01BB2-" prefix.
-         - 01BB2-O1234 is invalid, as "O1234" ≠ "01234" as "O" ≠ "0".
-    -->
-
   <Apps>
 		<Keysight>
       <BenchVue>C:\Program Files (x86)\Keysight\BenchVue\Platform\BenchVue\Keysight BenchVue.exe</BenchVue>

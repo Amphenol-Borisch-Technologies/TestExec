@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
-using Windows.Storage.Streams;
 
 // TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.

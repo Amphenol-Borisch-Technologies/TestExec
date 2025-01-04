@@ -142,6 +142,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
+            TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
             testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             _ = Task.Run(() => GetDeveloperAddresses());
             if (!testDefinition.TestSpace.Simulate) testInstruments = GetInstruments(_ConfigurationTestExec);
@@ -157,7 +158,6 @@ namespace ABT.Test.TestExec {
                 if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
 
                 _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{RegistryKey(testDefinition.UUT.Customer.Name)}\\{RegistryKey(testDefinition.UUT.Number)}\\SerialNumber");
-                testSpace.SerialNumber = _serialNumberRegistryKey.GetValue(_serialNumberMostRecent, String.Empty).ToString();
             }
 
             _statusTime.Elapsed += StatusTimeUpdate;
