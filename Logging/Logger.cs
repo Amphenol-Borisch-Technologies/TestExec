@@ -190,12 +190,12 @@ namespace ABT.Test.TestExec.Logging {
             using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testSequence.Event}.xml", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
-                    //xmlTextWriter.WriteStartElement("TestOutput");
-                    //xmlTextWriter.WriteAttributeString("xsi", "noNamespaceSchemaLocation", null, "file://C://Users//phils//source//repos//ABT//Test//TestLib//TestConfiguration//TestOutput.xsd");
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence));
-                    xmlSerializer.Serialize(xmlTextWriter, new TestSequence());
-                    //xmlTextWriter.WriteEndElement();
-                    //xmlTextWriter.Close();
+                    xmlSerializer.Serialize(xmlTextWriter, TestLib.TestLib.testSequence);
+                    // TODO: xmlTextWriter.WriteStartElement("TestOutput");
+                    // TODO: xmlTextWriter.WriteAttributeString("xsi", "noNamespaceSchemaLocation", null, "file://C://Users//phils//source//repos//ABT//Test//TestLib//TestConfiguration//TestOutput.xsd");
+                    // TODO: xmlTextWriter.WriteEndElement();
+                    // TODO: xmlTextWriter.Close();
                 }
             }
         }
