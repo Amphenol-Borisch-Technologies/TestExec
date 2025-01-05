@@ -437,7 +437,10 @@ namespace ABT.Test.TestExec {
                     serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                     _serialNumberDialog.Hide();
                 } else {
-                    serialNumber = Interaction.InputBox(Prompt: "Please enter Serial Number", Title: "Enter Serial Number", DefaultResponse: testSequence.SerialNumber).Trim().ToUpper();
+                    serialNumber = Interaction.InputBox(
+                        Prompt: $"Please enter Serial Number in below format:{Environment.NewLine}{Environment.NewLine}" +
+                        $"{((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat}",
+                        Title: "Enter Serial Number", DefaultResponse: testSequence.SerialNumber).Trim().ToUpper();
                     serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
                 }
                 if (String.Equals(serialNumber, String.Empty)) return;
