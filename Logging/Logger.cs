@@ -12,13 +12,13 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 
-// TODO:  Eventually; persist measurement data into Microsoft SQL Server Express; write all full Operation TestMeasurement output therein.
+// TODO:  Eventually; persist measurement data into PostgreSQL; write all full Operation TestMeasurement output therein.
 // - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
 // - Continue writing TestMeasurement output to RichTextBoxSink when only testing Groups.
 // - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
 // - This will resolve the RichTextBox scroll issue, wherein TestGroups output are scrolled up & away as TestMeasurements are appended.
-// - Only SQL Server Express persisted measurement data is legitimate; all RichTextBoxSink is Troubleshooting only.
-// - Create a Microsoft C# front-end exporting/reporting app for persisted SQL Server Express TestMeasurement full Operation measurement data.
+// - Only PostgreSQL persisted measurement data is legitimate; all RichTextBoxSink is Troubleshooting only.
+// - Create a front-end exporting/reporting Microsoft Access app for persisted PostgreSQL measurement data.
 // - Export in CSV, report in PDF.
 //
 
@@ -167,7 +167,7 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         private static void StopSQL() {
-            // TODO:  Eventually; SQL Server Express: SQLStop.
+            // TODO:  Eventually; PostgreSQL.
         }
 
         private static void StopXML() {
