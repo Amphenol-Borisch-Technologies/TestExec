@@ -133,7 +133,6 @@ namespace ABT.Test.TestExec {
         private readonly String _ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
-        private readonly RegistryKey _serialNumberRegistryKey = null;
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
         private CancellationTokenSource _CTS_Cancel;
         private CancellationTokenSource _CTS_EmergencyStop;
@@ -156,8 +155,6 @@ namespace ABT.Test.TestExec {
                 _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
                 if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
                 if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
-
-                _serialNumberRegistryKey = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{RegistryKey(testDefinition.UUT.Customer.Name)}\\{RegistryKey(testDefinition.UUT.Number)}\\SerialNumber");
             }
 
             _statusTime.Elapsed += StatusTimeUpdate;
@@ -169,8 +166,6 @@ namespace ABT.Test.TestExec {
         }
 
         #region Form Miscellaneous
-        private static String RegistryKey(String text) { return Regex.Replace(text, @"[\\\/\:\*\?\""\<\>\|]+", "_"); }
-
         public static void ErrorMessage(String Error) {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -251,12 +246,12 @@ namespace ABT.Test.TestExec {
 
         public virtual void IInstrumentsResetClear() {
             if (testDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments ii) ii.ResetClear();
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments iInstruments) iInstruments.ResetClear();
         }
 
         public virtual void IRelaysOpenAll() {
             if (testDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays ir) ir.OpenAll();
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays iRelays) iRelays.OpenAll();
         }
 
         public virtual void IPowerSuppliesOutputsOff() {
@@ -445,7 +440,6 @@ namespace ABT.Test.TestExec {
                     serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
                 }
                 if (String.Equals(serialNumber, String.Empty)) return;
-                _serialNumberRegistryKey.SetValue(_serialNumberMostRecent, serialNumber);
                 testSpace.SerialNumber = serialNumber;
             }
 
@@ -632,44 +626,42 @@ namespace ABT.Test.TestExec {
 
         private async Task MeasurementsRun() {
             TestIndex.TestOperation = testSpace.TestOperations[0];
-            if (testSpace.IsOperation) { // TODO: Accomodate if(TestSelection.IsGroup())
-                foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
-                    TestIndex.TestGroup = testGroup;
-                    foreach (Method method in testGroup.Methods) {
-                        TestIndex.Method = method;
-                        try {
-                            StatusStatisticsUpdate(null, null);
-                            method.Value = await Task.Run(() => MeasurementRun(method));
-                            method.Event = MeasurementEvaluate(method);
-                            if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
-                                SystemReset();
-                                return;
-                            }
-                        } catch (System.Exception e) {
+            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
+                TestIndex.TestGroup = testGroup;
+                foreach (Method method in testGroup.Methods) {
+                    TestIndex.Method = method;
+                    try {
+                        StatusStatisticsUpdate(null, null);
+                        method.Value = await Task.Run(() => MeasurementRun(method));
+                        method.Event = MeasurementEvaluate(method);
+                        if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                             SystemReset();
-                            if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
-                                method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
-                                while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
-                                _ = method.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
-                            }
-                            if (!CT_EmergencyStop.IsCancellationRequested && !CT_Cancel.IsCancellationRequested) {
-                                method.Event = EVENTS.ERROR;
-                                _ = method.Log.AppendLine($"{Environment.NewLine}{e}");
-                                ErrorMessage(e);
-                            }
                             return;
-                        } finally {
-                            // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
-                            // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
-                            if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
-                            else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
-                            // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                            Logger.LogTest((testSpace.IsOperation), method, ref rtfResults);
                         }
-                        if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
+                    } catch (System.Exception e) {
+                        SystemReset();
+                        if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
+                            method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
+                            while (!(e is OperationCanceledException) && (e.InnerException != null)) e = e.InnerException; // No fluff, just stuff.
+                            _ = method.Log.AppendLine($"{Environment.NewLine}{typeof(OperationCanceledException).Name}:{Environment.NewLine}{e.Message}");
+                        }
+                        if (!CT_EmergencyStop.IsCancellationRequested && !CT_Cancel.IsCancellationRequested) {
+                            method.Event = EVENTS.ERROR;
+                            _ = method.Log.AppendLine($"{Environment.NewLine}{e}");
+                            ErrorMessage(e);
+                        }
+                        return;
+                    } finally {
+                        // NOTE:  Normally executes, regardless if catchable Exception occurs or returned out of try/catch blocks.
+                        // Exceptional exceptions are exempted; https://stackoverflow.com/questions/345091/will-code-in-a-finally-statement-fire-if-i-return-a-value-in-a-try-block.
+                        if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
+                        else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
+                        // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
+                        Logger.LogTest((testSpace.IsOperation), method, ref rtfResults);
                     }
-                    if (GroupEvaluate(testGroup) != EVENTS.PASS && testGroup.CancelNotPassed) return;
+                    if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                 }
+                if (GroupEvaluate(testGroup) != EVENTS.PASS && testGroup.CancelNotPassed) return;
             }
         }
 
@@ -677,10 +669,10 @@ namespace ABT.Test.TestExec {
 
         private void MeasurementsPostRun() {
             SystemReset();
-            testDefinition.TestSpace.Event = OperationEvaluate();
-            TextTest.Text = testDefinition.TestSpace.Event.ToString();
-            TextTest.BackColor = EventColors[testDefinition.TestSpace.Event];
-            testDefinition.TestSpace.Statistics.Update(testDefinition.TestSpace.Event);
+            testSpace.Event = OperationEvaluate();
+            TextTest.Text = testSpace.Event.ToString();
+            TextTest.BackColor = EventColors[testSpace.Event];
+            testDefinition.TestSpace.Statistics.Update(testSpace.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
         }
