@@ -209,7 +209,7 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: false);
             TSMI_File_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
-            ButtonRunReset(enabled: testSpace != null);
+            ButtonRunReset(enabled: testSequence != null);
             TSMI_System_SelfTests.Enabled = true;
             TSMI_System_BarcodeScannerDiscovery.Enabled = true;
             TSMI_UUT_Statistics.Enabled = true;
@@ -421,8 +421,8 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
-            testSpace = TestSelect.Get();
-            base.Text = $"{testDefinition.UUT.Number}, {testDefinition.UUT.Description}, {(testSpace.IsOperation ? testSpace.TestOperations[0].NamespaceTrunk : testSpace.TestOperations[0].TestGroups[0].Class)}";
+            testSequence = TestSelect.Get();
+            base.Text = $"{testSequence.UUT.Number}, {testSequence.UUT.Description}, {(testSequence.IsOperation ? testSequence.TestOperation.NamespaceTrunk : testSequence.TestOperation.TestGroups[0].Class)}";
             _statusTime.Start();
             FormModeReset();
             FormModeWait();
@@ -432,15 +432,15 @@ namespace ABT.Test.TestExec {
             if (testDefinition.TestData.IsEnabled()) {
                 String serialNumber;
                 if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) {
-                    _serialNumberDialog.Set(testSpace.SerialNumber);
+                    _serialNumberDialog.Set(testSequence.SerialNumber);
                     serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                     _serialNumberDialog.Hide();
                 } else {
-                    serialNumber = Interaction.InputBox(Prompt: "Please enter Serial Number", Title: "Enter Serial Number", DefaultResponse: testSpace.SerialNumber).Trim().ToUpper();
+                    serialNumber = Interaction.InputBox(Prompt: "Please enter Serial Number", Title: "Enter Serial Number", DefaultResponse: testSequence.SerialNumber).Trim().ToUpper();
                     serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
                 }
                 if (String.Equals(serialNumber, String.Empty)) return;
-                testSpace.SerialNumber = serialNumber;
+                testSequence.SerialNumber = serialNumber;
             }
 
             FormModeReset();
@@ -473,7 +473,7 @@ namespace ABT.Test.TestExec {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"{testDefinition.UUT.Number}_{testSpace.TestOperations[0].NamespaceTrunk}_{testSpace.SerialNumber}",
+                FileName = $"{testSequence.UUT.Number}_{testSequence.TestOperation.NamespaceTrunk}_{testSequence.SerialNumber}",
                 DefaultExt = "rtf",
                 CreatePrompt = false,
                 OverwritePrompt = true
@@ -581,7 +581,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{testDefinition.UUT.Number}, {testSpace.TestOperations[0].NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
+                Title: $"{testSequence.UUT.Number}, {testSequence.TestOperation.NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
                 Text: testDefinition.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
@@ -613,7 +613,7 @@ namespace ABT.Test.TestExec {
 
         #region Measurements
         private void MeasurementsPreRun() {
-            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups)
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups)
                 foreach (Method method in testGroup.Methods) {
                     method.Event = EVENTS.UNSET;
                     _ = method.Log.Clear();
@@ -625,8 +625,8 @@ namespace ABT.Test.TestExec {
         }
 
         private async Task MeasurementsRun() {
-            TestIndex.TestOperation = testSpace.TestOperations[0];
-            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
+            TestIndex.TestOperation = testSequence.TestOperation;
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
                 TestIndex.TestGroup = testGroup;
                 foreach (Method method in testGroup.Methods) {
                     TestIndex.Method = method;
@@ -657,7 +657,7 @@ namespace ABT.Test.TestExec {
                         if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
                         else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
                         // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                        Logger.LogTest((testSpace.IsOperation), method, ref rtfResults);
+                        Logger.LogTest((testSequence.IsOperation), method, ref rtfResults);
                     }
                     if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                 }
@@ -669,10 +669,10 @@ namespace ABT.Test.TestExec {
 
         private void MeasurementsPostRun() {
             SystemReset();
-            testSpace.Event = OperationEvaluate();
-            TextTest.Text = testSpace.Event.ToString();
-            TextTest.BackColor = EventColors[testSpace.Event];
-            testDefinition.TestSpace.Statistics.Update(testSpace.Event);
+            testSequence.Event = OperationEvaluate();
+            TextTest.Text = testSequence.Event.ToString();
+            TextTest.BackColor = EventColors[testSequence.Event];
+            testDefinition.TestSpace.Statistics.Update(testSequence.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
         }
@@ -739,7 +739,7 @@ namespace ABT.Test.TestExec {
         private EVENTS OperationEvaluate() {
             List<EVENTS> groupEvents = new List<EVENTS>();
             Int32 methodsCount = 0;
-            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups) {
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
                 groupEvents.Add(GroupEvaluate(testGroup));
                 methodsCount += testGroup.Methods.Count();
             }
@@ -768,7 +768,7 @@ namespace ABT.Test.TestExec {
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (TestGroup testGroup in testSpace.TestOperations[0].TestGroups)
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups)
                 foreach (Method method in testGroup.Methods)
                     switch (method.Event) {
                         case EVENTS.CANCEL:
@@ -780,7 +780,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
                         default:
-                            _ = stringBuilder.AppendLine($"TestOperation '{testSpace.TestOperations[0].NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
+                            _ = stringBuilder.AppendLine($"TestOperation '{testSequence.TestOperation.NamespaceTrunk}', Class '{testGroup.Class}', Method: '{method.Name}' Event: '{method.Event}'.");
                             Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
                             break; // Above EVENTS aren't yet handled in this method.
                     }
