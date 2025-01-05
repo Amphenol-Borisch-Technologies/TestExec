@@ -27,9 +27,10 @@ namespace ABT.Test.TestExec.Logging {
         private readonly String _serialNumberRegEx;
         private readonly String _scannerID;
 
-        public SerialNumberDialog(String SerialNumberRegEx, String ScannerID) {
+        public SerialNumberDialog(String SerialNumberRegEx, String SerialNumberFormat, String ScannerID) {
             _serialNumberRegEx = SerialNumberRegEx;
             _scannerID = ScannerID;
+            toolTip.SetToolTip(BarCodeText, SerialNumberFormat);
 
             InitializeComponent();
 
