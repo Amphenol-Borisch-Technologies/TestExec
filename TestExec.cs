@@ -46,7 +46,7 @@ using static ABT.Test.TestLib.TestLib;
 // NOTE:  For public methods, will deviate by using PascalCasing for parameters.  Will use recommended camelCasing for internal & private method parameters.
 //        - Prefer named arguments for public methods be Capitalized/PascalCased, not uncapitalized/camelCased.
 //        - Invoking public methods with named arguments is a superb, self-documenting coding technique, improved by PascalCasing.
-// TODO:  Soon; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
+// TODO:  Eventually; add documentation per https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments.
 // TODO:  Eventually; update to .Net 8.0 & C# 12.0 instead of .Net FrameWork 4.8 & C# 7.3.
 //        - Currently cannot because all provider VISA.Net implementations are only compatible with the IVI Foundation's VISA.Net shared component versions 7.2 or lower.
 //          - https://github.com/vnau/IviVisaNetSample.
@@ -810,7 +810,6 @@ namespace ABT.Test.TestExec {
 
         #region Status Strip methods.
         private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
-        // TODO: Don't invoke timer until b
 
         private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
 
