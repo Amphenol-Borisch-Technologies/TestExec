@@ -625,7 +625,6 @@ namespace ABT.Test.TestExec {
                 foreach (Method method in testGroup.Methods) {
                     TestIndices.Method = method;
                     try {
-                        StatusStatisticsUpdate(null, null);
                         method.Value = await Task.Run(() => MethodRun(method));
                         method.Event = MethodEvaluate(method);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
@@ -651,7 +650,7 @@ namespace ABT.Test.TestExec {
                         if (CT_EmergencyStop.IsCancellationRequested) method.Event = EVENTS.EMERGENCY_STOP;
                         else if (CT_Cancel.IsCancellationRequested) method.Event = EVENTS.CANCEL;
                         // NOTE:  Both CT_Cancel.IsCancellationRequested & CT_EmergencyStop.IsCancellationRequested could be true; prioritize CT_EmergencyStop.
-                        Logger.LogTest((testSequence.IsOperation), method, ref rtfResults);
+                        Logger.LogMethod(ref rtfResults, method);
                     }
                     if (method.Event != EVENTS.PASS && method.CancelNotPassed) return;
                 }

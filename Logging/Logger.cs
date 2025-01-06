@@ -60,7 +60,8 @@ namespace ABT.Test.TestExec.Logging {
 
         public static void LogMessage(String Message) { Log.Information(Message); }
 
-        public static void LogTest(Boolean isOperation, Method method, ref RichTextBox rtfResults) {
+        public static void LogMethod(ref RichTextBox rtfResults, Method method) {
+            if (method.Event is EVENTS.IGNORE || method.Event is EVENTS.PASS) return;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(FormatMessage("Method", method.Name));
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", method.CancelNotPassed.ToString()));
@@ -74,7 +75,7 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append(method.Log.ToString());
             Log.Information(stringBuilder.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
+            SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
