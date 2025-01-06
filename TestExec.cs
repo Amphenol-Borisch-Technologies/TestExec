@@ -616,6 +616,7 @@ namespace ABT.Test.TestExec {
                 foreach (Method method in testGroup.Methods) {
                     method.Event = EVENTS.UNSET;
                     _ = method.Log.Clear();
+                    method.LogString = String.Empty;
                     method.Value = null;
                 }
             TestIndices.Nullify();

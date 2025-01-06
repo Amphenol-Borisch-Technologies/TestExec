@@ -4,6 +4,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -187,6 +188,8 @@ namespace ABT.Test.TestExec.Logging {
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
+
+            TestLib.TestLib.testSequence.LogConvert();
             using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testSequence.Event}.xml", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
