@@ -663,7 +663,7 @@ namespace ABT.Test.TestExec {
 
         private void MethodsPostRun() {
             SystemReset();
-            testSequence.Event = OperationEvaluate();
+            testSequence.PostRun(OperationEvaluate());
             TextTest.Text = testSequence.Event.ToString();
             TextTest.BackColor = EventColors[testSequence.Event];
             testDefinition.TestSpace.Statistics.Update(testSequence.Event);

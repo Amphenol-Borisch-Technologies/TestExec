@@ -188,8 +188,6 @@ namespace ABT.Test.TestExec.Logging {
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
-            TestLib.TestLib.testSequence.MethodLogsConvert();
-            TestLib.TestLib.testSequence.TimeEnd = DateTime.Now;
             using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testSequence.Event}.xml", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
