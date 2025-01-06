@@ -1,9 +1,7 @@
 ﻿#undef VERBOSE
 using System;
-using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -27,7 +25,6 @@ namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
-        private const String MESSAGE_STOP = "Stop              : ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
         private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
 
@@ -86,58 +83,32 @@ namespace ABT.Test.TestExec.Logging {
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            if (testSequence.IsOperation) {
-                Log.Information($"UUT:");
-                Log.Information($"\t{MESSAGE_UUT_EVENT}");
-                Log.Information($"\tSerial Number     : {testSequence.SerialNumber}");
-                Log.Information($"\tNumber            : {testSequence.UUT.Number}");
-                Log.Information($"\tRevision          : {testSequence.UUT.Revision}");
-                Log.Information($"\tDescription       : {testSequence.UUT.Description}");
-                Log.Information($"\tType              : {testSequence.UUT.Category}");
-                Log.Information($"\tCustomer          : {testSequence.UUT.Customer}\n");
+            Log.Information($"UUT:");
+            Log.Information($"\t{MESSAGE_UUT_EVENT}");
+            Log.Information($"\tSerial Number     : {testSequence.SerialNumber}");
+            Log.Information($"\tNumber            : {testSequence.UUT.Number}");
+            Log.Information($"\tRevision          : {testSequence.UUT.Revision}");
+            Log.Information($"\tDescription       : {testSequence.UUT.Description}");
+            Log.Information($"\tType              : {testSequence.UUT.Category}");
+            Log.Information($"\tCustomer          : {testSequence.UUT.Customer.Name}\n");
 
-                Log.Information($"TestOperation:");
-                Log.Information($"\tStart             : {DateTime.Now}");
-                Log.Information($"\t{MESSAGE_STOP}");
-                Log.Information($"\tUserPrincipal     : {UserPrincipal.Current.DisplayName}");
-                // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-                Log.Information($"\tMachineName       : {Environment.MachineName}");
-                Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
-                Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-                Log.Information($"\tSpecification     : {testSequence.UUT.TestSpecification}");
-                Log.Information($"\tID                : {testSequence.TestOperation.NamespaceTrunk}");
-                Log.Information($"\tDescription       : {testSequence.TestOperation.Description}\n");
-
-                StringBuilder stringBuilder = new StringBuilder();
-                foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
-                    stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
-                    foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
-                }
-                Log.Information($"TestMethods:\n{stringBuilder}");
-            } else { // Not a TestOperation, just a TestGroup.  When TestGroups are executed, test data isn't saved, thus forego header.
-                Log.Information($"Note: following results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{testSequence.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{testSequence.UUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{testSequence.UUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ", $"{testSequence.TestOperation.TestGroups[0].Class}"));
-                Log.Information(FormatMessage($"Description", $"{testSequence.TestOperation.TestGroups[0].Description}"));
-                Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
+                stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
+                foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
             }
+            Log.Information($"TestMethods:\n{stringBuilder}");
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
-            if (testSequence.IsOperation) {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + testSequence.Event.ToString());
-                SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
-                ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
-                Log.CloseAndFlush();
-                if (testSequence.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
-                    if (testDefinition.TestData.Item is XML) StopXML();
-                    else if (testDefinition.TestData.Item is SQL) StopSQL();
-                    else throw new ArgumentException($"Unknown TestData Item '{testDefinition.TestData.Item}'.");
-                }
-            } else Log.CloseAndFlush();
-            // Log header isn't written nor test data saved when not a TestOperation, emphasizing results aren't valid for passing & $hipping, only troubleshooting failures.
+            ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + testSequence.Event.ToString());
+            SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
+            Log.CloseAndFlush();
+            if (testSequence.IsOperation && testSequence.Event != EVENTS.IGNORE) {
+                if (testDefinition.TestData.Item is XML) StopXML();
+                else if (testDefinition.TestData.Item is SQL) StopSQL();
+                else throw new ArgumentException($"Unknown TestData Item '{testDefinition.TestData.Item}'.");
+            }
         }
         #endregion Public Methods
 
