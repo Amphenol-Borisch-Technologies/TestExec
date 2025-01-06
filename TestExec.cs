@@ -612,13 +612,7 @@ namespace ABT.Test.TestExec {
 
         #region Methods
         private void MethodsPreRun() {
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups)
-                foreach (Method method in testGroup.Methods) {
-                    method.Event = EVENTS.UNSET;
-                    _ = method.Log.Clear();
-                    method.LogString = String.Empty;
-                    method.Value = null;
-                }
+            testSequence.MethodsReset();
             TestIndices.Nullify();
             Logger.Start(ref rtfResults);
             SystemReset();
