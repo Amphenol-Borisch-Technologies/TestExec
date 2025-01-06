@@ -12,13 +12,13 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 
-// TODO:  Eventually; persist measurement data into PostgreSQL; write all full Operation TestMeasurement output therein.
-// - Stop writing TestMeasurement output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
-// - Continue writing TestMeasurement output to RichTextBoxSink when only testing Groups.
+// TODO:  Eventually; persist data into PostgreSQL; write all full Operation output therein.
+// - Stop writing output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
+// - Continue writing output to RichTextBoxSink when only testing Groups.
 // - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
-// - This will resolve the RichTextBox scroll issue, wherein TestGroups output are scrolled up & away as TestMeasurements are appended.
-// - Only PostgreSQL persisted measurement data is legitimate; all RichTextBoxSink is Troubleshooting only.
-// - Create a front-end exporting/reporting Microsoft Access app for persisted PostgreSQL measurement data.
+// - This will resolve the RichTextBox scroll issue, wherein TestGroups output are scrolled up & away as output is appended.
+// - Only PostgreSQL persisted data is legitimate; all RichTextBoxSink is Troubleshooting only.
+// - Create a front-end exporting/reporting Microsoft Access app for persisted PostgreSQL data.
 // - Export in CSV, report in PDF.
 //
 
@@ -110,11 +110,11 @@ namespace ABT.Test.TestExec.Logging {
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (TestGroup testGroup in TestLib.TestLib.testSequence.TestOperation.TestGroups) {
                     stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
-                    foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMeasurementID + "} : {1}\n", method.Name, method.Description));
+                    foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
                 }
-                Log.Information($"TestMeasurements:\n{stringBuilder}");
+                Log.Information($"TestMethods:\n{stringBuilder}");
             } else { // Not a TestOperation, just a TestGroup.  When TestGroups are executed, test data isn't saved, thus forego header.
-                Log.Information($"Note: following measurement results invalid for UUT production testing, only troubleshooting.");
+                Log.Information($"Note: following results invalid for UUT production testing, only troubleshooting.");
                 Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testSequence.SerialNumber}"));
                 Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testSequence.UUT.Number}"));
                 Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testSequence.UUT.Revision}"));
@@ -141,7 +141,7 @@ namespace ABT.Test.TestExec.Logging {
                     else throw new ArgumentException($"Unknown TestData Item '{TestLib.TestLib.testDefinition.TestData.Item}'.");
                 }
             } else Log.CloseAndFlush();
-            // Log header isn't written nor test data saved when not a TestOperation, emphasizing measurement results aren't valid for passing & $hipping, only troubleshooting failures.
+            // Log header isn't written nor test data saved when not a TestOperation, emphasizing results aren't valid for passing & $hipping, only troubleshooting failures.
         }
         #endregion Public Methods
 
@@ -192,10 +192,6 @@ namespace ABT.Test.TestExec.Logging {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence));
                     xmlSerializer.Serialize(xmlTextWriter, TestLib.TestLib.testSequence);
-                    // TODO: xmlTextWriter.WriteStartElement("TestOutput");
-                    // TODO: xmlTextWriter.WriteAttributeString("xsi", "noNamespaceSchemaLocation", null, "file://C://Users//phils//source//repos//ABT//Test//TestLib//TestConfiguration//TestOutput.xsd");
-                    // TODO: xmlTextWriter.WriteEndElement();
-                    // TODO: xmlTextWriter.Close();
                 }
             }
         }

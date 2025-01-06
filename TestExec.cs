@@ -78,10 +78,10 @@ namespace ABT.Test.TestExec {
     ///  </item>
     ///  </remarks>
     /// <summary>
-    /// NOTE:  Test Developer is responsible for ensuring Measurements can be both safely &amp; correctly called in sequence defined in App.config:
+    /// NOTE:  Test Developer is responsible for ensuring Methods can be both safely &amp; correctly called in sequence defined in TestDefinition.xml:
     /// <para>
-    ///        - That is, if Measurements execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
-    ///          configured safely &amp; correctly between each Measurement step.
+    ///        - That is, if Methods execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
+    ///          configured safely &amp; correctly between each Method.
     ///          - If:
     ///            - M1 is unpowered Shorts &amp; Opens measurements.
     ///            - M2 is powered voltage measurements.
@@ -97,35 +97,35 @@ namespace ABT.Test.TestExec {
     /// A) Spontaneous Operator Initiated Cancellations:
     ///      1)  Operator Proactive:
     ///          - Microsoft's recommended CancellationTokenSource technique, permitting Operator to proactively
-    ///            cancel currently executing Measurement.
+    ///            cancel currently executing Method.
     ///          - Requires Test project implementation by the Test Developer, but is initiated by Operator, so categorized as such.
-    ///          - Implementation necessary if the *currently* executing Measurement must be cancellable during execution by the Operator.
+    ///          - Implementation necessary if the *currently* executing Method must be cancellable during execution by the Operator.
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
     ///      2)  Operator Reactive:
     ///          - TestExec's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
     ///            which simply invokes _CTS_Cancel.Cancel().
-    ///          - _CTS_Cancel.IsCancellationRequested is checked at the end of TestExec.MeasurementsRun()'s foreach loop.
-    ///            - If true, TestExec.MeasurementsRun()'s foreach loop is broken, causing reactive cancellation.
-    ///            prior to the next Measurement's execution.
-    ///          - Note: This doesn't proactively cancel the *currently* executing Measurement, which runs to completion.
+    ///          - _CTS_Cancel.IsCancellationRequested is checked at the end of TestExec.MethodsRun()'s foreach loop.
+    ///            - If true, TestExec.MethodsRun()'s foreach loop is broken, causing reactive cancellation.
+    ///            prior to the next Method's execution.
+    ///          - Note: This doesn't proactively cancel the *currently* executing Method, which runs to completion.
     /// B) PrePlanned Developer Programmed Cancellations:
     ///      3)  TestExec Developer initiated cancellations:
-    ///          - Any Tests project's Measurement can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
-    ///          - Permits immediate cancellation if specific condition(s) occur in a Measurement; perhaps to prevent UUT or equipment damage,
+    ///          - Any Tests project's Method can initiate a cancellation programmatically by simply throwing an OperationCanceledException:
+    ///          - Permits immediate cancellation if specific condition(s) occur in a Method; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
-    ///      4)  App.config's CancelNotPassed:
-    ///          - App.config's TestMeasurement element has a Boolean "CancelNotPassed" field:
-    ///          - If the current Test.MeasurementRun() has CancelNotPassed=true and it's resulting EvaluateResultMeasurement() doesn't return EVENTS.PASS,
-    ///            TestExec.MeasurementsRun() will break/exit, stopping further testing.
-    ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MeasurementsPostRun().
+    ///      4)  TestDefinition.xml's CancelNotPassed:
+    ///          - TestDefinition.xml's Method elements have Boolean "CancelNotPassed" fields:
+    ///          - If the current Test.MethodRun() has CancelNotPassed=true and it's resulting EvaluateResultMethod() doesn't return EVENTS.PASS,
+    ///            TestExec.MethodsRun() will break/exit, stopping further testing.
+    ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MethodsPostRun().
     ///
-    /// NOTE:  The Operator Proactive &amp; TestExec Developer initiated cancellations both occur while the currently executing Tests.MeasurementRun() conpletes, via 
+    /// NOTE:  The Operator Proactive &amp; TestExec Developer initiated cancellations both occur while the currently executing Tests.MethodRun() conpletes, via 
     ///        thrown OperationCanceledException.
-    /// NOTE:  The Operator Reactive &amp; App.config's CancelNotPassed cancellations both occur after the currently executing Tests.MeasurementRun() completes, via checks
-    ///        inside the Exec.MeasurementsRun() loop.
+    /// NOTE:  The Operator Reactive &amp; TestDefinition.xml's CancelNotPassed cancellations both occur after the currently executing Tests.MethodRun() completes, via checks
+    ///        inside the Exec.MethodsRun() loop.
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
@@ -449,9 +449,9 @@ namespace ABT.Test.TestExec {
 
             FormModeReset();
             FormModeRun();
-            MeasurementsPreRun();
-            await MeasurementsRun();
-            MeasurementsPostRun();
+            MethodsPreRun();
+            await MethodsRun();
+            MethodsPostRun();
             FormModeWait();
         }
 
@@ -615,29 +615,29 @@ namespace ABT.Test.TestExec {
         }
         #endregion Form Tool Strip Menu Items
 
-        #region Measurements
-        private void MeasurementsPreRun() {
+        #region Methods
+        private void MethodsPreRun() {
             foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups)
                 foreach (Method method in testGroup.Methods) {
                     method.Event = EVENTS.UNSET;
                     _ = method.Log.Clear();
                     method.Value = null;
                 }
-            TestIndex.Nullify();
+            TestIndices.Nullify();
             Logger.Start(ref rtfResults);
             SystemReset();
         }
 
-        private async Task MeasurementsRun() {
-            TestIndex.TestOperation = testSequence.TestOperation;
+        private async Task MethodsRun() {
+            TestIndices.TestOperation = testSequence.TestOperation;
             foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
-                TestIndex.TestGroup = testGroup;
+                TestIndices.TestGroup = testGroup;
                 foreach (Method method in testGroup.Methods) {
-                    TestIndex.Method = method;
+                    TestIndices.Method = method;
                     try {
                         StatusStatisticsUpdate(null, null);
-                        method.Value = await Task.Run(() => MeasurementRun(method));
-                        method.Event = MeasurementEvaluate(method);
+                        method.Value = await Task.Run(() => MethodRun(method));
+                        method.Event = MethodEvaluate(method);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                             SystemReset();
                             return;
@@ -669,9 +669,9 @@ namespace ABT.Test.TestExec {
             }
         }
 
-        protected abstract Task<String> MeasurementRun(Method method);
+        protected abstract Task<String> MethodRun(Method method);
 
-        private void MeasurementsPostRun() {
+        private void MethodsPostRun() {
             SystemReset();
             testSequence.Event = OperationEvaluate();
             TextTest.Text = testSequence.Event.ToString();
@@ -681,14 +681,14 @@ namespace ABT.Test.TestExec {
             Logger.Stop(ref rtfResults);
         }
 
-        private EVENTS MeasurementEvaluate(Method method) {
+        private EVENTS MethodEvaluate(Method method) {
             if (method is MethodCustom) return method.Event;
             else if (method is MethodInterval methodInterval) {
-                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double dMeasurement)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
-                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < dMeasurement) && (dMeasurement <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < dMeasurement) && (dMeasurement < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
+                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
+                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
             } else if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, (String)methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, (String)methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
@@ -696,28 +696,28 @@ namespace ABT.Test.TestExec {
         }
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
-            if (MeasurementEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.IGNORE;
+            if (MethodEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.IGNORE;
             // 0th priority evaluation:
-            // All measurement Events are IGNORE, so UUT Event is IGNORE.
-            if (MeasurementEventsCount(testGroup, EVENTS.PASS) + MeasurementEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.PASS;
+            // All method Events are IGNORE, so UUT Event is IGNORE.
+            if (MethodEventsCount(testGroup, EVENTS.PASS) + MethodEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
-            if (MeasurementEventsCount(testGroup, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
+            // All method Events are PASS or IGNORE, so UUT Event is PASS.
+            if (MethodEventsCount(testGroup, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
-            // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
-            if (MeasurementEventsCount(testGroup, EVENTS.ERROR) != 0) return EVENTS.ERROR;
+            // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
+            if (MethodEventsCount(testGroup, EVENTS.ERROR) != 0) return EVENTS.ERROR;
             // 3rd priority evaluation:
-            // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
-            if (MeasurementEventsCount(testGroup, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
+            // - If any method Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
+            if (MethodEventsCount(testGroup, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
             // 4th priority evaluation:
-            // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
-            if (MeasurementEventsCount(testGroup, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
+            // - If any method Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
+            if (MethodEventsCount(testGroup, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
-            // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
-            // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
-            if (MeasurementEventsCount(testGroup, EVENTS.FAIL) != 0) return EVENTS.FAIL;
+            // - If any method Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Method(s) didn't complete.
+            // - Likely occurred because a method failed that had its TestDefinition.xml's CancelNotPassed flag set to true.
+            if (MethodEventsCount(testGroup, EVENTS.FAIL) != 0) return EVENTS.FAIL;
             // 6th priority evaluation:
-            // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
+            // - If any method Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder invalidTests = new StringBuilder();
@@ -749,26 +749,26 @@ namespace ABT.Test.TestExec {
             }
             if (groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.IGNORE;
             // 0th priority evaluation:
-            // All measurement Events are IGNORE, so UUT Event is IGNORE.
+            // All method Events are IGNORE, so UUT Event is IGNORE.
             if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All measurement Events are PASS or IGNORE, so UUT Event is PASS.
+            // All method Events are PASS or IGNORE, so UUT Event is PASS.
             if (groupEvents.FindAll(e => e is EVENTS.EMERGENCY_STOP).Count() != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
-            // - If any measurement Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
+            // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
             if (groupEvents.FindAll(e => e is EVENTS.ERROR).Count() != 0) return EVENTS.ERROR;
             // 3rd priority evaluation:
-            // - If any measurement Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
+            // - If any method Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
             if (groupEvents.FindAll(e => e is EVENTS.CANCEL).Count() != 0) return EVENTS.CANCEL;
             // 4th priority evaluation:
-            // - If any measurement Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
+            // - If any method Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
             if (groupEvents.FindAll(e => e is EVENTS.UNSET).Count() != 0) return EVENTS.CANCEL;
             // 5th priority evaluation:
-            // - If any measurement Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Measurement(s) didn't complete.
-            // - Likely occurred because a Measurement failed that had its App.config TestMeasurement CancelOnFail flag set to true.
+            // - If any method Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then method(s) didn't complete.
+            // - Likely occurred because a method failed that had its TestDefinition.xml's CancelOnFail flag set to true.
             if (groupEvents.FindAll(e => e is EVENTS.FAIL).Count() != 0) return EVENTS.FAIL;
             // 6th priority evaluation:
-            // - If any measurement Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
+            // - If any method Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
 
             // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
             StringBuilder stringBuilder = new StringBuilder();
@@ -791,8 +791,8 @@ namespace ABT.Test.TestExec {
             return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
         }
 
-        private Int32 MeasurementEventsCount(TestGroup testGroup, EVENTS Event) { return (from method in testGroup.Methods where (method.Event == Event) select method).Count(); }
-        #endregion Measurements
+        private Int32 MethodEventsCount(TestGroup testGroup, EVENTS Event) { return (from method in testGroup.Methods where (method.Event == Event) select method).Count(); }
+        #endregion Methods
 
         #region Logging methods.
         public void LogCaller([CallerFilePath] String callerFilePath = "", [CallerMemberName] String callerMemberName = "", [CallerLineNumber] Int32 callerLineNumber = 0) {
@@ -803,11 +803,11 @@ namespace ABT.Test.TestExec {
 
         public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
-        public void MessageAppend(String Message) { _ = TestIndex.Method.Log.Append(Message); }
+        public void MessageAppend(String Message) { _ = TestIndices.Method.Log.Append(Message); }
 
-        public void MessageAppendLine(String Message) { _ = TestIndex.Method.Log.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { _ = TestIndices.Method.Log.AppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { _ = TestIndex.Method.Log.AppendLine(MessageFormat(Label, Message)); }
+        public void MessageAppendLine(String Label, String Message) { _ = TestIndices.Method.Log.AppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
