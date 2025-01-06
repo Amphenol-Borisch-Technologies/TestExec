@@ -422,6 +422,7 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonSelect_Click(Object sender, EventArgs e) {
+            testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             testSequence = TestSelect.Get();
             base.Text = $"{testSequence.UUT.Number}, {testSequence.UUT.Description}, {(testSequence.IsOperation ? testSequence.TestOperation.NamespaceTrunk : testSequence.TestOperation.TestGroups[0].Class)}";
             _statusTime.Start();
@@ -593,7 +594,10 @@ namespace ABT.Test.TestExec {
             Debug.Assert(testDefinition.TestData.Item is XML);
             OpenFolder(((XML)testDefinition.TestData.Item).Folder);
         }
-        private void TSMI_UUT_TestDefinition_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", TestDefinitionXML); }
+        private void TSMI_UUT_TestDefinition_Click(Object sender, EventArgs e) {
+            OpenApp("Microsoft", "XMLNotepad", TestDefinitionXML);
+            testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
+        }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
         }
