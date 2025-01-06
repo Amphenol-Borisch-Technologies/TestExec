@@ -32,7 +32,7 @@ namespace ABT.Test.TestExec.Logging {
             _scannerID = ScannerID;
 
             InitializeComponent();
-            toolTip.SetToolTip(BarCodeText, SerialNumberFormat);
+            toolTip.SetToolTip(this, SerialNumberFormat);
 
             GetBarcodeScanner();
             FormUpdate(String.Empty);
