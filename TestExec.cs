@@ -612,7 +612,7 @@ namespace ABT.Test.TestExec {
 
         #region Methods
         private void MethodsPreRun() {
-            testSequence.MethodsReset();
+            testSequence.PreRun();
             TestIndices.Nullify();
             Logger.Start(ref rtfResults);
             SystemReset();
