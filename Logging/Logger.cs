@@ -4,7 +4,6 @@ using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -12,6 +11,7 @@ using System.Xml.Serialization;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
+using static ABT.Test.TestLib.TestLib;
 
 // TODO:  Eventually; persist data into PostgreSQL; write all full Operation output therein.
 // - Stop writing output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
@@ -77,7 +77,7 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append(method.Log.ToString());
             Log.Information(stringBuilder.ToString());
-            if (isOperation) SetBackColor(ref rtfResults, 0, method.Name, TestLib.TestLib.EventColors[method.Event]);
+            if (isOperation) SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
@@ -86,15 +86,15 @@ namespace ABT.Test.TestExec.Logging {
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            if (TestLib.TestLib.testSequence.IsOperation) {
+            if (testSequence.IsOperation) {
                 Log.Information($"UUT:");
                 Log.Information($"\t{MESSAGE_UUT_EVENT}");
-                Log.Information($"\tSerial Number     : {TestLib.TestLib.testSequence.SerialNumber}");
-                Log.Information($"\tNumber            : {TestLib.TestLib.testSequence.UUT.Number}");
-                Log.Information($"\tRevision          : {TestLib.TestLib.testSequence.UUT.Revision}");
-                Log.Information($"\tDescription       : {TestLib.TestLib.testSequence.UUT.Description}");
-                Log.Information($"\tType              : {TestLib.TestLib.testSequence.UUT.Category}");
-                Log.Information($"\tCustomer          : {TestLib.TestLib.testSequence.UUT.Customer}\n");
+                Log.Information($"\tSerial Number     : {testSequence.SerialNumber}");
+                Log.Information($"\tNumber            : {testSequence.UUT.Number}");
+                Log.Information($"\tRevision          : {testSequence.UUT.Revision}");
+                Log.Information($"\tDescription       : {testSequence.UUT.Description}");
+                Log.Information($"\tType              : {testSequence.UUT.Category}");
+                Log.Information($"\tCustomer          : {testSequence.UUT.Customer}\n");
 
                 Log.Information($"TestOperation:");
                 Log.Information($"\tStart             : {DateTime.Now}");
@@ -104,42 +104,37 @@ namespace ABT.Test.TestExec.Logging {
                 Log.Information($"\tMachineName       : {Environment.MachineName}");
                 Log.Information($"\tExec              : {Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}");
                 Log.Information($"\tTest              : {Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version} {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}");
-                Log.Information($"\tSpecification     : {TestLib.TestLib.testSequence.UUT.TestSpecification}");
-                Log.Information($"\tID                : {TestLib.TestLib.testSequence.TestOperation.NamespaceTrunk}");
-                Log.Information($"\tDescription       : {TestLib.TestLib.testSequence.TestOperation.Description}\n");
+                Log.Information($"\tSpecification     : {testSequence.UUT.TestSpecification}");
+                Log.Information($"\tID                : {testSequence.TestOperation.NamespaceTrunk}");
+                Log.Information($"\tDescription       : {testSequence.TestOperation.Description}\n");
 
                 StringBuilder stringBuilder = new StringBuilder();
-                foreach (TestGroup testGroup in TestLib.TestLib.testSequence.TestOperation.TestGroups) {
+                foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
                     stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
                     foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
                 }
                 Log.Information($"TestMethods:\n{stringBuilder}");
             } else { // Not a TestOperation, just a TestGroup.  When TestGroups are executed, test data isn't saved, thus forego header.
                 Log.Information($"Note: following results invalid for UUT production testing, only troubleshooting.");
-                Log.Information(FormatMessage($"UUT Serial Number", $"{TestLib.TestLib.testSequence.SerialNumber}"));
-                Log.Information(FormatMessage($"UUT Number", $"{TestLib.TestLib.testSequence.UUT.Number}"));
-                Log.Information(FormatMessage($"UUT Revision", $"{TestLib.TestLib.testSequence.UUT.Revision}"));
-                Log.Information(FormatMessage($"TestGroup ", $"{TestLib.TestLib.testSequence.TestOperation.TestGroups[0].Class}"));
-                Log.Information(FormatMessage($"Description", $"{TestLib.TestLib.testSequence.TestOperation.TestGroups[0].Description}"));
+                Log.Information(FormatMessage($"UUT Serial Number", $"{testSequence.SerialNumber}"));
+                Log.Information(FormatMessage($"UUT Number", $"{testSequence.UUT.Number}"));
+                Log.Information(FormatMessage($"UUT Revision", $"{testSequence.UUT.Revision}"));
+                Log.Information(FormatMessage($"TestGroup ", $"{testSequence.TestOperation.TestGroups[0].Class}"));
+                Log.Information(FormatMessage($"Description", $"{testSequence.TestOperation.TestGroups[0].Description}"));
                 Log.Information(FormatMessage($"Start", $"{DateTime.Now}\n"));
             }
         }
 
-        public static String BuildDate(Version version) {
-            DateTime Y2K = new DateTime(year: 2000, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Local);
-            return $"{Y2K + new TimeSpan(days: version.Build, hours: 0, minutes: 0, seconds: 2 * version.Revision):g}";
-        }
-
         public static void Stop(ref RichTextBox rtfResults) {
-            if (TestLib.TestLib.testSequence.IsOperation) {
-                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + TestLib.TestLib.testSequence.Event.ToString());
-                SetBackColor(ref rtfResults, 0, TestLib.TestLib.testSequence.Event.ToString(), TestLib.TestLib.EventColors[TestLib.TestLib.testSequence.Event]);
+            if (testSequence.IsOperation) {
+                ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + testSequence.Event.ToString());
+                SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
                 ReplaceText(ref rtfResults, 0, MESSAGE_STOP, MESSAGE_STOP + DateTime.Now);
                 Log.CloseAndFlush();
-                if (TestLib.TestLib.testSequence.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
-                    if (TestLib.TestLib.testDefinition.TestData.Item is XML) StopXML();
-                    else if (TestLib.TestLib.testDefinition.TestData.Item is SQL) StopSQL();
-                    else throw new ArgumentException($"Unknown TestData Item '{TestLib.TestLib.testDefinition.TestData.Item}'.");
+                if (testSequence.Event != EVENTS.IGNORE) { // Don't save test data who's overall result is IGNORE.
+                    if (testDefinition.TestData.Item is XML) StopXML();
+                    else if (testDefinition.TestData.Item is SQL) StopSQL();
+                    else throw new ArgumentException($"Unknown TestData Item '{testDefinition.TestData.Item}'.");
                 }
             } else Log.CloseAndFlush();
             // Log header isn't written nor test data saved when not a TestOperation, emphasizing results aren't valid for passing & $hipping, only troubleshooting failures.
@@ -172,9 +167,9 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         private static void StopXML() {
-            XML xml = (XML)TestLib.TestLib.testDefinition.TestData.Item;
-            String xmlFolder = $"{xml.Folder}\\{TestLib.TestLib.testSequence.TestOperation.NamespaceTrunk}";
-            String xmlBaseName = $"{TestLib.TestLib.testSequence.UUT.Number}_{TestLib.TestLib.testSequence.SerialNumber}_{TestLib.TestLib.testSequence.TestOperation.NamespaceTrunk}";
+            XML xml = (XML)testDefinition.TestData.Item;
+            String xmlFolder = $"{xml.Folder}\\{testSequence.TestOperation.NamespaceTrunk}";
+            String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*.xml", SearchOption.TopDirectoryOnly);
             // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
             Int32 maxNumber = 0; String s;
@@ -188,11 +183,11 @@ namespace ABT.Test.TestExec.Logging {
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
-            using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{TestLib.TestLib.testSequence.Event}.xml", FileMode.CreateNew)) {
+            using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{testSequence.Event}.xml", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence));
-                    xmlSerializer.Serialize(xmlTextWriter, TestLib.TestLib.testSequence);
+                    xmlSerializer.Serialize(xmlTextWriter, testSequence);
                 }
             }
         }
