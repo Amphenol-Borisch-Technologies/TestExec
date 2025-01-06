@@ -568,15 +568,6 @@ namespace ABT.Test.TestExec {
             );
             _ = about.ShowDialog();
         }
-
-        private void TSMI_UUT_AppConfig_Click(Object sender, EventArgs e) {
-            StringBuilder sb = new StringBuilder();
-            String EA = Assembly.GetEntryAssembly().GetName().Name;
-            _ = sb.AppendLine($"Please backport any permanently desired '{EA}.exe.config' changes to source repository's 'App.config'.{Environment.NewLine}");
-            _ = sb.AppendLine($"Also please undo any temporary undesired '{EA}.exe.config' changes.");
-            DialogResult dr = MessageBox.Show(sb.ToString(), $"Warning.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.OK) OpenApp("Microsoft", "XMLNotepad", $"{EA}.exe.config");
-        }
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
         }
@@ -602,6 +593,7 @@ namespace ABT.Test.TestExec {
             Debug.Assert(testDefinition.TestData.Item is XML);
             OpenFolder(((XML)testDefinition.TestData.Item).Folder);
         }
+        private void TSMI_UUT_TestDefinition_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad", TestDefinitionXML); }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
         }
