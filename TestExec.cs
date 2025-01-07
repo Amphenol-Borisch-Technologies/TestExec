@@ -30,6 +30,14 @@ using static ABT.Test.TestLib.TestLib;
 // TODO:  Soon; final tuning of CancellationTokenSource code.
 // TODO:  Eventually; AppDomain loading/unloading of TestPlans as plugins.
 // TODO:  Eventually; GitHub automated workflows; CI/CD including automated deployment to subscribed TestExec PCs (assuming its possible).
+// TODO:  Soon; need to add logic to ABT.Test.TestLib.TestConfiguration.PostRun(EVENT) to accomodate serializing ABT.Test.TestLib.TestConfiguration.Method's Value Object.
+//        - ABT.Test.TestExec.MethodRun(Method method) currently returns System.String.
+//        - ABT.Test.TestLib.TestConfiguration.Method.Value is a System.Object.
+//          - Eliminate Method.Value property in favor to custom classes specific to each inherited Method*.
+//            - MethodInterval will contain a System.Double property.
+//            - MethodProcess will contain a System.String to accomodate ExitCodes & ProcessRedirects.
+//            - MethodTextual will contain a System.String property.
+//            - MethodCustom will contain a System.Object property, though how it can be serialized will be challenging...
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
 //          - That is, it's excellent for non-GUI (WinForms/WPF/WinUI) C# development.

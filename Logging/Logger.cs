@@ -16,19 +16,19 @@ using static ABT.Test.TestLib.TestLib;
 //   - RichTextBoxSink test data are failures only, for trouble-shooting.
 //     - Can be exported as RTF if desired, then printed.
 //
-// Local PostgreSQL installations on all TestExec PCs in case LAN, IS Server or PostgreSQL server are down. 
-//   - Local PostgreSQL exports test data periodically via Microsoft Task Scheduler to main PostgreSQL RBDMS, then deletes its local data. 
+// Local PostgreSQL installations on all TestExec PCs in case LAN, IS Server or PostgreSQL server are down.
+//   - Local PostgreSQL exports test data periodically via Microsoft Task Scheduler to main PostgreSQL RBDMS, then deletes its local data.
 //
-// Microsoft Access app for querying & reporting PostgreSQL RBDMS: 
-//   - PostgreSQL test data accessible as: 
-//     - Read-only for all ABT personnel. 
-//     - Read-write for Test Engineers & Technicians. 
+// Create Microsoft Access app for querying & reporting PostgreSQL RBDMS:
+//   - PostgreSQL test data accessible as:
+//     - Read-only for all ABT personnel.
+//     - Read-write for Test Engineers & Technicians.
 //
-// PostgreSQL can integrate with Microsoft Active Directory for user access. 
-//   - Include standard queries & reports. 
-//     - Queries exportable as .CSV files for Excel. 
-//     - Reports exportable solely as .PDF files for Acrobat Reader. 
-//   - Custom querying/reporting available. 
+// PostgreSQL can integrate with Microsoft Active Directory for user access.
+//   - Include standard queries & reports.
+//     - Queries exportable as .CSV files for Excel.
+//     - Reports exportable solely as .PDF files for Acrobat Reader.
+//   - Custom querying/reporting permitted & encouraged.
 
 namespace ABT.Test.TestExec.Logging {
     public static class Logger {
