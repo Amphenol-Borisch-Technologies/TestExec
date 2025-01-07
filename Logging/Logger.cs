@@ -11,15 +11,24 @@ using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.TestLib;
 
-// TODO:  Eventually; persist data into PostgreSQL; write all full Operation output therein.
-// - Stop writing output to RichTextBoxSink when testing full Operations; only write TestGroups output to RichTextBoxSink.
-// - Continue writing output to RichTextBoxSink when only testing Groups.
-// - Stop saving RichTextBoxSink as RTF files, except allow manual export for Troubleshooting.
-// - This will resolve the RichTextBox scroll issue, wherein TestGroups output are scrolled up & away as output is appended.
-// - Only PostgreSQL persisted data is legitimate; all RichTextBoxSink is Troubleshooting only.
-// - Create a front-end exporting/reporting Microsoft Access app for persisted PostgreSQL data.
-// - Export in CSV, report in PDF.
+// TODO:  Eventually; persist test data into PostgreSQL on IS server:
+// Only XML and PostgreSQL persisted test data is legitimate.
+//   - RichTextBoxSink test data are failures only, for trouble-shooting.
+//     - Can be exported as RTF if desired, then printed.
 //
+// Local PostgreSQL installations on all TestExec PCs in case LAN, IS Server or PostgreSQL server are down. 
+//   - Local PostgreSQL exports test data periodically via Microsoft Task Scheduler to main PostgreSQL RBDMS, then deletes its local data. 
+//
+// Microsoft Access app for querying & reporting PostgreSQL RBDMS: 
+//   - PostgreSQL test data accessible as: 
+//     - Read-only for all ABT personnel. 
+//     - Read-write for Test Engineers & Technicians. 
+//
+// PostgreSQL can integrate with Microsoft Active Directory for user access. 
+//   - Include standard queries & reports. 
+//     - Queries exportable as .CSV files for Excel. 
+//     - Reports exportable solely as .PDF files for Acrobat Reader. 
+//   - Custom querying/reporting available. 
 
 namespace ABT.Test.TestExec.Logging {
     public static class Logger {

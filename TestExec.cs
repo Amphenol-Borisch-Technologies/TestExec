@@ -17,7 +17,6 @@ using System.Timers;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.Win32;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
@@ -26,7 +25,11 @@ using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.TestLib;
-
+// TODO:  Immediately; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
+// - Briefly evaluated previously; time for reevaluation.
+// TODO:  Soon; final tuning of CancellationTokenSource code.
+// TODO:  Eventually; AppDomain loading/unloading of TestPlans as plugins.
+// TODO:  Eventually; GitHub automated workflows; CI/CD including automated deployment to subscribed TestExec PCs (assuming its possible).
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
 //          - That is, it's excellent for non-GUI (WinForms/WPF/WinUI) C# development.
