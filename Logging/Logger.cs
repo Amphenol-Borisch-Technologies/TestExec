@@ -45,7 +45,9 @@ namespace ABT.Test.TestExec.Logging {
             sb.AppendLine(FormatMessage("High Limit", $"{methodInterval.High:G}"));
             sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
             sb.AppendLine(FormatMessage("Low Limit", $"{methodInterval.Low:G}"));
-            String units = $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
+            String units = String.Empty;
+            if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
+            units += $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
             if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
             sb.Append(FormatMessage("Units", units));
             return sb.ToString();
