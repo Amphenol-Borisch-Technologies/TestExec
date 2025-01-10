@@ -158,7 +158,9 @@ namespace ABT.Test.TestExec {
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
             _ = Task.Run(() => GetDeveloperAddresses());
-            if (!testDefinition.TestSpace.Simulate) testInstruments = GetInstruments(_ConfigurationTestExec);
+            
+            testInstruments = GetInstruments(_ConfigurationTestExec);
+
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
                 if (!(testDefinition.TestData.Item is XML) && !(testDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
