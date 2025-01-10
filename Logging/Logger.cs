@@ -106,7 +106,7 @@ namespace ABT.Test.TestExec.Logging {
 
             StringBuilder stringBuilder = new StringBuilder();
             foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
-                stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Class, testGroup.Description));
+                stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Classname, testGroup.Description));
                 foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
             }
             Log.Information($"TestMethods:\n{stringBuilder}");
