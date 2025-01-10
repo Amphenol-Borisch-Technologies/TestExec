@@ -152,12 +152,12 @@ namespace ABT.Test.TestExec {
         protected TestExec(Icon icon, String baseDirectory) {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
-            _ = Task.Run(() => GetDeveloperAddresses());
             BaseDirectory = baseDirectory;
             TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
             if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
+            _ = Task.Run(() => GetDeveloperAddresses());
             if (!testDefinition.TestSpace.Simulate) testInstruments = GetInstruments(_ConfigurationTestExec);
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
