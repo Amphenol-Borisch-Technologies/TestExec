@@ -73,7 +73,7 @@ namespace ABT.Test.TestExec.Logging {
 
         public static void LogMethod(ref RichTextBox rtfResults, Method method) {
             SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
-            if (method.Event is EVENTS.IGNORE || method.Event is EVENTS.PASS) return;
+            if (method.Event is EVENTS.INFORMATION || method.Event is EVENTS.PASS) return;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(FormatMessage("Method", method.Name));
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", method.CancelNotPassed.ToString()));
@@ -116,7 +116,7 @@ namespace ABT.Test.TestExec.Logging {
             ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + testSequence.Event.ToString());
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
-            if (testSequence.IsOperation && testSequence.Event != EVENTS.IGNORE) {
+            if (testSequence.IsOperation) {
                 if (testDefinition.TestData.Item is XML) StopXML();
                 else if (testDefinition.TestData.Item is SQL) StopSQL();
                 else throw new ArgumentException($"Unknown TestData Item '{testDefinition.TestData.Item}'.");

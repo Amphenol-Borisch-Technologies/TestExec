@@ -701,12 +701,12 @@ namespace ABT.Test.TestExec {
         }
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
-            if (MethodEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.IGNORE;
+            if (MethodEventsCount(testGroup, EVENTS.INFORMATION) == testGroup.Methods.Count) return EVENTS.INFORMATION;
             // 0th priority evaluation:
-            // All method Events are IGNORE, so UUT Event is IGNORE.
-            if (MethodEventsCount(testGroup, EVENTS.PASS) + MethodEventsCount(testGroup, EVENTS.IGNORE) == testGroup.Methods.Count) return EVENTS.PASS;
+            // All method Events are INFORMATION, so UUT Event is INFORMATION.
+            if (MethodEventsCount(testGroup, EVENTS.PASS) + MethodEventsCount(testGroup, EVENTS.INFORMATION) == testGroup.Methods.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All method Events are PASS or IGNORE, so UUT Event is PASS.
+            // All method Events are PASS or INFORMATION, so UUT Event is PASS.
             if (MethodEventsCount(testGroup, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
             // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
@@ -732,7 +732,7 @@ namespace ABT.Test.TestExec {
                     case EVENTS.EMERGENCY_STOP:
                     case EVENTS.ERROR:
                     case EVENTS.FAIL:
-                    case EVENTS.IGNORE:
+                    case EVENTS.INFORMATION:
                     case EVENTS.PASS:
                     case EVENTS.UNSET:
                         break; // Above EVENTS are all handled in this method.
@@ -752,12 +752,12 @@ namespace ABT.Test.TestExec {
                 groupEvents.Add(GroupEvaluate(testGroup));
                 methodsCount += testGroup.Methods.Count();
             }
-            if (groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.IGNORE;
+            if (groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == methodsCount) return EVENTS.INFORMATION;
             // 0th priority evaluation:
-            // All method Events are IGNORE, so UUT Event is IGNORE.
-            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.IGNORE).Count() == methodsCount) return EVENTS.PASS;
+            // All method Events are INFORMATION, so UUT Event is INFORMATION.
+            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == methodsCount) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All method Events are PASS or IGNORE, so UUT Event is PASS.
+            // All method Events are PASS or INFORMATION, so UUT Event is PASS.
             if (groupEvents.FindAll(e => e is EVENTS.EMERGENCY_STOP).Count() != 0) return EVENTS.EMERGENCY_STOP;
             // 2nd priority evaluation:
             // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
@@ -784,7 +784,7 @@ namespace ABT.Test.TestExec {
                         case EVENTS.EMERGENCY_STOP:
                         case EVENTS.ERROR:
                         case EVENTS.FAIL:
-                        case EVENTS.IGNORE:
+                        case EVENTS.INFORMATION:
                         case EVENTS.PASS:
                         case EVENTS.UNSET:
                             break; // Above EVENTS are all handled in this method.
