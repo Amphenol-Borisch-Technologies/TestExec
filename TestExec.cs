@@ -142,7 +142,6 @@ namespace ABT.Test.TestExec {
     public abstract partial class TestExec : Form {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String _NOT_APPLICABLE = "NotApplicable";
-        private readonly String _ConfigurationTestExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
         private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
@@ -154,12 +153,13 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
+            SystemDefinitionXML = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
             if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
             _ = Task.Run(() => GetDeveloperAddresses());
             
-            testInstruments = GetInstruments(_ConfigurationTestExec);
+            testInstruments = GetInstruments(SystemDefinitionXML);
 
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
@@ -169,7 +169,7 @@ namespace ABT.Test.TestExec {
 
                 _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
                 if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
-                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(_ConfigurationTestExec).Element("BarCodeScannerID").Value);
+                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarCodeScannerID").Value);
             }
 
             _statusTime.Elapsed += StatusTimeUpdate;
@@ -231,7 +231,7 @@ namespace ABT.Test.TestExec {
             StatusModeUpdate(MODES.Waiting);
         }
 
-        private String GetFolder(String FolderID) { return XElement.Load(_ConfigurationTestExec).Element("Folders").Element(FolderID).Value; }
+        private String GetFolder(String FolderID) { return XElement.Load(SystemDefinitionXML).Element("Folders").Element(FolderID).Value; }
 
         private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
@@ -279,7 +279,7 @@ namespace ABT.Test.TestExec {
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
         private void OpenApp(String CompanyID, String AppID, String Arguments = "") {
-            String app = XElement.Load(_ConfigurationTestExec).Element("Apps").Element(CompanyID).Element(AppID).Value;
+            String app = XElement.Load(SystemDefinitionXML).Element("Apps").Element(CompanyID).Element(AppID).Value;
 
             if (File.Exists(app)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
