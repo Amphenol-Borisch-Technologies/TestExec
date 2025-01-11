@@ -81,6 +81,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SystemDefinition.cs">
+      <DependentUpon>SystemDefinition.xsd</DependentUpon>
+    </Compile>
     <Compile Include="TestExec.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,7 +167,7 @@
     <Content Include="Resources\EmergencyStop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestExec.config.xml">
+    <Content Include="SystemDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Raytheon.ico" />
@@ -259,6 +262,11 @@
       <Project>{24d5e99e-185c-4507-81f0-132d8cb8164e}</Project>
       <Name>TestLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SystemDefinition.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

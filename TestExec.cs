@@ -153,7 +153,7 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
-            SystemDefinitionXML = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\TestExec.config.xml";
+            SystemDefinitionXML = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\SystemDefinition.xml";
             if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
