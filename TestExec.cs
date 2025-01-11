@@ -688,6 +688,8 @@ namespace ABT.Test.TestExec {
             if (method is MethodCustom) return (EVENTS)Enum.Parse(typeof(EVENTS), method.Value);
             else if (method is MethodInterval methodInterval) {
                 if (!Double.TryParse((String)methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
+                d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
+                methodInterval.Value = d.ToString("G");
                 if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
