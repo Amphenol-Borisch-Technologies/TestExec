@@ -589,7 +589,8 @@ namespace ABT.Test.TestExec {
                 String s = $"{nameof(EVENTS)}.{Event}";
                 richTextBox.SelectionStart = richTextBox.Find(s, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                 richTextBox.SelectionLength = s.Length;
-                richTextBox.SelectionBackColor = EventColors[Event];
+                if (EventColors.ContainsKey(Event)) richTextBox.SelectionBackColor = EventColors[Event];
+                else throw new InvalidOperationException($"Test Engineering needs to update '{nameof(EventColors)}', associating '{nameof(EVENTS)}.{Event}' with a color!");
             }
             customMessageBox.ShowDialog();
         }
