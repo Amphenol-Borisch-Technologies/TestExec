@@ -140,11 +140,11 @@ namespace ABT.Test.TestExec {
     /// </para>
     /// </summary>
     public abstract partial class TestExec : Form {
+        public static System.Timers.Timer StatusTimer = new System.Timers.Timer(10000);
         private const String _serialNumberMostRecent = "MostRecent";
         private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
-        private readonly System.Timers.Timer _statusTime = new System.Timers.Timer(10000);
         private CancellationTokenSource _CTS_Cancel;
         private CancellationTokenSource _CTS_EmergencyStop;
 
@@ -172,8 +172,8 @@ namespace ABT.Test.TestExec {
                 if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarcodeScanner").Attribute("ID").Value);
             }
 
-            _statusTime.Elapsed += StatusTimeUpdate;
-            _statusTime.AutoReset = true;
+            StatusTimer.Elapsed += StatusTimeUpdate;
+            StatusTimer.AutoReset = true;
             _CTS_Cancel = new CancellationTokenSource();
             CT_Cancel = _CTS_Cancel.Token;
             _CTS_EmergencyStop = new CancellationTokenSource();
@@ -438,7 +438,7 @@ namespace ABT.Test.TestExec {
         private void ButtonSelect_Click(Object sender, EventArgs e) {
             testSequence = TestSelect.Get();
             base.Text = $"{testSequence.UUT.Number}, {testSequence.UUT.Description}, {(testSequence.IsOperation ? testSequence.TestOperation.NamespaceTrunk : testSequence.TestOperation.TestGroups[0].Classname)}";
-            _statusTime.Start();
+            StatusTimer.Start();
             FormModeReset();
             FormModeWait();
         }
@@ -562,6 +562,24 @@ namespace ABT.Test.TestExec {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
+        private void TSMI_System_ColorCode_Click(Object sender, EventArgs e) {
+            TestLib.Miscellaneous.CustomMessageBox customMessageBox = new TestLib.Miscellaneous.CustomMessageBox {
+                Icon = SystemIcons.Information,
+                Text = "Event Color Codes"
+            };
+            RichTextBox richTextBox = (RichTextBox)customMessageBox.Controls["richTextBox"];
+            richTextBox.Font = new Font(richTextBox.Font.FontFamily, 20);
+            richTextBox.Text = String.Empty;
+            foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) richTextBox.Text += $"{nameof(EVENTS)}.{Event}{Environment.NewLine}{Environment.NewLine}";
+
+            foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) {
+                String s = $"{nameof(EVENTS)}.{Event}";
+                richTextBox.SelectionStart = richTextBox.Find(s, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                richTextBox.SelectionLength = s.Length;
+                richTextBox.SelectionBackColor = EventColors[Event];
+            }
+            customMessageBox.ShowDialog();
+        }
         private void TSMI_System_SelfTestsInstruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
             Boolean passed = true;
@@ -572,6 +590,8 @@ namespace ABT.Test.TestExec {
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_TestExecConfigXML_Click(Object sender, EventArgs e) {
+            _ = MessageBox.Show(ActiveForm, "Any SystemDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);
 
         }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
