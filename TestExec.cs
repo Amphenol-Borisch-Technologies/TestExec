@@ -157,6 +157,7 @@ namespace ABT.Test.TestExec {
             if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
+            UserName = GetUserPrincipal();
             _ = Task.Run(() => GetDeveloperAddresses());
             
             testInstruments = GetInstruments(SystemDefinitionXML);
@@ -190,6 +191,16 @@ namespace ABT.Test.TestExec {
                 ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.Developer[0].EMailAddress}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendDeveloperMailMessage("Exception caught!", Ex);
             }
+        }
+
+        private static String GetUserPrincipal() {
+            String UserName;
+            try { UserName = UserPrincipal.Current.DisplayName; } catch {
+                // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+                UserName = Interaction.InputBox(Prompt: $"Please enter your full name for test data logging.", Title: "Enter Your Name");
+                UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
+            }
+            return UserName;
         }
 
         private void Form_Closing(Object sender, FormClosingEventArgs e) { if (e.CloseReason == CloseReason.UserClosing) PreApplicationExit(); }
@@ -328,7 +339,7 @@ namespace ABT.Test.TestExec {
         public static void SendDeveloperMailMessage(String Subject, System.Exception Ex) {
             StringBuilder sb = new StringBuilder();
             _ = sb.AppendLine($"MachineName           : {Environment.MachineName}");
-            _ = sb.AppendLine($"UserPrincipal         : {UserPrincipal.Current.DisplayName}");
+            _ = sb.AppendLine($"User Name             : {UserName}");
             _ = sb.AppendLine($"Exception.ToString()  : {Ex}");
             SendDeveloperMailMessage(Subject, Body: sb.ToString());
         }
@@ -372,11 +383,13 @@ namespace ABT.Test.TestExec {
             Outlook.AddressList addressList = outlookNamespace.AddressLists["Offline Global Address List"];
 
             if (addressList != null) {
-                Object task;
-                foreach (Developer developer in testDefinition.Development.Developer) {
-                    task = await Task.Run(() => GetAddress(addressList, developer.Name));
-                    developer.EMailAddress = (String)task;
-                }
+                try {
+                    Object task;
+                    foreach (Developer developer in testDefinition.Development.Developer) {
+                        task = await Task.Run(() => GetAddress(addressList, developer.Name));
+                        developer.EMailAddress = (String)task;
+                    }
+                } catch { };
             }
         }
 
@@ -527,10 +540,10 @@ namespace ABT.Test.TestExec {
         private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudioCode"); }
         private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
 
-        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserPrincipal.Current.DisplayName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserPrincipal.Current.DisplayName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserPrincipal.Current.DisplayName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
