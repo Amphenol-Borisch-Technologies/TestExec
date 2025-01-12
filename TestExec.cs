@@ -169,7 +169,7 @@ namespace ABT.Test.TestExec {
 
                 _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
                 if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
-                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarCodeScannerID").Value);
+                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarcodeScanner").Attribute("ID").Value);
             }
 
             _statusTime.Elapsed += StatusTimeUpdate;

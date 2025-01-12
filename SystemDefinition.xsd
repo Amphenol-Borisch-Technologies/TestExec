@@ -48,6 +48,34 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:complexType name="BarcodeScanner">
+    <xs:attribute name="ID" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+          ID attribute:
+          - Required.
+          - Must be unique.
+          - Type: xs:string.
+          ]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Detail" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+                Detail attribute:
+                - Required.
+                - Type: xs:string.
+                
+                Concise description of Barcode Scanner.
+              ]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  
   <xs:complexType name="Instrument">
     <xs:attribute name="ID" type="xs:string" use="required">
       <xs:annotation>
@@ -103,7 +131,21 @@
   <xs:element name="SystemDefinition">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="BarCodeScannerID" type="xs:string" />
+        <xs:element name="BarcodeScanner" type="BarcodeScanner" minOccurs="1" maxOccurs="1" >
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              <![CDATA[
+                BarcodeScanner element:
+                - Required, 1 occurence.
+                - Type: BarcodeScanner.
+              ]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:unique name="UniqueBarcodeScannerID">
+            <xs:selector xpath="BarcodeScanner"/>
+            <xs:field xpath="@ID"/>
+          </xs:unique>
+        </xs:element>
         <xs:element name="Apps" minOccurs="1" maxOccurs="1" >
           <xs:complexType>
             <xs:sequence>
@@ -165,7 +207,7 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
-          <xs:unique name="UniqueIDs">
+          <xs:unique name="UniqueInstrumentID">
             <xs:selector xpath="Instrument"/>
             <xs:field xpath="@ID"/>
           </xs:unique>
