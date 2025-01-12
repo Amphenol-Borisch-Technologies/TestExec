@@ -53,10 +53,9 @@
       <xs:annotation>
         <xs:documentation xml:lang="en">
           <![CDATA[
-          ID attribute:
-          - Required.
-          - Must be unique.
-          - Type: xs:string.
+            ID attribute:
+            - Required.
+            - Type: xs:string.
           ]]>
         </xs:documentation>
       </xs:annotation>
@@ -65,12 +64,12 @@
       <xs:annotation>
         <xs:documentation xml:lang="en">
           <![CDATA[
-                Detail attribute:
-                - Required.
-                - Type: xs:string.
+            Detail attribute:
+            - Required.
+            - Type: xs:string.
                 
-                Concise description of Barcode Scanner.
-              ]]>
+            Concise description of Barcode Scanner.
+          ]]>
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -141,10 +140,6 @@
               ]]>
             </xs:documentation>
           </xs:annotation>
-          <xs:unique name="UniqueBarcodeScannerID">
-            <xs:selector xpath="BarcodeScanner"/>
-            <xs:field xpath="@ID"/>
-          </xs:unique>
         </xs:element>
         <xs:element name="Apps" minOccurs="1" maxOccurs="1" >
           <xs:complexType>
