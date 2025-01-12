@@ -25,7 +25,8 @@ using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.TestLib;
-// TODO:  Immediately; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
+using ABT.Test.TestLib.Miscellaneous;
+// TODO:  Soon; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
 // - Briefly evaluated previously; time for reevaluation.
 // TODO:  Soon; final tuning of CancellationTokenSource code.
 // TODO:  Eventually; AppDomain loading/unloading of TestPlans as plugins.
@@ -159,7 +160,7 @@ namespace ABT.Test.TestExec {
 
             UserName = GetUserPrincipal();
             _ = Task.Run(() => GetDeveloperAddresses());
-            
+
             testInstruments = GetInstruments(SystemDefinitionXML);
 
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
@@ -576,7 +577,7 @@ namespace ABT.Test.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
         }
         private void TSMI_System_ColorCode_Click(Object sender, EventArgs e) {
-            TestLib.Miscellaneous.CustomMessageBox customMessageBox = new TestLib.Miscellaneous.CustomMessageBox {
+            CustomMessageBox customMessageBox = new CustomMessageBox {
                 Icon = SystemIcons.Information,
                 Text = "Event Color Codes"
             };
@@ -605,14 +606,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
         private void TSMI_System_SystemDefinition_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show(ActiveForm, "Any SystemDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);        }
-        private void TSMI_System_About_Click(Object sender, EventArgs e) {
-            Form about = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: "About TestExec",
-                Text: $"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
-                Link: "https://github.com/Amphenol-Borisch-Technologies/TestExec"
-            );
-            _ = about.ShowDialog();
+            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);
         }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
@@ -643,17 +637,21 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_TestDefinition_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show(ActiveForm, "Any TestDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             OpenApp("Microsoft", "XMLNotepad", TestDefinitionXML);
-       }
+        }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
         }
-        private void TSMI_UUT_About_Click(Object sender, EventArgs e) {
-            Form about = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: "About",
-                Text: $"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.{Environment.NewLine}{Environment.NewLine}© 2022, Amphenol Borisch Technologies.",
-                Link: "https://github.com/Amphenol-Borisch-Technologies/TestPlan"
-            );
-            _ = about.ShowDialog();
+
+        private void TSMI_About_Click(Object sender, EventArgs e) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.");
+            stringBuilder.AppendLine($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.");
+            AssemblyName assemblyName = new AssemblyName(nameof(TestLib));
+            stringBuilder.AppendLine($"{assemblyName.Name}, {assemblyName.Version}, {BuildDate(assemblyName.Version)}.");
+            stringBuilder.AppendLine($"© 2022, Amphenol Borisch Technologies.{Environment.NewLine}");
+
+            foreach (Repository repository in testDefinition.Development.Repository) stringBuilder.AppendLine(repository.URL);
+            CustomMessageBox.Show(Title: "About", Message: stringBuilder.ToString());
         }
         #endregion Form Tool Strip Menu Items
 
