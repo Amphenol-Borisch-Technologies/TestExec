@@ -602,11 +602,9 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
-        private void TSMI_System_TestExecConfigXML_Click(Object sender, EventArgs e) {
+        private void TSMI_System_SystemDefinition_Click(Object sender, EventArgs e) {
             _ = MessageBox.Show(ActiveForm, "Any SystemDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);
-
-        }
+            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);        }
         private void TSMI_System_About_Click(Object sender, EventArgs e) {
             Form about = new Miscellaneous.MessageBoxMonoSpaced(
                 Title: "About TestExec",
@@ -615,6 +613,7 @@ namespace ABT.Test.TestExec {
             );
             _ = about.ShowDialog();
         }
+
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
         }
