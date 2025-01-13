@@ -646,8 +646,8 @@ namespace ABT.Test.TestExec {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.");
             stringBuilder.AppendLine($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.");
-            AssemblyName assemblyName = new AssemblyName(nameof(TestLib));
-            stringBuilder.AppendLine($"{assemblyName.Name}, {assemblyName.Version}, {BuildDate(assemblyName.Version)}.");
+            Assembly assembly = Assembly.ReflectionOnlyLoad(nameof(TestLib));
+            stringBuilder.AppendLine($"{assembly.GetName().Name}, {assembly.GetName().Version}, {BuildDate(assembly.GetName().Version)}.{Environment.NewLine}");
             stringBuilder.AppendLine($"© 2022, Amphenol Borisch Technologies.{Environment.NewLine}");
 
             foreach (Repository repository in testDefinition.Development.Repository) stringBuilder.AppendLine(repository.URL);
