@@ -201,7 +201,7 @@ namespace ABT.Test.TestExec {
             //    UserName = InputBoxForm.Show("Please enter your full name for test data logging.");
             //    UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
             //}
-                UserName = InputForm.Show(Title: "Enter full name for test data.", SystemIcons.Question);
+                UserName = InputForm.Show(Title: "Enter your full name for test data.", SystemIcons.Question);
                 UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
             return UserName;
         }
