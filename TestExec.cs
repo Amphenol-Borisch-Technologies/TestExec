@@ -196,11 +196,13 @@ namespace ABT.Test.TestExec {
 
         private static String GetUserPrincipal() {
             String UserName;
-            try { UserName = UserPrincipal.Current.DisplayName; } catch {
-                // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
-                UserName = Interaction.InputBox(Prompt: $"Please enter your full name for test data logging.", Title: "Enter Your Name");
+            //try { UserName = UserPrincipal.Current.DisplayName; } catch {
+            //    // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
+            //    UserName = InputBoxForm.Show("Please enter your full name for test data logging.");
+            //    UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
+            //}
+                UserName = InputForm.Show(Title: "Enter full name for test data.", SystemIcons.Question);
                 UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
-            }
             return UserName;
         }
 
