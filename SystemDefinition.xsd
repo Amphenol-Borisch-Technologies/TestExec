@@ -48,6 +48,71 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:attribute name="Folder" type="ValidWindowsPath"/>
+  
+  <xs:complexType name="Documentation">
+    <xs:attribute ref="Folder" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Developer">
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+          Name attribute:
+          - Required.
+          - Must be unique.
+          - Type: xs:string.
+        ]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Language" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+          Language attribute:
+          - Required.
+          - Type: xs:enumeration.
+        ]]>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CSharp"/>
+          <xs:enumeration value="Python"/>
+          <xs:enumeration value="VEE"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Comment" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+          Comment attribute:
+          - Optional.
+          - Type: xs:string.
+          ]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="Repository">
+    <xs:attribute name="URL" type="xs:anyURI" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          <![CDATA[
+            URL attribute:
+            - Required.
+            - Must be unique.
+            - Type: xs:anyURI:
+          ]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>  
+   
   <xs:complexType name="BarcodeScanner">
     <xs:attribute name="ID" type="xs:string" use="required">
       <xs:annotation>
@@ -130,6 +195,77 @@
   <xs:element name="SystemDefinition">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="Development" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              <![CDATA[
+                Development element.
+                - Required, 1 occurence.
+                - Type: xs:element.
+              ]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Developer" type="Developer" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">
+                    <![CDATA[
+                    Developer element.
+                    - Required, 1 or more occurences.
+                    - Type: Developer.
+                  ]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Documentation" type="Documentation" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">
+                    <![CDATA[
+                    Documentation element.
+                    - Optional, 0 or more occurences.
+                    - Type: Documentation.
+                  ]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Repository" type="Repository" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation xml:lang="en">
+                    <![CDATA[
+                    Repository element.
+                    - Optional, 0 or more occurences.
+                    - Type: Repository.
+                  ]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Released" type="xs:date" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="en">
+                  <![CDATA[
+                    Released attribute.
+                    - Required.
+                    - Type: xs:date.
+                  ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+          <xs:unique name="UniqueDeveloper">
+            <xs:selector xpath="Developer"/>
+            <xs:field xpath="@Name"/>
+          </xs:unique>
+          <xs:unique name="UniqueDocumentationa">
+            <xs:selector xpath="Documentation"/>
+            <xs:field xpath="@Folder"/>
+          </xs:unique>
+          <xs:unique name="UniqueRepository">
+            <xs:selector xpath="Repository"/>
+            <xs:field xpath="@URL"/>
+          </xs:unique>
+        </xs:element>
         <xs:element name="BarcodeScanner" type="BarcodeScanner" minOccurs="1" maxOccurs="1" >
           <xs:annotation>
             <xs:documentation xml:lang="en">

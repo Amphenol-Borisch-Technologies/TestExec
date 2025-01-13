@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SystemDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://C://Users//phils//source//repos//ABT//Test//TestExec//SystemDefinition.xsd">
 
+  <Development Released="2025-04-01">
+    <Developer Name="Phillip Smelt" Language="CSharp" Comment="Also XML &amp; XSD." />
+    <Documentation Folder="P:\Test\Engineers\Equipment Manuals\TestExec" />
+    <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestExec" />
+    <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestLib" />
+    <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestPlan" />
+  </Development>
+  
   <BarcodeScanner ID="\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner" Detail="Honeywell Voyager USB 1200g corded Barcode Scanner" />
   <!-- BarcodeScanner's  is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
         When a TestDefinition.xml file specifies SerialNumberEntry="Barcode":

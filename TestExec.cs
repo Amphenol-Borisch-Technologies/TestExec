@@ -641,17 +641,28 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
         }
-
-        private void TSMI_About_Click(Object sender, EventArgs e) {
+        private void TSMI_About_TestExec_Click(Object sender, EventArgs e) {
+            Assembly assemblyTestExec = Assembly.GetExecutingAssembly();
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"{Assembly.GetEntryAssembly().GetName().Name}, {Assembly.GetEntryAssembly().GetName().Version}, {BuildDate(Assembly.GetEntryAssembly().GetName().Version)}.");
-            stringBuilder.AppendLine($"{Assembly.GetExecutingAssembly().GetName().Name}, {Assembly.GetExecutingAssembly().GetName().Version}, {BuildDate(Assembly.GetExecutingAssembly().GetName().Version)}.");
-            Assembly assembly = Assembly.ReflectionOnlyLoad(nameof(TestLib));
-            stringBuilder.AppendLine($"{assembly.GetName().Name}, {assembly.GetName().Version}, {BuildDate(assembly.GetName().Version)}.{Environment.NewLine}");
-            stringBuilder.AppendLine($"© 2022, Amphenol Borisch Technologies.{Environment.NewLine}");
+            stringBuilder.AppendLine($"{assemblyTestExec.GetName().Version}, {BuildDate(assemblyTestExec.GetName().Version)}.");
+            AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assemblyTestExec, typeof(AssemblyCopyrightAttribute));
+            String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" :assemblyCopyrightAttribute.Copyright;
+            stringBuilder.AppendLine($"{copyRight}{Environment.NewLine}");
+            Development development = Serializing.DeserializeFromFile<Development>(SystemDefinitionXML);
+            foreach (Repository repository in development.Repository) stringBuilder.AppendLine(repository.URL);
 
+            CustomMessageBox.Show(Title: $"About {assemblyTestExec.GetName().Name}", Message: stringBuilder.ToString());
+        }
+        private void TSMI_About_TestPlan_Click(Object sender, EventArgs e) {
+            Assembly assemblyTestPlan = Assembly.GetEntryAssembly();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{assemblyTestPlan.GetName().Version}, {BuildDate(assemblyTestPlan.GetName().Version)}.");
+            AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assemblyTestPlan, typeof(AssemblyCopyrightAttribute));
+            String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" :assemblyCopyrightAttribute.Copyright;
+            stringBuilder.AppendLine($"{copyRight}{Environment.NewLine}");
             foreach (Repository repository in testDefinition.Development.Repository) stringBuilder.AppendLine(repository.URL);
-            CustomMessageBox.Show(Title: "About", Message: stringBuilder.ToString());
+
+            CustomMessageBox.Show(Title: $"About {assemblyTestPlan.GetName().Name}", Message: stringBuilder.ToString());
         }
         #endregion Form Tool Strip Menu Items
 
