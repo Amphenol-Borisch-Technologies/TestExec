@@ -400,7 +400,6 @@ namespace ABT.Test.TestExec {
                 if (entry != null) {
                     exchangeUser = entry.GetExchangeUser();
                     if (exchangeUser != null) {
-                        Debug.WriteLine($"AddressEntry.Name : '{entry.Name}', AddressEntry.Address : '{entry.Address}',ExchangeUser.Name : '{exchangeUser.Name}', ExchangeUser.Address : '{exchangeUser.PrimarySmtpAddress}'");
                         if (String.Equals(exchangeUser.Name, Name)) return exchangeUser.PrimarySmtpAddress;
                     }
                 }
