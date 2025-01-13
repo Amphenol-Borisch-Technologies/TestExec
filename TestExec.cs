@@ -656,14 +656,14 @@ namespace ABT.Test.TestExec {
             stringBuilder.AppendLine($"\tBuilt   : {BuildDate(assembly.GetName().Version)}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
-            stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}");
+            stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
 
             stringBuilder.AppendLine($"Repository(s):");
             foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\tURL : {repository.URL}");
             stringBuilder.AppendLine($"{Environment.NewLine}");
 
-            stringBuilder.AppendLine($"Developement:");
-            stringBuilder.AppendLine($"\tReleased      : {development.Released}");
+            stringBuilder.AppendLine($"Development:");
+            stringBuilder.AppendLine($"\tReleased      : {development.Released:d}");
             foreach (Developer developer in development.Developer) stringBuilder.AppendLine($"\tDeveloper     : {developer.Name}, {developer.Language}.");
             foreach (Documentation documentation in development.Documentation) stringBuilder.AppendLine($"\tDocumentation : {ConvertWindowsPathToUrl(documentation.Folder)}");
 
