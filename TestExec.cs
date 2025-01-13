@@ -643,19 +643,30 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_About_TestExec_Click(Object sender, EventArgs e) {
             Development development = Serializing.DeserializeFromFile<Development>(SystemDefinitionXML);
-            ShowAbout(Assembly.GetExecutingAssembly(), development.Repository);
+            ShowAbout(Assembly.GetExecutingAssembly(), development);
         }
         private void TSMI_About_TestPlan_Click(Object sender, EventArgs e) {
-            ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development.Repository);
+            ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development);
         }
-        private void ShowAbout(Assembly assembly, List<Repository> repositories) {
+        private void ShowAbout(Assembly assembly, Development development) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"Version '{assembly.GetName().Version}', Built '{BuildDate(assembly.GetName().Version)}'.");
+            stringBuilder.AppendLine($"Assembly:");
+            stringBuilder.AppendLine($"\tName    : {assembly.GetName().Name}");
+            stringBuilder.AppendLine($"\tVersion : {assembly.GetName().Version}");
+            stringBuilder.AppendLine($"\tBuilt   : {BuildDate(assembly.GetName().Version)}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
-            String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" :assemblyCopyrightAttribute.Copyright;
-            stringBuilder.AppendLine($"{copyRight}{Environment.NewLine}");
+            String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
+            stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}");
 
-            foreach (Repository repository in repositories) stringBuilder.AppendLine(repository.URL);
+            stringBuilder.AppendLine($"Repository(s):");
+            foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\tURL : {repository.URL}");
+            stringBuilder.AppendLine($"{Environment.NewLine}");
+
+            stringBuilder.AppendLine($"Developement:");
+            stringBuilder.AppendLine($"\tReleased      : {development.Released}");
+            foreach (Developer developer in development.Developer) stringBuilder.AppendLine($"\tDeveloper     : {developer.Name}, {developer.Language}.");
+            foreach (Documentation documentation in development.Documentation) stringBuilder.AppendLine($"\tDocumentation : {ConvertWindowsPathToUrl(documentation.Folder)}");
+
             CustomMessageBox.Show(Title: $"About {assembly.GetName().Name}", Message: stringBuilder.ToString());
         }
         #endregion Form Tool Strip Menu Items
