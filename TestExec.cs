@@ -161,7 +161,7 @@ namespace ABT.Test.TestExec {
             UserName = GetUserPrincipal();
             _ = Task.Run(() => GetDeveloperAddresses());
 
-            testInstruments = GetInstruments(SystemDefinitionXML);
+            InstrumentDrivers = GetInstruments();
 
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
