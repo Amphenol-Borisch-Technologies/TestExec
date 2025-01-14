@@ -161,7 +161,7 @@ namespace ABT.Test.TestExec {
             UserName = GetUserPrincipal();
             _ = Task.Run(() => GetDeveloperAddresses());
 
-            testInstruments = GetInstruments(SystemDefinitionXML);
+            InstrumentDrivers = GetInstruments();
 
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
@@ -355,7 +355,7 @@ namespace ABT.Test.TestExec {
                 mailItem.Body = Body;
                 mailItem.Send();
             } catch {
-                Logger.LogError(Subject);
+                // TODO: Logger.LogError(Subject);
             }
         }
 
@@ -374,7 +374,7 @@ namespace ABT.Test.TestExec {
                 _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{testDefinition.UUT.Number}.rtf");
                 mailItem.Display();
             } catch {
-                Logger.LogError(subject);
+                // TODO: Logger.LogError(subject);
             }
         }
 
@@ -390,7 +390,9 @@ namespace ABT.Test.TestExec {
                         task = await Task.Run(() => GetAddress(addressList, developer.Name));
                         developer.EMailAddress = (String)task;
                     }
-                } catch { };
+                } catch {
+                    // TODO:
+                };
             }
         }
 
