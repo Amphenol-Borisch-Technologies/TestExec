@@ -188,7 +188,7 @@ namespace ABT.Test.TestExec {
         }
 
         public static void ErrorMessage(System.Exception Ex) {
-            if (!String.Equals(testDefinition.Development.Developer[0].EMailAddress, String.Empty)) {
+            if ((testDefinition.Development.Developer[0].EMailAddress != null) && !String.Equals(testDefinition.Development.Developer[0].EMailAddress, String.Empty)) {
                 ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.Developer[0].EMailAddress}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                 SendDeveloperMailMessage("Exception caught!", Ex);
             }
