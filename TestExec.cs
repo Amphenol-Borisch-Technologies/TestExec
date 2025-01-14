@@ -647,9 +647,9 @@ namespace ABT.Test.TestExec {
             ShowAbout(Assembly.GetExecutingAssembly(), development);
         }
         private void TSMI_About_TestPlan_Click(Object sender, EventArgs e) {
-            ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development);
+            ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development, isTestPlan: true);
         }
-        private void ShowAbout(Assembly assembly, Development development) {
+        private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"Assembly:");
             stringBuilder.AppendLine($"\tName    : {assembly.GetName().Name}");
@@ -668,7 +668,7 @@ namespace ABT.Test.TestExec {
             foreach (Developer developer in development.Developer) stringBuilder.AppendLine($"\tDeveloper     : {developer.Name}, {developer.Language}.");
             foreach (Documentation documentation in development.Documentation) stringBuilder.AppendLine($"\tDocumentation : {ConvertWindowsPathToUrl(documentation.Folder)}");
 
-            CustomMessageBox.Show(Title: $"About {assembly.GetName().Name}", Message: stringBuilder.ToString());
+            CustomMessageBox.Show(Title: $"About {(isTestPlan ? "TestPlan " : String.Empty)}{assembly.GetName().Name}", Message: stringBuilder.ToString());
         }
         #endregion Form Tool Strip Menu Items
 
