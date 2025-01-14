@@ -795,15 +795,11 @@ namespace ABT.Test.TestExec {
 
         private EVENTS OperationEvaluate() {
             List<EVENTS> groupEvents = new List<EVENTS>();
-            Int32 methodsCount = 0;
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
-                groupEvents.Add(GroupEvaluate(testGroup));
-                methodsCount += testGroup.Methods.Count();
-            }
-            if (groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == methodsCount) return EVENTS.INFORMATION;
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) groupEvents.Add(GroupEvaluate(testGroup));
+            if (groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == groupEvents.Count) return EVENTS.INFORMATION;
             // 0th priority evaluation:
             // All method Events are INFORMATION, so UUT Event is INFORMATION.
-            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == methodsCount) return EVENTS.PASS;
+            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == groupEvents.Count) return EVENTS.PASS;
             // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
             // All method Events are PASS or INFORMATION, so UUT Event is PASS.
             if (groupEvents.FindAll(e => e is EVENTS.EMERGENCY_STOP).Count() != 0) return EVENTS.EMERGENCY_STOP;
