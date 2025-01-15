@@ -117,8 +117,8 @@ namespace ABT.Test.TestExec {
     ///          - https://learn.microsoft.com/en-us/dotnet/standard/threading/canceling-threads-cooperatively
     ///      2)  Operator Reactive:
     ///          - TestExec's already implemented, always available &amp; default reactive "Cancel before next Test" technique,
-    ///            which simply invokes _CTS_Cancel.Cancel().
-    ///          - _CTS_Cancel.IsCancellationRequested is checked at the end of TestExec.MethodsRun()'s foreach loop.
+    ///            which simply invokes CTS_Cancel.Cancel().
+    ///          - CTS_Cancel.IsCancellationRequested is checked at the end of TestExec.MethodsRun()'s foreach loop.
     ///            - If true, TestExec.MethodsRun()'s foreach loop is broken, causing reactive cancellation.
     ///            prior to the next Method's execution.
     ///          - Note: This doesn't proactively cancel the *currently* executing Method, which runs to completion.
@@ -146,8 +146,6 @@ namespace ABT.Test.TestExec {
         private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
-        private CancellationTokenSource _CTS_Cancel;
-        private CancellationTokenSource _CTS_EmergencyStop;
 
         protected TestExec(Icon icon, String baseDirectory) {
             InitializeComponent();
@@ -176,10 +174,10 @@ namespace ABT.Test.TestExec {
 
             StatusTimer.Elapsed += StatusTimeUpdate;
             StatusTimer.AutoReset = true;
-            _CTS_Cancel = new CancellationTokenSource();
-            CT_Cancel = _CTS_Cancel.Token;
-            _CTS_EmergencyStop = new CancellationTokenSource();
-            CT_EmergencyStop = _CTS_EmergencyStop.Token;
+            CTS_Cancel = new CancellationTokenSource();
+            CT_Cancel = CTS_Cancel.Token;
+            CTS_EmergencyStop = new CancellationTokenSource();
+            CT_EmergencyStop = CTS_EmergencyStop.Token;
         }
 
         #region Form Miscellaneous
@@ -412,10 +410,10 @@ namespace ABT.Test.TestExec {
 
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            Debug.Assert(!_CTS_Cancel.IsCancellationRequested);
+            Debug.Assert(!CTS_Cancel.IsCancellationRequested);
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Cancelling);
-            _CTS_Cancel.Cancel();
+            CTS_Cancel.Cancel();
         }
 
         private void ButtonCancelReset(Boolean enabled) {
@@ -426,26 +424,26 @@ namespace ABT.Test.TestExec {
                 ButtonCancel.BackColor = SystemColors.Control;
                 ButtonCancel.UseVisualStyleBackColor = true;
             }
-            if (_CTS_Cancel.IsCancellationRequested) {
-                _CTS_Cancel.Dispose();
-                _CTS_Cancel = new CancellationTokenSource();
-                CT_Cancel = _CTS_Cancel.Token;
+            if (CTS_Cancel.IsCancellationRequested) {
+                CTS_Cancel.Dispose();
+                CTS_Cancel = new CancellationTokenSource();
+                CT_Cancel = CTS_Cancel.Token;
             }
             ButtonCancel.Enabled = enabled;
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            Debug.Assert(!_CTS_EmergencyStop.IsCancellationRequested);
+            Debug.Assert(!CTS_EmergencyStop.IsCancellationRequested);
             ButtonEmergencyStop.Enabled = false;
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Emergency_Stopping);
-            _CTS_EmergencyStop.Cancel();
+            CTS_EmergencyStop.Cancel();
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
             if (CT_EmergencyStop.IsCancellationRequested) {
-                _CTS_EmergencyStop = new CancellationTokenSource();
-                CT_EmergencyStop = _CTS_EmergencyStop.Token;
+                CTS_EmergencyStop = new CancellationTokenSource();
+                CT_EmergencyStop = CTS_EmergencyStop.Token;
             }
             ButtonEmergencyStop.Enabled = enabled;
         }
