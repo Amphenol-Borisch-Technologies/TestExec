@@ -161,7 +161,7 @@ namespace ABT.Test.TestExec {
             UserName = GetUserPrincipal();
             _ = Task.Run(() => GetDeveloperAddresses());
 
-            InstrumentDrivers = GetInstruments();
+            InstrumentDrivers = GetInstrumentDriversTestDefinition();
 
             TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
@@ -852,11 +852,11 @@ namespace ABT.Test.TestExec {
 
         public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
 
-        public void MessageAppend(String Message) { _ = TestIndices.Method.Log.Append(Message); }
+        public void MessageAppend(String Message) { Logger.LogMessageAppend(Message); }
 
-        public void MessageAppendLine(String Message) { _ = TestIndices.Method.Log.AppendLine(Message); }
+        public void MessageAppendLine(String Message) { Logger.LogMessageAppendLine(Message); }
 
-        public void MessageAppendLine(String Label, String Message) { _ = TestIndices.Method.Log.AppendLine(MessageFormat(Label, Message)); }
+        public void MessageAppendLine(String Label, String Message) { Logger.LogMessageAppendLine(MessageFormat(Label, Message)); }
 
         public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
         #endregion Logging methods.
