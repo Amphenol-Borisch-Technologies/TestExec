@@ -161,11 +161,11 @@ namespace ABT.Test.TestExec.Logging {
             Int32 maxNumber = 0; String s;
             foreach (String xmlFileName in xmlFileNames) {
                 s = xmlFileName;
+                foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) s = s.Replace(Event.ToString(), String.Empty);
                 s = s.Replace($"{xmlFolder}\\{xmlBaseName}", String.Empty);
                 s = s.Replace(".xml", String.Empty);
                 s = s.Replace("_", String.Empty);
 
-                foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) s = s.Replace(Event.ToString(), String.Empty);
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
