@@ -34,11 +34,12 @@ namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_21 = "                     ";
+        private const String SPACES_2 = "  ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
         private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
 
         #region Public Methods
-        public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
+        public static String FormatMessage(String Label, String Message) { return $"{SPACES_2}{Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
         public static StringBuilder FormatNumeric(MethodInterval methodInterval) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -87,7 +88,7 @@ namespace ABT.Test.TestExec.Logging {
             else if (method is MethodTextual methodTextual) stringBuilder.Append(FormatTextual(methodTextual));
             else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
-            stringBuilder.Append(method.Log);
+            stringBuilder.Append($"{SPACES_2}{method.Log}");
             Log.Information(stringBuilder.ToString());
         }
 
