@@ -40,31 +40,31 @@ namespace ABT.Test.TestExec.Logging {
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"  {Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
 
-        public static String FormatNumeric(MethodInterval methodInterval) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("High Limit", $"{methodInterval.High:G}"));
-            sb.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
-            sb.AppendLine(FormatMessage("Low Limit", $"{methodInterval.Low:G}"));
+        public static StringBuilder FormatNumeric(MethodInterval methodInterval) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(FormatMessage("High Limit", $"{methodInterval.High:G}"));
+            stringBuilder.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
+            stringBuilder.AppendLine(FormatMessage("Low Limit", $"{methodInterval.Low:G}"));
             String units = String.Empty;
             if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
             units += $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
             if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
-            sb.Append(FormatMessage("Units", units));
-            return sb.ToString();
+            stringBuilder.Append(FormatMessage("Units", units));
+            return stringBuilder;
         }
 
-        public static String FormatProcess(MethodProcess methodProcess) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", methodProcess.Expected));
-            sb.Append(FormatMessage("Actual", (String)methodProcess.Value));
-            return sb.ToString();
+        public static StringBuilder FormatProcess(MethodProcess methodProcess) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(FormatMessage("Expected", methodProcess.Expected));
+            stringBuilder.Append(FormatMessage("Actual", (String)methodProcess.Value));
+            return stringBuilder;
         }
 
-        public static String FormatTextual(MethodTextual methodTextual) {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(FormatMessage("Expected", methodTextual.Text));
-            sb.Append(FormatMessage("Actual", (String)methodTextual.Value));
-            return sb.ToString();
+        public static StringBuilder FormatTextual(MethodTextual methodTextual) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(FormatMessage("Expected", methodTextual.Text));
+            stringBuilder.AppendLine(FormatMessage("Actual", (String)methodTextual.Value));
+            return stringBuilder;
         }
 
         public static void LogError(String logMessage) { Log.Error(logMessage); }
@@ -81,13 +81,13 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", method.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage("Description", method.Description));
 
-            if (method is MethodCustom) { } // NOTE: Call LogMessage from Tests project to log any MethodCustom desired detail.
-            else if (method is MethodInterval methodInterval) stringBuilder.AppendLine(FormatNumeric(methodInterval));
-            else if (method is MethodProcess methodProcess) stringBuilder.AppendLine(FormatProcess(methodProcess));
-            else if (method is MethodTextual methodTextual) stringBuilder.AppendLine(FormatTextual(methodTextual));
+            if (method is MethodCustom) { } // NOTE: Call Method.LogMessage() from Tests project to log desire Method detail.
+            else if (method is MethodInterval methodInterval) stringBuilder.Append(FormatNumeric(methodInterval));
+            else if (method is MethodProcess methodProcess) stringBuilder.Append(FormatProcess(methodProcess));
+            else if (method is MethodTextual methodTextual) stringBuilder.Append(FormatTextual(methodTextual));
             else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
-            stringBuilder.Append(method.Log.ToString());
+            stringBuilder.Append(method.Log);
             Log.Information(stringBuilder.ToString());
         }
 

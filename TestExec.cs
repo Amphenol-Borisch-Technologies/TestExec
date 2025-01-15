@@ -843,24 +843,6 @@ namespace ABT.Test.TestExec {
         private Int32 MethodEventsCount(TestGroup testGroup, EVENTS Event) { return (from method in testGroup.Methods where (method.Event == Event) select method).Count(); }
         #endregion Methods
 
-        #region Logging methods.
-        public void LogCaller([CallerFilePath] String callerFilePath = "", [CallerMemberName] String callerMemberName = "", [CallerLineNumber] Int32 callerLineNumber = 0) {
-            MessageAppendLine("Caller File", $"'{callerFilePath}'");
-            MessageAppendLine("Caller Member", $"'{callerMemberName}'");
-            MessageAppendLine("Caller Line #", $"'{callerLineNumber}'");
-        }
-
-        public String MessageFormat(String Label, String Message) { return ($"{Label}".PadLeft(Logger.SPACES_21.Length) + $" : {Message}"); }
-
-        public void MessageAppend(String Message) { Logger.LogMessageAppend(Message); }
-
-        public void MessageAppendLine(String Message) { Logger.LogMessageAppendLine(Message); }
-
-        public void MessageAppendLine(String Label, String Message) { Logger.LogMessageAppendLine(MessageFormat(Label, Message)); }
-
-        public void MessagesAppendLines(List<(String, String)> Messages) { foreach ((String Label, String Message) in Messages) MessageAppendLine(Label, Message); }
-        #endregion Logging methods.
-
         #region Status Strip methods.
         private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
 
