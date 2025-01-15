@@ -726,7 +726,7 @@ namespace ABT.Test.TestExec {
             SystemReset();
             testSequence.PostRun(OperationEvaluate());
             TextTest.Text = testSequence.Event.ToString();
-            TextTest.BackColor = EventColors[testSequence.Event];
+            if (EventColors[testSequence.Event] != Color.Transparent) TextTest.BackColor = EventColors[testSequence.Event]; // TextBox & RichTextBox controls can't have BackColor = Color.Transparent BackColor.
             testDefinition.TestSpace.Statistics.Update(testSequence.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
