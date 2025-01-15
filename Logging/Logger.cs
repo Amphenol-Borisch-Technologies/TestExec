@@ -33,8 +33,8 @@ using static ABT.Test.TestLib.TestLib;
 namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
+        public const String SPACES_2 = "  ";
         public const String SPACES_21 = "                     ";
-        private const String SPACES_2 = "  ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
         private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
 
