@@ -79,7 +79,6 @@ using ABT.Test.TestLib.Miscellaneous;
 //        - FYI, synchronizing with Tests repository doesn't error out, as it doesn't utilize a Git server.
 
 namespace ABT.Test.TestExec {
-    // TODO:  Eventually; mitigate or eliminate writeable global objects; change their access to pass by value or reference.
     /// <remarks>
     ///  <b>References:</b>
     /// <item>
