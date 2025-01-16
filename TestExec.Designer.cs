@@ -472,9 +472,10 @@ namespace ABT.Test.TestExec {
             // TSMI_System_DiagnosticsInstruments
             // 
             this.TSMI_System_DiagnosticsInstruments.Name = "TSMI_System_DiagnosticsInstruments";
-            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(168, 26);
+            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(224, 26);
             this.TSMI_System_DiagnosticsInstruments.Text = "&Instruments";
-            this.TSMI_System_DiagnosticsInstruments.ToolTipText = "Invoke Instruments self-tests.";
+            this.TSMI_System_DiagnosticsInstruments.ToolTipText = "Run TestPlan\'s instruments\' power-on self-tests.  Quicker but less comprehensive " +
+    "than Diagnostics.";
             this.TSMI_System_DiagnosticsInstruments.Click += new System.EventHandler(this.TSMI_System_SelfTestsInstruments_Click);
             // 
             // TSMI_System_SystemDefinition
@@ -590,14 +591,14 @@ namespace ABT.Test.TestExec {
             // TSMI_About_TestExec
             // 
             this.TSMI_About_TestExec.Name = "TSMI_About_TestExec";
-            this.TSMI_About_TestExec.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_About_TestExec.Size = new System.Drawing.Size(148, 26);
             this.TSMI_About_TestExec.Text = "Test&Exec";
             this.TSMI_About_TestExec.Click += new System.EventHandler(this.TSMI_About_TestExec_Click);
             // 
             // TSMI_About_TestPlan
             // 
             this.TSMI_About_TestPlan.Name = "TSMI_About_TestPlan";
-            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(148, 26);
             this.TSMI_About_TestPlan.Text = "Test&Plan";
             this.TSMI_About_TestPlan.Click += new System.EventHandler(this.TSMI_About_TestPlan_Click);
             // 
