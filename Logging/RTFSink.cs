@@ -32,7 +32,7 @@ namespace ABT.Test.TestExec.Logging {
                     selectionStart = richTextBox.Find(Event.ToString(), startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                     richTextBox.SelectionStart = selectionStart;
                     richTextBox.SelectionLength = Event.ToString().Length;
-                    richTextBox.SelectionBackColor = TestLib.TestLib.EventColors[Event];
+                    richTextBox.SelectionBackColor = TestLib.Data.EventColors[Event];
                 }
             }
         }

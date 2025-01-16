@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,7 +23,7 @@ using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
 using ABT.Test.TestLib.TestConfiguration;
-using static ABT.Test.TestLib.TestLib;
+using static ABT.Test.TestLib.Data;
 using ABT.Test.TestLib.Miscellaneous;
 // TODO:  Soon; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
 // - Briefly evaluated previously; time for reevaluation.
@@ -182,7 +181,7 @@ namespace ABT.Test.TestExec {
 
         #region Form Miscellaneous
         public static void ErrorMessage(String Error) {
-            _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         public static void ErrorMessage(System.Exception Ex) {
@@ -353,7 +352,7 @@ namespace ABT.Test.TestExec {
                 mailItem.Body = Body;
                 mailItem.Send();
             } catch {
-                // TODO: Logger.LogError(Subject);
+                _ = MessageBox.Show(ActiveForm, $"Sorry, cannot E-Mail presently.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
         }
 
@@ -372,7 +371,7 @@ namespace ABT.Test.TestExec {
                 _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{testDefinition.UUT.Number}.rtf");
                 mailItem.Display();
             } catch {
-                // TODO: Logger.LogError(subject);
+                _ = MessageBox.Show(ActiveForm, $"Sorry, cannot E-Mail presently.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
             }
         }
 
@@ -388,9 +387,7 @@ namespace ABT.Test.TestExec {
                         task = await Task.Run(() => GetAddress(addressList, developer.Name));
                         developer.EMailAddress = (String)task;
                     }
-                } catch {
-                    // TODO:
-                };
+                } catch { };
             }
         }
 
@@ -540,13 +537,13 @@ namespace ABT.Test.TestExec {
         private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudioCode"); }
         private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
 
-        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show($"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+        private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
         private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
-            DialogResult dr = MessageBox.Show($"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
+            DialogResult dr = MessageBox.Show(ActiveForm, $"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
                 $"Please Cancel & File/Save results if needed, then re-run Discovery.", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (dr == DialogResult.Cancel) return;
             rtfResults.Clear();
@@ -724,7 +721,7 @@ namespace ABT.Test.TestExec {
             SystemReset();
             testSequence.PostRun(OperationEvaluate());
             TextTest.Text = testSequence.Event.ToString();
-            if (EventColors[testSequence.Event] != Color.Transparent) TextTest.BackColor = EventColors[testSequence.Event]; // TextBox & RichTextBox controls can't have BackColor = Color.Transparent BackColor.
+            TextTest.BackColor = EventColors[testSequence.Event];
             testDefinition.TestSpace.Statistics.Update(testSequence.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
