@@ -648,8 +648,8 @@ namespace ABT.Test.TestExec {
                 stringBuilder.AppendLine($"Assembly:");
                 stringBuilder.AppendLine($"\tName           : {assembly.GetName().Name}");
             if (isTestPlan) {
-                stringBuilder.AppendLine($"\t{nameof(Versions.TestPlan)}       : {testDefinition.Versions.TestPlan}");
-                stringBuilder.AppendLine($"\t{nameof(Versions.TestDefinition)} : {testDefinition.Versions.TestDefinition}");
+                stringBuilder.AppendLine($"\t{nameof(Revisions.Definition)}     : {testDefinition.Revisions.Definition.Number}, {testDefinition.Revisions.Definition.Date:d}");
+                stringBuilder.AppendLine($"\t{nameof(Revisions.Program)}        : {testDefinition.Revisions.Program.Number}, {testDefinition.Revisions.Program.Date:d}");
             }
             else stringBuilder.AppendLine($"\tVersion        : {assembly.GetName().Version}");
                 stringBuilder.AppendLine($"\tBuilt          : {BuildDate(assembly.GetName().Version)}");
