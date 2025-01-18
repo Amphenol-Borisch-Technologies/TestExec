@@ -645,10 +645,14 @@ namespace ABT.Test.TestExec {
         }
         private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"Assembly:");
-            stringBuilder.AppendLine($"\tName    : {assembly.GetName().Name}");
-            stringBuilder.AppendLine($"\tVersion : {assembly.GetName().Version}");
-            stringBuilder.AppendLine($"\tBuilt   : {BuildDate(assembly.GetName().Version)}");
+                stringBuilder.AppendLine($"Assembly:");
+                stringBuilder.AppendLine($"\tName           : {assembly.GetName().Name}");
+            if (isTestPlan) {
+                stringBuilder.AppendLine($"\t{nameof(Versions.TestPlan)}       : {testDefinition.Versions.TestPlan}");
+                stringBuilder.AppendLine($"\t{nameof(Versions.TestDefinition)} : {testDefinition.Versions.TestDefinition}");
+            }
+            else stringBuilder.AppendLine($"\tVersion        : {assembly.GetName().Version}");
+                stringBuilder.AppendLine($"\tBuilt          : {BuildDate(assembly.GetName().Version)}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
