@@ -645,14 +645,11 @@ namespace ABT.Test.TestExec {
         }
         private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
             StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine($"Assembly:");
-                stringBuilder.AppendLine($"\tName           : {assembly.GetName().Name}");
-            if (isTestPlan) {
-                stringBuilder.AppendLine($"\t{nameof(Revisions.Definition)}     : {testDefinition.Revisions.Definition.Number}, {testDefinition.Revisions.Definition.Date:d}");
-                stringBuilder.AppendLine($"\t{nameof(Revisions.Program)}        : {testDefinition.Revisions.Program.Number}, {testDefinition.Revisions.Program.Date:d}");
-            }
-            else stringBuilder.AppendLine($"\tVersion        : {assembly.GetName().Version}");
-                stringBuilder.AppendLine($"\tBuilt          : {BuildDate(assembly.GetName().Version)}");
+            stringBuilder.AppendLine($"Assembly:");
+            stringBuilder.AppendLine($"\tName           : {assembly.GetName().Name}");
+            stringBuilder.AppendLine($"\tVersion        : {assembly.GetName().Version}");
+            stringBuilder.AppendLine($"\tBuilt          : {BuildDate(assembly.GetName().Version)}");
+            if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.Revision}, {testDefinition.Date:d}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
@@ -731,7 +728,7 @@ namespace ABT.Test.TestExec {
         }
 
         private EVENTS MethodEvaluate(Method method) {
-            if (method is MethodCustom) return (EVENTS)Enum.Parse(typeof(EVENTS), method.Value);
+            if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
             else if (method is MethodInterval methodInterval) {
                 if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
                 d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
