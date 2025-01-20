@@ -35,19 +35,20 @@ namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
         public const String SPACES_2 = "  ";
-        public const String SPACES_21 = "                     ";
+        public const String SPACES_4 = SPACES_2 + SPACES_2; // Embedded tabs in strings (\t) seem to cause method ReplaceText() issues.
         private const String MESSAGE_TEST_EVENT = "Test Event";
-        private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "       : ";
+        private const Int32 PR = 21;
+        private static readonly String MESSAGE_UUT_EVENT = (SPACES_2 + MESSAGE_TEST_EVENT).PadRight(PR) + ": ";
         private const String EXPECTED = "Expected";
         private const String ACTUAL = "Actual";
 
         #region Public Methods
-        public static String FormatMessage(String Label, String Message) { return $"{SPACES_2}{Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
+        public static String FormatMessage(String Label, String Message) { return $"{SPACES_2}{Label}".PadRight(PR) + $": {Message}"; }
 
         public static StringBuilder FormatNumeric(MethodInterval methodInterval) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.High), $"{methodInterval.High:G}"));
-            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Value), $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
+            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Value), $"{Math.Round(Double.Parse(methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
             stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Low), $"{methodInterval.Low:G}"));
             String units = String.Empty;
             if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
@@ -101,26 +102,25 @@ namespace ABT.Test.TestExec.Logging {
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            const Int32 PR = 16;
             Log.Information($"{nameof(UUT)}:");
-            Log.Information($"\t{MESSAGE_UUT_EVENT}");
-            Log.Information($"\t{nameof(TestSequence.SerialNumber)}".PadRight(PR) + $": {testSequence.SerialNumber}");
-            Log.Information($"\t{nameof(UUT.Number)}".PadRight(PR) + $": {testSequence.UUT.Number}");
-            Log.Information($"\t{nameof(UUT.Revision)}".PadRight(PR) + $": {testSequence.UUT.Revision}");
-            Log.Information($"\t{nameof(UUT.Description)}".PadRight(PR) + $": {testSequence.UUT.Description}");
-            Log.Information($"\t{nameof(UUT.Category)}".PadRight(PR) + $": {testSequence.UUT.Category}");
-            Log.Information($"\t{nameof(UUT.Customer)}".PadRight(PR) + $": {testSequence.UUT.Customer.Name}\n");
+            Log.Information($"{MESSAGE_UUT_EVENT}");
+            Log.Information($"{SPACES_2}{nameof(TestSequence.SerialNumber)}".PadRight(PR) + $": {testSequence.SerialNumber}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Number)}".PadRight(PR) + $": {testSequence.UUT.Number}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Revision)}".PadRight(PR) + $": {testSequence.UUT.Revision}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Description)}".PadRight(PR) + $": {testSequence.UUT.Description}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Category)}".PadRight(PR) + $": {testSequence.UUT.Category}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Customer)}".PadRight(PR) + $": {testSequence.UUT.Customer.Name}\n");
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{nameof(TestGroup.Methods)}:");
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) { stringBuilder.AppendLine($"\t{testGroup.Classname}, {testGroup.Description}");
-                foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"\t\t{method.Name}, {method.Description}");
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) { stringBuilder.AppendLine($"{SPACES_2}{testGroup.Classname}, {testGroup.Description}");
+                foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"{SPACES_4}{method.Name}".PadRight(PR + SPACES_4.Length) + $": {method.Description}");
             }
             Log.Information(stringBuilder.ToString());
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
-            ReplaceText(ref rtfResults, 0, MESSAGE_UUT_EVENT, MESSAGE_UUT_EVENT + testSequence.Event.ToString());
+            ReplaceText(ref rtfResults, 0, $"{MESSAGE_UUT_EVENT}", $"{MESSAGE_UUT_EVENT}{testSequence.Event}");
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
             if (testSequence.IsOperation) {
