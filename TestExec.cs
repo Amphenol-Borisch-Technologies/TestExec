@@ -739,19 +739,19 @@ namespace ABT.Test.TestExec {
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
             Int32 groupEvents = 0;
-            foreach (Method method in testGroup.Methods) {
-                groupEvents |= (Int32)method.Event;
-                Debug.Print($"Group '{testGroup.Classname}, Events '{groupEvents:X}'.");
-            }
+            foreach (Method method in testGroup.Methods) groupEvents |= (Int32)method.Event;
             foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(groupEvents, events)) return events;
 
             throw new NotImplementedException(($"{nameof(testGroup.Classname)}: '{testGroup.Classname}', {nameof(testGroup.Description)} '{testGroup.Description}' doesn't contain valid {nameof(EVENTS)}."));
         }
 
         private EVENTS OperationEvaluate(TestOperation testOperation) {
+            EVENTS groupEvent;
             Int32 operationEvents = 0;
             foreach (TestGroup testGroup in testOperation.TestGroups) {
-                operationEvents |= (Int32)GroupEvaluate(testGroup);
+                groupEvent = GroupEvaluate(testGroup);
+                Debug.Print($"Group '{testGroup.Classname}, Event '{groupEvent}'.");
+                operationEvents |= (Int32)groupEvent;
                 Debug.Print($"Operation '{testOperation.NamespaceTrunk}, Events '{operationEvents:X}'.");
             }
             foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(operationEvents, events)) return events;
