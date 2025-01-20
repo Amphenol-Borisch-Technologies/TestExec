@@ -334,10 +334,11 @@ namespace ABT.Test.TestExec {
         }
 
         public static void SendDeveloperMailMessage(String Subject, System.Exception Ex) {
+            const Int32 PR = 22;
             StringBuilder sb = new StringBuilder();
-            _ = sb.AppendLine($"MachineName           : {Environment.MachineName}");
-            _ = sb.AppendLine($"User Name             : {UserName}");
-            _ = sb.AppendLine($"Exception.ToString()  : {Ex}");
+            _ = sb.AppendLine($"{nameof(Environment.MachineName)}".PadRight(PR) +$": {Environment.MachineName}");
+            _ = sb.AppendLine($"{UserName}".PadRight(PR) + $": {UserName}");
+            _ = sb.AppendLine($"Exception.ToString()".PadRight(PR) + $": {Ex}");
             SendDeveloperMailMessage(Subject, Body: sb.ToString());
         }
 
@@ -613,8 +614,6 @@ namespace ABT.Test.TestExec {
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
-
-
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
             testDefinition.TestSpace.Statistics = new Statistics();
@@ -637,23 +636,24 @@ namespace ABT.Test.TestExec {
         }
         private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"Assembly:");
-            stringBuilder.AppendLine($"\tName           : {assembly.GetName().Name}");
-            stringBuilder.AppendLine($"\tVersion        : {assembly.GetName().Version}");
-            stringBuilder.AppendLine($"\tBuilt          : {BuildDate(assembly.GetName().Version)}");
+            const Int32 PR = 15;
+            stringBuilder.AppendLine($"{nameof(Assembly)}:");
+            stringBuilder.AppendLine($"\t{nameof(Name)}".PadRight(PR) + $": {assembly.GetName().Name}");
+            stringBuilder.AppendLine($"\t{nameof(Version)}".PadRight(PR) + $": {assembly.GetName().Version}");
+            stringBuilder.AppendLine($"\tBuilt".PadRight(PR) + $": {BuildDate(assembly.GetName().Version)}");
             if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.Revision}, {testDefinition.Date:d}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
 
-            stringBuilder.AppendLine($"Repository(s):");
-            foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\tURL : {repository.URL}");
+            stringBuilder.AppendLine($"{nameof(Repository)}(s):");
+            foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\t{nameof(Repository.URL)} : {repository.URL}");
             stringBuilder.AppendLine($"{Environment.NewLine}");
 
-            stringBuilder.AppendLine($"Development:");
-            stringBuilder.AppendLine($"\tReleased      : {development.Released:d}");
-            foreach (Developer developer in development.Developer) stringBuilder.AppendLine($"\tDeveloper     : {developer.Name}, {developer.Language}.");
-            foreach (Documentation documentation in development.Documentation) stringBuilder.AppendLine($"\tDocumentation : {ConvertWindowsPathToUrl(documentation.Folder)}");
+            stringBuilder.AppendLine($"{nameof(Development)}:");
+            stringBuilder.AppendLine($"\t{nameof(Development.Released)}".PadRight(PR) + $": {development.Released:d}");
+            foreach (Developer developer in development.Developer) stringBuilder.AppendLine($"\t{nameof(Development)}".PadRight(PR) + $": {developer.Name}, {developer.Language}.");
+            foreach (Documentation documentation in development.Documentation) stringBuilder.AppendLine($"\t{nameof(Documentation)}".PadRight(PR) + $": {ConvertWindowsPathToUrl(documentation.Folder)}");
 
             CustomMessageBox.Show(Title: $"About {(isTestPlan ? "TestPlan " : String.Empty)}{assembly.GetName().Name}", Message: stringBuilder.ToString());
         }

@@ -10,6 +10,7 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.Data;
+using System.Drawing.Text;
 
 // TODO:  Eventually; persist test data into PostgreSQL on IS server:
 // Only XML and PostgreSQL persisted test data is legitimate.
@@ -45,14 +46,14 @@ namespace ABT.Test.TestExec.Logging {
 
         public static StringBuilder FormatNumeric(MethodInterval methodInterval) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("High Limit", $"{methodInterval.High:G}"));
-            stringBuilder.AppendLine(FormatMessage("Measured", $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
-            stringBuilder.AppendLine(FormatMessage("Low Limit", $"{methodInterval.Low:G}"));
+            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.High), $"{methodInterval.High:G}"));
+            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Value), $"{Math.Round(Double.Parse((String)methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
+            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Low), $"{methodInterval.Low:G}"));
             String units = String.Empty;
             if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
             units += $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
             if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
-            stringBuilder.AppendLine(FormatMessage("Units", units));
+            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Units), units));
             return stringBuilder;
         }
 
@@ -100,21 +101,22 @@ namespace ABT.Test.TestExec.Logging {
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            Log.Information($"UUT:");
+            const Int32 PR = 18;
+            Log.Information($"{nameof(UUT)}:");
             Log.Information($"\t{MESSAGE_UUT_EVENT}");
-            Log.Information($"\tSerial Number     : {testSequence.SerialNumber}");
-            Log.Information($"\tNumber            : {testSequence.UUT.Number}");
-            Log.Information($"\tRevision          : {testSequence.UUT.Revision}");
-            Log.Information($"\tDescription       : {testSequence.UUT.Description}");
-            Log.Information($"\tType              : {testSequence.UUT.Category}");
-            Log.Information($"\tCustomer          : {testSequence.UUT.Customer.Name}\n");
+            Log.Information($"\t{nameof(TestSequence.SerialNumber)}".PadRight(PR) + $": {testSequence.SerialNumber}");
+            Log.Information($"\t{nameof(UUT.Number)}".PadRight(PR) + $": {testSequence.UUT.Number}");
+            Log.Information($"\t{nameof(UUT.Revision)}".PadRight(PR) + $": {testSequence.UUT.Revision}");
+            Log.Information($"\t{nameof(UUT.Description)}".PadRight(PR) + $": {testSequence.UUT.Description}");
+            Log.Information($"\t{nameof(UUT.Category)}".PadRight(PR) + $": {testSequence.UUT.Category}");
+            Log.Information($"\t{nameof(UUT.Customer)}".PadRight(PR) + $": {testSequence.UUT.Customer.Name}\n");
 
             StringBuilder stringBuilder = new StringBuilder();
             foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
                 stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Classname, testGroup.Description));
                 foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
             }
-            Log.Information($"TestMethods:\n{stringBuilder}");
+            Log.Information($"{nameof(TestGroup.Methods)}:\n{stringBuilder}");
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
@@ -124,7 +126,7 @@ namespace ABT.Test.TestExec.Logging {
             if (testSequence.IsOperation) {
                 if (testDefinition.TestData.Item is XML) StopXML();
                 else if (testDefinition.TestData.Item is SQL) StopSQL();
-                else throw new ArgumentException($"Unknown TestData Item '{testDefinition.TestData.Item}'.");
+                else throw new ArgumentException($"Unknown {nameof(TestData)} item '{testDefinition.TestData.Item}'.");
             }
         }
         #endregion Public Methods
@@ -155,23 +157,24 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         private static void StopXML() {
+            const String _xml = ".xml";
             XML xml = (XML)testDefinition.TestData.Item;
             String xmlFolder = $"{xml.Folder}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
-            String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*.xml", SearchOption.TopDirectoryOnly);
+            String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
             // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
             Int32 maxNumber = 0; String s;
             foreach (String xmlFileName in xmlFileNames) {
                 s = xmlFileName;
                 foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) s = s.Replace(Event.ToString(), String.Empty);
                 s = s.Replace($"{xmlFolder}\\{xmlBaseName}", String.Empty);
-                s = s.Replace(".xml", String.Empty);
+                s = s.Replace(_xml, String.Empty);
                 s = s.Replace("_", String.Empty);
 
                 if (Int32.Parse(s) > maxNumber) maxNumber = Int32.Parse(s);
             }
 
-            using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{testSequence.Event}.xml", FileMode.CreateNew)) {
+            using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{testSequence.Event}{_xml}", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence));
