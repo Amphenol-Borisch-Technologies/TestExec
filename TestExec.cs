@@ -636,7 +636,7 @@ namespace ABT.Test.TestExec {
         }
         private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
             StringBuilder stringBuilder = new StringBuilder();
-            const Int32 PR = 15;
+            const Int32 PR = 16;
             stringBuilder.AppendLine($"{nameof(Assembly)}:");
             stringBuilder.AppendLine($"\t{nameof(Name)}".PadRight(PR) + $": {assembly.GetName().Name}");
             stringBuilder.AppendLine($"\t{nameof(Version)}".PadRight(PR) + $": {assembly.GetName().Version}");
@@ -647,7 +647,7 @@ namespace ABT.Test.TestExec {
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
 
             stringBuilder.AppendLine($"{nameof(Repository)}(s):");
-            foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\t{nameof(Repository.URL)} : {repository.URL}");
+            foreach (Repository repository in development.Repository) stringBuilder.AppendLine($"\t{nameof(Repository.URL)}".PadRight(PR) + $": {repository.URL}");
             stringBuilder.AppendLine($"{Environment.NewLine}");
 
             stringBuilder.AppendLine($"{nameof(Development)}:");

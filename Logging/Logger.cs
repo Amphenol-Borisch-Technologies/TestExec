@@ -37,7 +37,7 @@ namespace ABT.Test.TestExec.Logging {
         public const String SPACES_2 = "  ";
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
-        private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
+        private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "       : ";
         private const String EXPECTED = "Expected";
         private const String ACTUAL = "Actual";
 
@@ -101,7 +101,7 @@ namespace ABT.Test.TestExec.Logging {
                 .WriteTo.Sink(new RichTextBoxSink(richTextBox: ref rtfResults, outputTemplate: LOGGER_TEMPLATE))
                 .CreateLogger();
 
-            const Int32 PR = 18;
+            const Int32 PR = 16;
             Log.Information($"{nameof(UUT)}:");
             Log.Information($"\t{MESSAGE_UUT_EVENT}");
             Log.Information($"\t{nameof(TestSequence.SerialNumber)}".PadRight(PR) + $": {testSequence.SerialNumber}");
@@ -112,11 +112,11 @@ namespace ABT.Test.TestExec.Logging {
             Log.Information($"\t{nameof(UUT.Customer)}".PadRight(PR) + $": {testSequence.UUT.Customer.Name}\n");
 
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
-                stringBuilder.Append(String.Format("\t{0,-" + testGroup.FormattingLengthGroupID + "} : {1}\n", testGroup.Classname, testGroup.Description));
-                foreach (Method method in testGroup.Methods) stringBuilder.Append(String.Format("\t\t{0,-" + testGroup.FormattingLengthMethodID + "} : {1}\n", method.Name, method.Description));
+            stringBuilder.AppendLine($"{nameof(TestGroup.Methods)}:");
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) { stringBuilder.AppendLine($"\t{testGroup.Classname}, {testGroup.Description}");
+                foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"\t\t{method.Name}, {method.Description}");
             }
-            Log.Information($"{nameof(TestGroup.Methods)}:\n{stringBuilder}");
+            Log.Information(stringBuilder.ToString());
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
