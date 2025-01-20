@@ -52,14 +52,14 @@ namespace ABT.Test.TestExec.Logging {
             if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
             units += $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
             if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
-            stringBuilder.Append(FormatMessage("Units", units));
+            stringBuilder.AppendLine(FormatMessage("Units", units));
             return stringBuilder;
         }
 
         public static StringBuilder FormatProcess(MethodProcess methodProcess) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(FormatMessage(EXPECTED, methodProcess.Expected));
-            stringBuilder.Append(FormatMessage(ACTUAL, methodProcess.Value));
+            stringBuilder.AppendLine(FormatMessage(ACTUAL, methodProcess.Value));
             return stringBuilder;
         }
 

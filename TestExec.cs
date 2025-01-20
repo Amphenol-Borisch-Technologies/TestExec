@@ -599,10 +599,6 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
         private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
-        private void TSMI_System_SystemDefinition_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show(ActiveForm, "Any SystemDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OpenApp("Microsoft", "XMLNotepad", SystemDefinitionXML);
-        }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
@@ -628,10 +624,6 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
             OpenFolder(((XML)testDefinition.TestData.Item).Folder);
-        }
-        private void TSMI_UUT_TestDefinition_Click(Object sender, EventArgs e) {
-            _ = MessageBox.Show(ActiveForm, "Any TestDefinition modifications won't be active until TestExec is exited & relaunched.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OpenApp("Microsoft", "XMLNotepad", TestDefinitionXML);
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
@@ -730,7 +722,7 @@ namespace ABT.Test.TestExec {
         private EVENTS MethodEvaluate(Method method) {
             if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
             else if (method is MethodInterval methodInterval) {
-                if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' Value '{method.Value}' ≠ System.Double.");
+                if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' {nameof(Method.Value)} '{method.Value}' ≠ System.Double.");
                 d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
                 methodInterval.Value = d.ToString("G");
                 if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;

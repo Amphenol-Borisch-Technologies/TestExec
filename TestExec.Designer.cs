@@ -65,7 +65,6 @@ namespace ABT.Test.TestExec {
             this.TSMI_System_ManualsInstruments = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_SelfTests = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_System_DiagnosticsInstruments = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_System_SystemDefinition = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_eDocs = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_Manuals = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,7 +75,6 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_TestData = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestDataP_DriveTDR_Folder = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_UUT_TestDefinition = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_About = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_About_TestExec = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_About_TestPlan = new System.Windows.Forms.ToolStripMenuItem();
@@ -251,13 +249,13 @@ namespace ABT.Test.TestExec {
             this.generateToolStripMenuItem,
             this.validateToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(155, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem1.Text = "&ABT";
             // 
             // generateToolStripMenuItem
             // 
             this.generateToolStripMenuItem.Name = "generateToolStripMenuItem";
-            this.generateToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.generateToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.generateToolStripMenuItem.Text = "&Generate";
             this.generateToolStripMenuItem.ToolTipText = "Generate skeleton program.";
             this.generateToolStripMenuItem.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerate_Click);
@@ -265,7 +263,7 @@ namespace ABT.Test.TestExec {
             // validateToolStripMenuItem
             // 
             this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
-            this.validateToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.validateToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.validateToolStripMenuItem.Text = "&Validate";
             this.validateToolStripMenuItem.ToolTipText = "Validate TestDefinition.xml.";
             this.validateToolStripMenuItem.Click += new System.EventHandler(this.TSMI_Apps_ABTValidate_Click);
@@ -277,14 +275,14 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(155, 26);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightBenchVue
             // 
             this.TSMI_Apps_KeysightBenchVue.Enabled = false;
             this.TSMI_Apps_KeysightBenchVue.Name = "TSMI_Apps_KeysightBenchVue";
-            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(213, 26);
+            this.TSMI_Apps_KeysightBenchVue.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightBenchVue.Text = "&BenchVue";
             this.TSMI_Apps_KeysightBenchVue.ToolTipText = "Control Keysight Instruments via soft/virtual panels.";
             this.TSMI_Apps_KeysightBenchVue.Click += new System.EventHandler(this.TSMI_Apps_KeysightBenchVue_Click);
@@ -292,7 +290,7 @@ namespace ABT.Test.TestExec {
             // TSMI_Apps_KeysightCommandExpert
             // 
             this.TSMI_Apps_KeysightCommandExpert.Name = "TSMI_Apps_KeysightCommandExpert";
-            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(213, 26);
+            this.TSMI_Apps_KeysightCommandExpert.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightCommandExpert.Text = "Co&mmand Expert";
             this.TSMI_Apps_KeysightCommandExpert.ToolTipText = "SCPI programming & debugging IDE.";
             this.TSMI_Apps_KeysightCommandExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightCommandExpert_Click);
@@ -300,7 +298,7 @@ namespace ABT.Test.TestExec {
             // TSMI_Apps_KeysightConnectionExpert
             // 
             this.TSMI_Apps_KeysightConnectionExpert.Name = "TSMI_Apps_KeysightConnectionExpert";
-            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(213, 26);
+            this.TSMI_Apps_KeysightConnectionExpert.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_KeysightConnectionExpert.Text = "Co&nnection Expert";
             this.TSMI_Apps_KeysightConnectionExpert.ToolTipText = "Discover VISA Instruments.";
             this.TSMI_Apps_KeysightConnectionExpert.Click += new System.EventHandler(this.TSMI_Apps_KeysightConnectionExpert_Click);
@@ -313,7 +311,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(155, 26);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_Microsoft.Text = "&Microsoft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
@@ -364,7 +362,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits,
             this.TSMI_Feedback_ComplimentsMoney});
             this.TSMI_Feedback_Compliments.Name = "TSMI_Feedback_Compliments";
-            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(180, 26);
+            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Feedback_Compliments.Text = "&Compliments";
             // 
             // TSMI_Feedback_ComplimentsPraiseεPlaudits
@@ -389,7 +387,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Feedback_CritiquesBugReport,
             this.TSMI_Feedback_CritiquesImprovementRequest});
             this.TSMI_Feedback_Critiques.Name = "TSMI_Feedback_Critiques";
-            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(180, 26);
+            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Feedback_Critiques.Text = "Criti&ques";
             // 
             // TSMI_Feedback_CritiquesBugReport
@@ -414,8 +412,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_System_BarcodeScannerDiscovery,
             this.TSMI_System_ColorCode,
             this.TSMI_System_Manuals,
-            this.TSMI_System_SelfTests,
-            this.TSMI_System_SystemDefinition});
+            this.TSMI_System_SelfTests});
             this.TSMI_System.Name = "TSMI_System";
             this.TSMI_System.Size = new System.Drawing.Size(70, 24);
             this.TSMI_System.Text = "S&ystem";
@@ -472,19 +469,11 @@ namespace ABT.Test.TestExec {
             // TSMI_System_DiagnosticsInstruments
             // 
             this.TSMI_System_DiagnosticsInstruments.Name = "TSMI_System_DiagnosticsInstruments";
-            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_System_DiagnosticsInstruments.Size = new System.Drawing.Size(168, 26);
             this.TSMI_System_DiagnosticsInstruments.Text = "&Instruments";
             this.TSMI_System_DiagnosticsInstruments.ToolTipText = "Run TestPlan\'s instruments\' power-on self-tests.  Quicker but less comprehensive " +
     "than Diagnostics.";
             this.TSMI_System_DiagnosticsInstruments.Click += new System.EventHandler(this.TSMI_System_SelfTestsInstruments_Click);
-            // 
-            // TSMI_System_SystemDefinition
-            // 
-            this.TSMI_System_SystemDefinition.Name = "TSMI_System_SystemDefinition";
-            this.TSMI_System_SystemDefinition.Size = new System.Drawing.Size(271, 26);
-            this.TSMI_System_SystemDefinition.Text = "&System Definition";
-            this.TSMI_System_SystemDefinition.ToolTipText = "TestExec\'s XML definition file.";
-            this.TSMI_System_SystemDefinition.Click += new System.EventHandler(this.TSMI_System_SystemDefinition_Click);
             // 
             // TSMI_UUT
             // 
@@ -492,8 +481,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_eDocs,
             this.TSMI_UUT_Manuals,
             this.TSMI_UUT_Statistics,
-            this.TSMI_UUT_TestData,
-            this.TSMI_UUT_TestDefinition});
+            this.TSMI_UUT_TestData});
             this.TSMI_UUT.Name = "TSMI_UUT";
             this.TSMI_UUT.Size = new System.Drawing.Size(51, 24);
             this.TSMI_UUT.Text = "&UUT";
@@ -570,14 +558,6 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Text = "&SQL Reporting && Querying";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.ToolTipText = "Coming soon!";
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying.Click += new System.EventHandler(this.TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click);
-            // 
-            // TSMI_UUT_TestDefinition
-            // 
-            this.TSMI_UUT_TestDefinition.Name = "TSMI_UUT_TestDefinition";
-            this.TSMI_UUT_TestDefinition.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_UUT_TestDefinition.Text = "Test &Definition";
-            this.TSMI_UUT_TestDefinition.ToolTipText = "TestPlan\'s XML definition file.";
-            this.TSMI_UUT_TestDefinition.Click += new System.EventHandler(this.TSMI_UUT_TestDefinition_Click);
             // 
             // TSMI_About
             // 
@@ -707,8 +687,6 @@ namespace ABT.Test.TestExec {
         private ToolStripMenuItem TSMI_System_ManualsBarcodeScanner;
         private ToolStripMenuItem TSMI_System_ManualsInstruments;
         private ToolStripMenuItem TSMI_System_BarcodeScannerDiscovery;
-        private ToolStripMenuItem TSMI_System_SystemDefinition;
-        private ToolStripMenuItem TSMI_UUT_TestDefinition;
         private ToolStripMenuItem TSMI_Apps_Keysight;
         private ToolStripMenuItem TSMI_Apps_KeysightBenchVue;
         private ToolStripMenuItem TSMI_Apps_KeysightCommandExpert;
