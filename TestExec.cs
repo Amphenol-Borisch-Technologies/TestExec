@@ -710,7 +710,7 @@ namespace ABT.Test.TestExec {
 
         private void MethodsPostRun() {
             SystemReset();
-            testSequence.PostRun(OperationEvaluate());
+            testSequence.PostRun(OperationEvaluate(testSequence.TestOperation));
             TextTest.Text = testSequence.Event.ToString();
             TextTest.BackColor = EventColors[testSequence.Event];
             testDefinition.TestSpace.Statistics.Update(testSequence.Event);
@@ -720,7 +720,7 @@ namespace ABT.Test.TestExec {
 
         private EVENTS MethodEvaluate(Method method) {
             if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
-            else if (method is MethodInterval methodInterval) {
+            if (method is MethodInterval methodInterval) {
                 if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' {nameof(Method.Value)} '{method.Value}' ≠ System.Double.");
                 d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
                 methodInterval.Value = d.ToString("G");
@@ -729,27 +729,34 @@ namespace ABT.Test.TestExec {
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
-            } else if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
+            } 
+            if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
+            throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
         }
 
         private Boolean EventSet(Int32 aggregatedEvents, EVENTS events) { return ((aggregatedEvents & (Int32)events) == (Int32)events); }
 
         private EVENTS GroupEvaluate(TestGroup testGroup) {
             Int32 groupEvents = 0;
-            foreach (Method method in testGroup.Methods) groupEvents |= (Int32)method.Event;
+            foreach (Method method in testGroup.Methods) {
+                groupEvents |= (Int32)method.Event;
+                Debug.Print($"Group '{testGroup.Classname}, Events '{groupEvents:X}'.");
+            }
             foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(groupEvents, events)) return events;
 
-            throw new NotImplementedException(($"{nameof(TestGroup)}: '{testGroup.Classname}', {nameof(TestGroup.Description)} '{testGroup.Description}' doesn't contain valid {nameof(EVENTS)}."));
+            throw new NotImplementedException(($"{nameof(testGroup.Classname)}: '{testGroup.Classname}', {nameof(testGroup.Description)} '{testGroup.Description}' doesn't contain valid {nameof(EVENTS)}."));
         }
 
-        private EVENTS OperationEvaluate() {
+        private EVENTS OperationEvaluate(TestOperation testOperation) {
             Int32 operationEvents = 0;
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) operationEvents |= (Int32) GroupEvaluate(testGroup);
+            foreach (TestGroup testGroup in testOperation.TestGroups) {
+                operationEvents |= (Int32)GroupEvaluate(testGroup);
+                Debug.Print($"Operation '{testOperation.NamespaceTrunk}, Events '{operationEvents:X}'.");
+            }
             foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(operationEvents, events)) return events;
 
-            throw new NotImplementedException(($"{nameof(TestOperation.NamespaceTrunk)}: '{testSequence.TestOperation.NamespaceTrunk}', {nameof(TestOperation.Description)} '{testSequence.TestOperation.Description}' doesn't contain valid {nameof(EVENTS)}."));
+            throw new NotImplementedException(($"{nameof(testOperation.NamespaceTrunk)}: '{testOperation.NamespaceTrunk}', {nameof(testOperation.Description)} '{testOperation.Description}' doesn't contain valid {nameof(EVENTS)}."));
         }
         #endregion Methods
 
