@@ -48,7 +48,7 @@ using ABT.Test.TestLib.Miscellaneous;
 //        - https://github.com/Amphenol-Borisch-Technologies/TestExec/blob/master/LICENSE.txt
 //        - "An unlimited number of users within an organization can use Visual Studio Community for the following scenarios:
 //           in a classroom learning environment, for academic research, or for contributing to open source projects."
-//        - Tests based projects are very likely closed source/proprietary, which are disqualified from using VS Studio Community Edition.
+//        - Tests based projects are closed source/proprietary, which are disqualified from using VS Studio Community Edition.
 //          - https://visualstudio.microsoft.com/vs/community/
 //          - https://visualstudio.microsoft.com/license-terms/vs2022-ga-community/
 // NOTE:  - VS Studio Community Edition is more preferable for GUI C# development than VS Code.
@@ -730,112 +730,36 @@ namespace ABT.Test.TestExec {
         private EVENTS MethodEvaluate(Method method) {
             if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
             else if (method is MethodInterval methodInterval) {
-                if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"Method '{method.Name}' Value '{method.Value}' ≠ System.Double.");
+                if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' Value '{method.Value}' ≠ System.Double.");
                 d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
                 methodInterval.Value = d.ToString("G");
                 if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
+                throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
             } else if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             else if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
+            else throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
         }
 
-        private EVENTS GroupEvaluate(TestGroup testGroup) {
-            if (MethodEventsCount(testGroup, EVENTS.INFORMATION) == testGroup.Methods.Count) return EVENTS.INFORMATION;
-            // 0th priority evaluation:
-            // All method Events are INFORMATION, so UUT Event is INFORMATION.
-            if (MethodEventsCount(testGroup, EVENTS.PASS) + MethodEventsCount(testGroup, EVENTS.INFORMATION) == testGroup.Methods.Count) return EVENTS.PASS;
-            // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All method Events are PASS or INFORMATION, so UUT Event is PASS.
-            if (MethodEventsCount(testGroup, EVENTS.EMERGENCY_STOP) != 0) return EVENTS.EMERGENCY_STOP;
-            // 2nd priority evaluation:
-            // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
-            if (MethodEventsCount(testGroup, EVENTS.ERROR) != 0) return EVENTS.ERROR;
-            // 3rd priority evaluation:
-            // - If any method Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
-            if (MethodEventsCount(testGroup, EVENTS.CANCEL) != 0) return EVENTS.CANCEL;
-            // 4th priority evaluation:
-            // - If any method Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
-            if (MethodEventsCount(testGroup, EVENTS.UNSET) != 0) return EVENTS.CANCEL;
-            // 5th priority evaluation:
-            // - If any method Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then Method(s) didn't complete.
-            // - Likely occurred because a method failed that had its TestDefinition.xml's CancelNotPassed flag set to true.
-            if (MethodEventsCount(testGroup, EVENTS.FAIL) != 0) return EVENTS.FAIL;
-            // 6th priority evaluation:
-            // - If any method Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
+        private Boolean EventSet(Int32 aggregatedEvents, EVENTS events) { return ((aggregatedEvents & (Int32)events) == (Int32)events); }
 
-            // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
-            StringBuilder invalidTests = new StringBuilder();
-            foreach (Method method in testGroup.Methods) {
-                switch (method.Event) {
-                    case EVENTS.CANCEL:
-                    case EVENTS.EMERGENCY_STOP:
-                    case EVENTS.ERROR:
-                    case EVENTS.FAIL:
-                    case EVENTS.INFORMATION:
-                    case EVENTS.PASS:
-                    case EVENTS.UNSET:
-                        break; // Above EVENTS are all handled in this method.
-                    default:
-                        _ = invalidTests.AppendLine($"Method: '{method.Name}', Description '{method.Description}', Event: '{method.Event}'.");
-                        Logger.LogError($"{Environment.NewLine}Invalid methods to enum EVENTS:{Environment.NewLine}{invalidTests}");
-                        break; // Above EVENTS aren't yet handled in this method.
-                }
-            }
-            return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
+        private EVENTS GroupEvaluate(TestGroup testGroup) {
+            Int32 groupEvents = 0;
+            foreach (Method method in testGroup.Methods) groupEvents |= (Int32)method.Event;
+            foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(groupEvents, events)) return events;
+
+            throw new NotImplementedException(($"{nameof(TestGroup)}: '{testGroup.Classname}', {nameof(TestGroup.Description)} '{testGroup.Description}' doesn't contain valid {nameof(EVENTS)}."));
         }
 
         private EVENTS OperationEvaluate() {
-            List<EVENTS> groupEvents = new List<EVENTS>();
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) groupEvents.Add(GroupEvaluate(testGroup));
-            if (groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == groupEvents.Count) return EVENTS.INFORMATION;
-            // 0th priority evaluation:
-            // All method Events are INFORMATION, so UUT Event is INFORMATION.
-            if (groupEvents.FindAll(e => e is EVENTS.PASS).Count() + groupEvents.FindAll(e => e is EVENTS.INFORMATION).Count() == groupEvents.Count) return EVENTS.PASS;
-            // 1st priority evaluation (or could also be last, but we're irrationally optimistic.)
-            // All method Events are PASS or INFORMATION, so UUT Event is PASS.
-            if (groupEvents.FindAll(e => e is EVENTS.EMERGENCY_STOP).Count() != 0) return EVENTS.EMERGENCY_STOP;
-            // 2nd priority evaluation:
-            // - If any method Event is EMERGENCY_STOP, UUT Event is EMERGENCY_STOP.
-            if (groupEvents.FindAll(e => e is EVENTS.ERROR).Count() != 0) return EVENTS.ERROR;
-            // 3rd priority evaluation:
-            // - If any method Event is ERROR, and none were EMERGENCY_STOP, UUT Event is ERROR.
-            if (groupEvents.FindAll(e => e is EVENTS.CANCEL).Count() != 0) return EVENTS.CANCEL;
-            // 4th priority evaluation:
-            // - If any method Event is CANCEL, and none were EMERGENCY_STOP or ERROR, UUT Event is CANCEL.
-            if (groupEvents.FindAll(e => e is EVENTS.UNSET).Count() != 0) return EVENTS.CANCEL;
-            // 5th priority evaluation:
-            // - If any method Event is UNSET, and none were EMERGENCY_STOP, ERROR or CANCEL, then method(s) didn't complete.
-            // - Likely occurred because a method failed that had its TestDefinition.xml's CancelOnFail flag set to true.
-            if (groupEvents.FindAll(e => e is EVENTS.FAIL).Count() != 0) return EVENTS.FAIL;
-            // 6th priority evaluation:
-            // - If any method Event is FAIL, and none were EMERGENCY_STOP, ERROR, CANCEL or UNSET, UUT Event is FAIL.
+            Int32 operationEvents = 0;
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) operationEvents |= (Int32) GroupEvaluate(testGroup);
+            foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(operationEvents, events)) return events;
 
-            // If we've not returned yet, then enum EVENTS was modified without updating this method.  Report this egregious oversight.
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups)
-                foreach (Method method in testGroup.Methods)
-                    switch (method.Event) {
-                        case EVENTS.CANCEL:
-                        case EVENTS.EMERGENCY_STOP:
-                        case EVENTS.ERROR:
-                        case EVENTS.FAIL:
-                        case EVENTS.INFORMATION:
-                        case EVENTS.PASS:
-                        case EVENTS.UNSET:
-                            break; // Above EVENTS are all handled in this method.
-                        default:
-                            _ = stringBuilder.AppendLine($"TestOperation '{testSequence.TestOperation.NamespaceTrunk}', Classname '{testGroup.Classname}', Method: '{method.Name}' Event: '{method.Event}'.");
-                            Logger.LogError($"{Environment.NewLine}Invalid Methods to enum EVENTS:{Environment.NewLine}{stringBuilder}");
-                            break; // Above EVENTS aren't yet handled in this method.
-                    }
-            return EVENTS.ERROR; // Above switch handles enum EVENTS being changed without updating this method.
+            throw new NotImplementedException(($"{nameof(TestOperation.NamespaceTrunk)}: '{testSequence.TestOperation.NamespaceTrunk}', {nameof(TestOperation.Description)} '{testSequence.TestOperation.Description}' doesn't contain valid {nameof(EVENTS)}."));
         }
-
-        private Int32 MethodEventsCount(TestGroup testGroup, EVENTS Event) { return (from method in testGroup.Methods where (method.Event == Event) select method).Count(); }
         #endregion Methods
 
         #region Status Strip methods.

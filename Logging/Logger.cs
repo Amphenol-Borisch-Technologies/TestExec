@@ -37,6 +37,8 @@ namespace ABT.Test.TestExec.Logging {
         public const String SPACES_21 = "                     ";
         private const String MESSAGE_TEST_EVENT = "Test Event";
         private const String MESSAGE_UUT_EVENT = MESSAGE_TEST_EVENT + "        : ";
+        private const String EXPECTED = "Expected";
+        private const String ACTUAL = "Actual";
 
         #region Public Methods
         public static String FormatMessage(String Label, String Message) { return $"{SPACES_2}{Label}".PadRight(SPACES_21.Length) + $" : {Message}"; }
@@ -56,15 +58,15 @@ namespace ABT.Test.TestExec.Logging {
 
         public static StringBuilder FormatProcess(MethodProcess methodProcess) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("Expected", methodProcess.Expected));
-            stringBuilder.Append(FormatMessage("Actual", (String)methodProcess.Value));
+            stringBuilder.AppendLine(FormatMessage(EXPECTED, methodProcess.Expected));
+            stringBuilder.Append(FormatMessage(ACTUAL, methodProcess.Value));
             return stringBuilder;
         }
 
         public static StringBuilder FormatTextual(MethodTextual methodTextual) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("Expected", methodTextual.Text));
-            stringBuilder.AppendLine(FormatMessage("Actual", (String)methodTextual.Value));
+            stringBuilder.AppendLine(FormatMessage(EXPECTED, methodTextual.Text));
+            stringBuilder.AppendLine(FormatMessage(ACTUAL, methodTextual.Value));
             return stringBuilder;
         }
 
@@ -78,15 +80,15 @@ namespace ABT.Test.TestExec.Logging {
             SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
             if (method.Event is EVENTS.PASS) return;
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage("Method", method.Name));
-            stringBuilder.AppendLine(FormatMessage("Cancel Not Passed", method.CancelNotPassed.ToString()));
-            stringBuilder.AppendLine(FormatMessage("Description", method.Description));
+            stringBuilder.AppendLine(FormatMessage($"{nameof(Method)}", method.Name));
+            stringBuilder.AppendLine(FormatMessage($"{nameof(Method.CancelNotPassed)}", method.CancelNotPassed.ToString()));
+            stringBuilder.AppendLine(FormatMessage($"{nameof(Method.Description)}", method.Description));
 
             if (method is MethodCustom) { } // NOTE: Call Method.LogMessage() from Tests project to log desire Method detail.
             else if (method is MethodInterval methodInterval) stringBuilder.Append(FormatNumeric(methodInterval));
             else if (method is MethodProcess methodProcess) stringBuilder.Append(FormatProcess(methodProcess));
             else if (method is MethodTextual methodTextual) stringBuilder.Append(FormatTextual(methodTextual));
-            else throw new NotImplementedException($"Method '{method.Name}', description '{method.Description}', with classname '{nameof(method)}' not implemented.");
+            else throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append($"{SPACES_2}{method.Log}");
             Log.Information(stringBuilder.ToString());
