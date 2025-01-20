@@ -10,7 +10,6 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.Data;
-using System.Drawing.Text;
 
 // TODO:  Eventually; persist test data into PostgreSQL on IS server:
 // Only XML and PostgreSQL persisted test data is legitimate.
