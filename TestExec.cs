@@ -609,7 +609,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
-            OpenFolder(((XML)testDefinition.TestData.Item).Folder);
+            OpenFolder($"{((XML)testDefinition.TestData.Item).Folder}\\{testSequence.TestOperation.NamespaceTrunk}");
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testDefinition.TestData.Item is XML);
