@@ -542,34 +542,22 @@ namespace ABT.Test.TestExec {
         private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
-            DialogResult dr = MessageBox.Show(ActiveForm, $"About to clear/erase result box.{Environment.NewLine}{Environment.NewLine}" +
-                $"Please Cancel & File/Save results if needed, then re-run Discovery.", "Alert", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-            if (dr == DialogResult.Cancel) return;
-            rtfResults.Clear();
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
-            StringBuilder sb = new StringBuilder($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
+            StringBuilder sb = new StringBuilder();
+            _ = sb.AppendLine($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
             _ = sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
             _ = sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
             _ = sb.AppendLine($"  - Modify ConfigurationTestExec to use a discovered Barcode Scanner.");
             _ = sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
-            _ = sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment%20Manuals/TestExec/Honeywell%20Voyager%201200g/Honeywell%20Voyager%201200G%20User's%20Guide%20ReadMe.pdf");
-            _ = sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}");
+            _ = sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment_Manuals/Honeywell/Honeywell_Voyager_1200G_User's_Guide_ReadMe.pdf");
+            _ = sb.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}{Environment.NewLine}");
             foreach (DeviceInformation di in dic) {
                 _ = sb.AppendLine($"Name: '{di.Name}'.");
                 _ = sb.AppendLine($"Kind: '{di.Kind}'.");
                 _ = sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
             }
-            rtfResults.Text = sb.ToString();
-            SaveFileDialog saveFileDialog = new SaveFileDialog {
-                Title = "Save Discovered Corded Barcode Scanner(s)",
-                Filter = "Rich Text Format|*.rtf",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = $"Discovered Corded Barcode Scanner(s)",
-                DefaultExt = "rtf",
-                CreatePrompt = false,
-                OverwritePrompt = true
-            };
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName, RichTextBoxStreamType.RichText);
+
+            CustomMessageBox.Show(Title: $"Microsoft supported, corded Barcode Scanner(s)", Message: sb.ToString());
         }
         private void TSMI_System_ColorCode_Click(Object sender, EventArgs e) {
             CustomMessageBox customMessageBox = new CustomMessageBox {
@@ -746,14 +734,8 @@ namespace ABT.Test.TestExec {
         }
 
         private EVENTS OperationEvaluate(TestOperation testOperation) {
-            EVENTS groupEvent;
             Int32 operationEvents = 0;
-            foreach (TestGroup testGroup in testOperation.TestGroups) {
-                groupEvent = GroupEvaluate(testGroup);
-                Debug.Print($"Group '{testGroup.Classname}, Event '{groupEvent}'.");
-                operationEvents |= (Int32)groupEvent;
-                Debug.Print($"Operation '{testOperation.NamespaceTrunk}, Events '{operationEvents:X}'.");
-            }
+            foreach (TestGroup testGroup in testOperation.TestGroups) operationEvents |= (Int32)GroupEvaluate(testGroup);
             foreach (EVENTS events in Enum.GetValues(typeof(EVENTS))) if (EventSet(operationEvents, events)) return events;
 
             throw new NotImplementedException(($"{nameof(testOperation.NamespaceTrunk)}: '{testOperation.NamespaceTrunk}', {nameof(testOperation.Description)} '{testOperation.Description}' doesn't contain valid {nameof(EVENTS)}."));
