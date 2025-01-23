@@ -539,6 +539,7 @@ namespace ABT.Test.TestExec {
             _ = sb.AppendLine($"Discovering Microsoft supported, corded Barcode Scanner(s):{Environment.NewLine}");
             _ = sb.AppendLine($"  - See https://learn.microsoft.com/en-us/windows/uwp/devices-sensors/pos-device-support.");
             _ = sb.AppendLine($"  - Note that only corded Barcode Scanners are discovered; cordless BlueTooth & Wireless scanners are ignored.");
+            _ = sb.AppendLine($"  - Note that cameras are also discovered; cameras are digital imagers, just as many bar-code readers are.");
             _ = sb.AppendLine($"  - Modify ConfigurationTestExec to use a discovered Barcode Scanner.");
             _ = sb.AppendLine($"  - Scanners must be programmed into USB-HID mode to function properly:");
             _ = sb.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment_Manuals/Honeywell/Honeywell_Voyager_1200G_User's_Guide_ReadMe.pdf");
