@@ -40,3 +40,10 @@
 *.tmp
 *.temp
 
+/bin/x64/Debug/TestExec.dll
+/bin/x64/Debug/TestExec.pdb
+/bin/x64/Debug/TestLib.dll
+/bin/x64/Debug/TestLib.pdb
+/obj/x64/Debug/TestExec.csproj.AssemblyReference.cache
+/obj/x64/Debug/TestExec.dll
+/obj/x64/Debug/TestExec.pdb
