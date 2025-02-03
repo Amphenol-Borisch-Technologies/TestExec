@@ -418,12 +418,11 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            SystemReset();
             ButtonEmergencyStop.Enabled = false;
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Emergency_Stopping);
+            SystemReset();
             CTS_EmergencyStop.Cancel();
-            CT_EmergencyStop.ThrowIfCancellationRequested();
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
