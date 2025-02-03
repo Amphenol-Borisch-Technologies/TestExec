@@ -118,3 +118,6 @@ C:\Users\phils\Source\Repos\ABT\Test\TestExec\obj\x64\Debug\TestExec.csproj.Core
 C:\Users\phils\Source\Repos\ABT\Test\TestExec\obj\x64\Debug\TestExec.csproj.Up2Date
 C:\Users\phils\Source\Repos\ABT\Test\TestExec\obj\x64\Debug\TestExec.dll
 C:\Users\phils\Source\Repos\ABT\Test\TestExec\obj\x64\Debug\TestExec.pdb
+C:\Users\phils\Source\Repos\ABT\Test\TestExec\bin\x64\Debug\TestChanger.exe
+C:\Users\phils\Source\Repos\ABT\Test\TestExec\bin\x64\Debug\TestChanger.pdb
+C:\Users\phils\Source\Repos\ABT\Test\TestExec\bin\x64\Debug\TestChanger.exe.config
