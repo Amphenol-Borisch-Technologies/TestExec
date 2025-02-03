@@ -4,6 +4,22 @@
     "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj": {}
   },
   "projects": {
+    "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj",
+        "projectName": "TestChanger",
+        "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    },
     "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -33,6 +49,9 @@
         "frameworks": {
           "net48": {
             "projectReferences": {
+              "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
+                "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
+              },
               "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
                 "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj"
               }

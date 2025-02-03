@@ -557,6 +557,15 @@
           }
         }
       },
+      "TestChanger/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TestChanger.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestChanger.dll": {}
+        }
+      },
       "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
@@ -1092,6 +1101,15 @@
           "lib/net48/WindowsFormsIntegration.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "TestChanger/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TestChanger.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -1631,6 +1649,15 @@
           }
         }
       },
+      "TestChanger/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TestChanger.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestChanger.dll": {}
+        }
+      },
       "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
@@ -2168,6 +2195,15 @@
           }
         }
       },
+      "TestChanger/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TestChanger.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestChanger.dll": {}
+        }
+      },
       "TestLib/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.8",
@@ -2703,6 +2739,15 @@
           "lib/net48/WindowsFormsIntegration.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "TestChanger/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TestChanger.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -3887,6 +3932,11 @@
         "windowsapicodepack.nuspec"
       ]
     },
+    "TestChanger/1.0.0": {
+      "type": "project",
+      "path": "../TestChanger/TestChanger.csproj",
+      "msbuildProject": "../TestChanger/TestChanger.csproj"
+    },
     "TestLib/1.0.0": {
       "type": "project",
       "path": "../TestLib/TestLib.csproj",
@@ -3909,6 +3959,7 @@
       "System.Threading.Channels >= 9.0.1",
       "System.Threading.Tasks.Extensions >= 4.6.0",
       "System.ValueTuple >= 4.5.0",
+      "TestChanger >= 1.0.0",
       "TestLib >= 1.0.0",
       "WindowsAPICodePack >= 8.0.6"
     ]
@@ -3946,6 +3997,9 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
+            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
+              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
+            },
             "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
               "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj"
             }

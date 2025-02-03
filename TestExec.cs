@@ -216,7 +216,7 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: true);
             ButtonSelect.Enabled = false;
             ButtonRunReset(enabled: false);
-            TSMI_File_Exit.Enabled = false;
+            TSMI_Test_Exit.Enabled = false;
             TSMI_System_SelfTests.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_Statistics.Enabled = false;
@@ -226,7 +226,7 @@ namespace ABT.Test.TestExec {
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
-            TSMI_File_Exit.Enabled = true;
+            TSMI_Test_Exit.Enabled = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: testSequence != null);
             TSMI_System_SelfTests.Enabled = true;
@@ -481,7 +481,7 @@ namespace ABT.Test.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+        private void TSMI_Test_Change_Click(Object sender, EventArgs e) {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
                 openFileDialog.Filter = "TestExecutor Programs|*.exe";
@@ -489,8 +489,8 @@ namespace ABT.Test.TestExec {
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo("ProcessPath") {
-                        Arguments = $"{Assembly.GetEntryAssembly()} {openFileDialog.FileName}",
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChanger\bin\x64\Debug\TestChanger.exe""") {
+                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{openFileDialog.FileName}\"",
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardError = false,
@@ -501,11 +501,9 @@ namespace ABT.Test.TestExec {
                     Thread.Sleep(1500);
                     if (process != null && !process.HasExited) Application.Exit();
                 }
-            }        
-        
+            }
         }
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
-        private void TSMI_File_SaveResults_Click(Object sender, EventArgs e) {
+        private void TSMI_Test_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
                 Filter = "Rich Text Format|*.rtf",
@@ -517,6 +515,7 @@ namespace ABT.Test.TestExec {
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
         }
+        private void TSMI_Test_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
 
         private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();

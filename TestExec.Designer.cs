@@ -33,10 +33,11 @@ namespace ABT.Test.TestExec {
             this.ButtonSelect = new System.Windows.Forms.Button();
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
-            this.TSMI_File = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_File_SaveResults = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Test = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Test_Change = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Test_SaveResults = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.TSMI_File_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Test_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.generateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +84,6 @@ namespace ABT.Test.TestExec {
             this.StatusStatisticsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusModeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusCustomLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.TSMI_File_Change = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -189,7 +189,7 @@ namespace ABT.Test.TestExec {
             // 
             this.MS.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.MS.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_File,
+            this.TSMI_Test,
             this.TSMI_Apps,
             this.TSMI_Feedback,
             this.TSMI_System,
@@ -202,38 +202,45 @@ namespace ABT.Test.TestExec {
             this.MS.TabIndex = 6;
             this.MS.TabStop = true;
             // 
-            // TSMI_File
+            // TSMI_Test
             // 
-            this.TSMI_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_File_Change,
-            this.TSMI_File_SaveResults,
+            this.TSMI_Test.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Test_Change,
+            this.TSMI_Test_SaveResults,
             this.TSMI_File_Separator1,
-            this.TSMI_File_Exit});
-            this.TSMI_File.Name = "TSMI_File";
-            this.TSMI_File.Size = new System.Drawing.Size(46, 24);
-            this.TSMI_File.Text = "&File";
+            this.TSMI_Test_Exit});
+            this.TSMI_Test.Name = "TSMI_Test";
+            this.TSMI_Test.Size = new System.Drawing.Size(49, 24);
+            this.TSMI_Test.Text = "&Test";
             // 
-            // TSMI_File_SaveResults
+            // TSMI_Test_Change
             // 
-            this.TSMI_File_SaveResults.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_File_SaveResults.Image")));
-            this.TSMI_File_SaveResults.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TSMI_File_SaveResults.Name = "TSMI_File_SaveResults";
-            this.TSMI_File_SaveResults.Size = new System.Drawing.Size(228, 30);
-            this.TSMI_File_SaveResults.Text = "&Save Results";
-            this.TSMI_File_SaveResults.ToolTipText = "Save UUT results.";
-            this.TSMI_File_SaveResults.Click += new System.EventHandler(this.TSMI_File_SaveResults_Click);
+            this.TSMI_Test_Change.Name = "TSMI_Test_Change";
+            this.TSMI_Test_Change.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_Change.Text = "&Change";
+            this.TSMI_Test_Change.Click += new System.EventHandler(this.TSMI_Test_Change_Click);
+            // 
+            // TSMI_Test_SaveResults
+            // 
+            this.TSMI_Test_SaveResults.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_Test_SaveResults.Image")));
+            this.TSMI_Test_SaveResults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TSMI_Test_SaveResults.Name = "TSMI_Test_SaveResults";
+            this.TSMI_Test_SaveResults.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_SaveResults.Text = "&Save Results";
+            this.TSMI_Test_SaveResults.ToolTipText = "Save UUT results.";
+            this.TSMI_Test_SaveResults.Click += new System.EventHandler(this.TSMI_Test_SaveResults_Click);
             // 
             // TSMI_File_Separator1
             // 
             this.TSMI_File_Separator1.Name = "TSMI_File_Separator1";
             this.TSMI_File_Separator1.Size = new System.Drawing.Size(225, 6);
             // 
-            // TSMI_File_Exit
+            // TSMI_Test_Exit
             // 
-            this.TSMI_File_Exit.Name = "TSMI_File_Exit";
-            this.TSMI_File_Exit.Size = new System.Drawing.Size(228, 30);
-            this.TSMI_File_Exit.Text = "&Exit";
-            this.TSMI_File_Exit.Click += new System.EventHandler(this.TSMI_File_Exit_Click);
+            this.TSMI_Test_Exit.Name = "TSMI_Test_Exit";
+            this.TSMI_Test_Exit.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_Exit.Text = "&Exit";
+            this.TSMI_Test_Exit.Click += new System.EventHandler(this.TSMI_Test_Exit_Click);
             // 
             // TSMI_Apps
             // 
@@ -251,7 +258,7 @@ namespace ABT.Test.TestExec {
             this.generateToolStripMenuItem,
             this.validateToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(155, 26);
             this.toolStripMenuItem1.Text = "&ABT";
             // 
             // generateToolStripMenuItem
@@ -277,7 +284,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightBenchVue
@@ -313,7 +320,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Microsoft.Text = "&Microsoft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
@@ -491,7 +498,7 @@ namespace ABT.Test.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(154, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -501,7 +508,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(154, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
@@ -518,7 +525,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_StatisticsDisplay,
             this.TSMI_UUT_StatisticsReset});
             this.TSMI_UUT_Statistics.Name = "TSMI_UUT_Statistics";
-            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(154, 26);
             this.TSMI_UUT_Statistics.Text = "&Statistics";
             // 
             // TSMI_UUT_StatisticsDisplay
@@ -541,7 +548,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(154, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -633,13 +640,6 @@ namespace ABT.Test.TestExec {
             this.StatusCustomLabel.Text = "Custom";
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TSMI_File_Change
-            // 
-            this.TSMI_File_Change.Name = "TSMI_File_Change";
-            this.TSMI_File_Change.Size = new System.Drawing.Size(228, 30);
-            this.TSMI_File_Change.Text = "&Change";
-            this.TSMI_File_Change.Click += new System.EventHandler(this.TSMI_File_Change_Click);
-            // 
             // TestExec
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -679,8 +679,8 @@ namespace ABT.Test.TestExec {
         private System.Windows.Forms.Button ButtonSelect;
         private Button ButtonEmergencyStop;
         private MenuStrip MS;
-        private ToolStripMenuItem TSMI_File;
-        private ToolStripMenuItem TSMI_File_SaveResults;
+        private ToolStripMenuItem TSMI_Test;
+        private ToolStripMenuItem TSMI_Test_SaveResults;
         private ToolStripMenuItem TSMI_System;
         private ToolStripMenuItem TSMI_Apps;
         private ToolStripMenuItem TSMI_System_SelfTests;
@@ -717,7 +717,7 @@ namespace ABT.Test.TestExec {
         private ToolStripStatusLabel StatusCustomLabel;
         private ToolStripStatusLabel StatusTimeLabel;
         private ToolStripStatusLabel StatusModeLabel;
-        private ToolStripMenuItem TSMI_File_Exit;
+        private ToolStripMenuItem TSMI_Test_Exit;
         private ToolStripSeparator TSMI_File_Separator1;
         private ToolStripMenuItem TSMI_UUT_Statistics;
         private ToolStripMenuItem TSMI_UUT_StatisticsDisplay;
@@ -729,6 +729,6 @@ namespace ABT.Test.TestExec {
         private ToolStripMenuItem TSMI_About;
         private ToolStripMenuItem TSMI_About_TestExec;
         private ToolStripMenuItem TSMI_About_TestPlan;
-        private ToolStripMenuItem TSMI_File_Change;
+        private ToolStripMenuItem TSMI_Test_Change;
     }
 }

@@ -255,9 +255,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestChanger\TestSwitcher.csproj">
+    <ProjectReference Include="..\TestChanger\TestChanger.csproj">
       <Project>{5f67f305-a6d3-4e89-a423-add7724800b2}</Project>
-      <Name>TestSwitcher</Name>
+      <Name>TestChanger</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestLib\TestLib.csproj">
       <Project>{24d5e99e-185c-4507-81f0-132d8cb8164e}</Project>
