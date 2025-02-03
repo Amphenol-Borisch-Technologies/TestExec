@@ -259,8 +259,8 @@ namespace ABT.Test.TestExec {
         public virtual void SystemReset() {
             if (testDefinition.TestSpace.Simulate) return;
             IPowerSuppliesOutputsOff();
-            IRelaysOpenAll();
             IInstrumentsResetClear();
+            IRelaysOpenAll();
         }
 
         public virtual void IInstrumentsResetClear() {
@@ -268,14 +268,14 @@ namespace ABT.Test.TestExec {
             foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments iInstruments) iInstruments.ResetClear();
         }
 
-        public virtual void IRelaysOpenAll() {
-            if (testDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays iRelays) iRelays.OpenAll();
-        }
-
         public virtual void IPowerSuppliesOutputsOff() {
             if (testDefinition.TestSpace.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IPowerSupply iIPowerSupply) iIPowerSupply.OutputsOff();
+        }
+
+        public virtual void IRelaysOpenAll() {
+            if (testDefinition.TestSpace.Simulate) return;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays iRelays) iRelays.OpenAll();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(ActiveForm, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -396,7 +396,6 @@ namespace ABT.Test.TestExec {
 
         #region Form Command Buttons
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
-            Debug.Assert(!CTS_Cancel.IsCancellationRequested);
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Cancelling);
             CTS_Cancel.Cancel();
@@ -419,11 +418,12 @@ namespace ABT.Test.TestExec {
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
-            Debug.Assert(!CTS_EmergencyStop.IsCancellationRequested);
+            SystemReset();
             ButtonEmergencyStop.Enabled = false;
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Emergency_Stopping);
             CTS_EmergencyStop.Cancel();
+            CT_EmergencyStop.ThrowIfCancellationRequested();
         }
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
