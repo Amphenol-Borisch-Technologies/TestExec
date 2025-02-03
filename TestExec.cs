@@ -481,7 +481,30 @@ namespace ABT.Test.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { System.Windows.Forms.Application.Exit(); }
+        private void TSMI_File_Change_Click(Object sender, EventArgs e) {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+                openFileDialog.Filter = "TestExecutor Programs|*.exe";
+                openFileDialog.DereferenceLinks = true;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo("ProcessPath") {
+                        Arguments = $"{Assembly.GetEntryAssembly()} {openFileDialog.FileName}",
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = false,
+                        RedirectStandardOutput = false
+                    };
+
+                    Process process = Process.Start(processStartInfo);
+                    Thread.Sleep(1500);
+                    if (process != null && !process.HasExited) Application.Exit();
+                }
+            }        
+        
+        }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
         private void TSMI_File_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",

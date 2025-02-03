@@ -307,7 +307,6 @@
             <xs:sequence>
               <xs:element name="BarcodeScanner" type="ValidWindowsPath" minOccurs="1" maxOccurs="1" />
               <xs:element name="Instruments" type="ValidWindowsPath" minOccurs="1" maxOccurs="1" />
-              <xs:element name="Tests" type="ValidWindowsPath" minOccurs="1" maxOccurs="1" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
