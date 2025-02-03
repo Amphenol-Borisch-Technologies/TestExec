@@ -191,7 +191,12 @@ namespace ABT.Test.TestExec {
             return UserName;
         }
 
-        private void Form_Closing(Object sender, FormClosingEventArgs e) { if (e.CloseReason == CloseReason.UserClosing) PreApplicationExit(); }
+        private void Form_Closing(Object sender, FormClosingEventArgs e) {
+            SystemReset();
+            _serialNumberDialog?.Close();
+            MutexTest?.ReleaseMutex();
+            MutexTest?.Dispose();
+        }
 
         private void Form_Shown(Object sender, EventArgs e) { ButtonSelect_Click(sender, e); }
 
@@ -305,13 +310,6 @@ namespace ABT.Test.TestExec {
                 };
                 _ = Process.Start(psi);
             } else InvalidPathError(FolderPath);
-        }
-
-        private void PreApplicationExit() {
-            SystemReset();
-            _serialNumberDialog?.Close();
-            MutexTest.ReleaseMutex();
-            MutexTest.Dispose();
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
@@ -430,6 +428,7 @@ namespace ABT.Test.TestExec {
 
         private void ButtonEmergencyStopReset(Boolean enabled) {
             if (CT_EmergencyStop.IsCancellationRequested) {
+                CTS_EmergencyStop.Dispose();
                 CTS_EmergencyStop = new CancellationTokenSource();
                 CT_EmergencyStop = CTS_EmergencyStop.Token;
             }
@@ -483,10 +482,7 @@ namespace ABT.Test.TestExec {
         #endregion Form Command Buttons
 
         #region Form Tool Strip Menu Items
-        private void TSMI_File_Exit_Click(Object sender, EventArgs e) {
-            PreApplicationExit();
-            System.Windows.Forms.Application.Exit();
-        }
+        private void TSMI_File_Exit_Click(Object sender, EventArgs e) { System.Windows.Forms.Application.Exit(); }
         private void TSMI_File_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
                 Title = "Save Test Results",
