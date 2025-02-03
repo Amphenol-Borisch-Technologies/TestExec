@@ -3997,8 +3997,8 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
-            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
-              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
+            "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
+              "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
             },
             "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
               "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj"
