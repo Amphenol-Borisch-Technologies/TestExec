@@ -3920,11 +3920,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj",
+      "projectUniqueName": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj",
       "projectName": "TestExec",
-      "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj",
+      "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj",
       "packagesPath": "C:\\Users\\phils\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\obj\\",
+      "outputPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "UsingMicrosoftNETSdk": false,
@@ -3946,8 +3946,8 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
-            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
-              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj"
+            "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
+              "projectPath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestLib\\TestLib.csproj"
             }
           }
         }
