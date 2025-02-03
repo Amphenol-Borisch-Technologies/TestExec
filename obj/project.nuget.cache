@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wIvUEk9fJbw=",
+  "dgSpecHash": "T6a3I3rsQI4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj",
+  "projectFilePath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\phils\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\9.0.1\\microsoft.bcl.asyncinterfaces.9.0.1.nupkg.sha512",
     "C:\\Users\\phils\\.nuget\\packages\\microsoft.netcore.platforms\\7.0.0\\microsoft.netcore.platforms.7.0.0.nupkg.sha512",
