@@ -44,3 +44,11 @@
 *.tmp
 *.temp
 
+/bin/x64/Debug/Ag34401_11.dll
+/bin/x64/Debug/Ag34980_2_43.dll
+/bin/x64/Debug/AgE363x_1_7.dll
+/bin/x64/Debug/AgE364xD_1_7.dll
+/bin/x64/Debug/AgSCPI99_1_0.dll
+/obj/x64/Debug/TestExec.csproj.CoreCompileInputs.cache
+/obj/x64/Debug/TestExec.csproj.FileListAbsolute.txt
+/obj/x64/Debug/TestExec.csproj.GenerateResource.cache
