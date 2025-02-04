@@ -187,7 +187,7 @@ namespace ABT.Test.TestExec {
                 // NOTE:  UserPrincipal.Current.DisplayName requires a connected/active Domain session for Active Directory PCs.
                 UserName = InputForm.Show(Title: "Enter your full name for test data.", SystemIcons.Question);
             }
-                UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
+            UserName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(UserName);
             return UserName;
         }
 
@@ -325,7 +325,7 @@ namespace ABT.Test.TestExec {
         public static void SendDeveloperMailMessage(String Subject, System.Exception Ex) {
             const Int32 PR = 22;
             StringBuilder sb = new StringBuilder();
-            _ = sb.AppendLine($"{nameof(Environment.MachineName)}".PadRight(PR) +$": {Environment.MachineName}");
+            _ = sb.AppendLine($"{nameof(Environment.MachineName)}".PadRight(PR) + $": {Environment.MachineName}");
             _ = sb.AppendLine($"{UserName}".PadRight(PR) + $": {UserName}");
             _ = sb.AppendLine($"Exception.ToString()".PadRight(PR) + $": {Ex}");
             SendDeveloperMailMessage(Subject, Body: sb.ToString());
@@ -482,15 +482,31 @@ namespace ABT.Test.TestExec {
 
         #region Form Tool Strip Menu Items
         private void TSMI_Test_Change_Click(Object sender, EventArgs e) {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
-                openFileDialog.Filter = "TestExecutor Programs|*.exe";
-                openFileDialog.DereferenceLinks = true;
-                openFileDialog.RestoreDirectory = true;
+            // NOTE: Canonical method to load/unload DLLs in .Net Framework is AppDomain.
+            // - But, AppDomains require marshalling across process boundaries, as AppDomains are their own seperate processes.
+            // - Further, AppDomains aren't supported in .Net, just .Net Framework.
+            // - .Net instead provides AssemblyLoadContext, which will be perfect for this app, but isn't available in .Net Framework.
+            // - Thus, this compromise.
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+            //using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+            //    openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+            //    openFileDialog.Filter = "TestExecutor Programs|*.exe";
+            //    openFileDialog.DereferenceLinks = true;
+            //    openFileDialog.RestoreDirectory = true;
+
+            //    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
+                folderBrowserDialog.Description = "Select a TestPlan Folder";
+                folderBrowserDialog.ShowNewFolderButton = false;
+                folderBrowserDialog.RootFolder = Environment.SpecialFolder.UserProfile;
+                folderBrowserDialog.SelectedPath = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
+                    String s = $"{folderBrowserDialog.SelectedPath}" + @"\bin\x64\Debug\" + $"{Path.GetFileName(folderBrowserDialog.SelectedPath)}.exe";
+
                     ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChanger\bin\x64\Debug\TestChanger.exe""") {
-                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{openFileDialog.FileName}\"",
+                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{s}\"",
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardError = false,
@@ -631,7 +647,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_About_TestPlan_Click(Object sender, EventArgs e) {
             ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development, isTestPlan: true);
         }
-        private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan=false) {
+        private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan = false) {
             StringBuilder stringBuilder = new StringBuilder();
             const Int32 PR = 16;
             stringBuilder.AppendLine($"{nameof(Assembly)}:");
@@ -727,7 +743,7 @@ namespace ABT.Test.TestExec {
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
                 throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
-            } 
+            }
             if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
             throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
