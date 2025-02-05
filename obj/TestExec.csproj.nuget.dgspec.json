@@ -4,22 +4,6 @@
     "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj": {}
   },
   "projects": {
-    "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
-      "restore": {
-        "projectUniqueName": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj",
-        "projectName": "TestChanger",
-        "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj",
-        "UsingMicrosoftNETSdk": false,
-        "frameworks": {
-          "net48": {
-            "projectReferences": {}
-          }
-        }
-      },
-      "frameworks": {
-        "net48": {}
-      }
-    },
     "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -49,9 +33,6 @@
         "frameworks": {
           "net48": {
             "projectReferences": {
-              "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
-                "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
-              },
               "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
                 "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj"
               }
@@ -67,6 +48,10 @@
       "frameworks": {
         "net48": {
           "dependencies": {
+            "Microsoft-WindowsAPICodePack-Shell": {
+              "target": "Package",
+              "version": "[1.1.5, )"
+            },
             "Microsoft.Windows.SDK.Contracts": {
               "target": "Package",
               "version": "[10.0.26100.1742, )"
@@ -122,10 +107,6 @@
             "System.ValueTuple": {
               "target": "Package",
               "version": "[4.5.0, )"
-            },
-            "WindowsAPICodePack": {
-              "target": "Package",
-              "version": "[8.0.6, )"
             }
           }
         }

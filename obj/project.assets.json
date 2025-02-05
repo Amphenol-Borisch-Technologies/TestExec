@@ -2,6 +2,57 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.8": {
+      "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.5"
+        },
+        "frameworkAssemblies": [
+          "CustomMarshalers",
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "System.Xml",
+          "WindowsBase",
+          "WindowsFormsIntegration"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -19,15 +70,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/7.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
         }
       },
       "Microsoft.Windows.SDK.Contracts/10.0.26100.1742": {
@@ -222,19 +264,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.IO/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.IO.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.IO.dll": {}
-        }
-      },
       "System.Memory/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -256,33 +285,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.Net.Http/4.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.X509Certificates": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Net.Http.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Net.Http.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/netstandard1.6/System.Net.Http.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net46/System.Net.Http.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
       "System.Numerics.Vectors/4.6.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -300,21 +302,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -372,102 +359,6 @@
           "build/net461/System.Runtime.WindowsRuntime.UI.Xaml.targets": {}
         }
       },
-      "System.Security.Cryptography.Algorithms/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtime": {
-          "lib/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/osx/lib/netstandard1.6/System.Security.Cryptography.Algorithms.dll": {
-            "assetType": "runtime",
-            "rid": "osx"
-          },
-          "runtimes/unix/lib/netstandard1.6/System.Security.Cryptography.Algorithms.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/netstandard1.3/System.Security.Cryptography.Encoding.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Primitives.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Primitives.dll": {}
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.Algorithms": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/netstandard1.6/System.Security.Cryptography.X509Certificates.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
       "System.Threading.Channels/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -519,51 +410,6 @@
           "lib/net47/System.ValueTuple.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "WindowsAPICodePack/8.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "7.0.0",
-          "System.Net.Http": "4.3.4"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "TestChanger/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/TestChanger.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -592,6 +438,57 @@
       }
     },
     ".NETFramework,Version=v4.8/win": {
+      "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.5"
+        },
+        "frameworkAssemblies": [
+          "CustomMarshalers",
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "System.Xml",
+          "WindowsBase",
+          "WindowsFormsIntegration"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -609,15 +506,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/7.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
         }
       },
       "Microsoft.Windows.SDK.Contracts/10.0.26100.1742": {
@@ -812,19 +700,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.IO/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.IO.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.IO.dll": {}
-        }
-      },
       "System.Memory/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -846,23 +721,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.Net.Http/4.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.X509Certificates": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Net.Http.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Net.Http.dll": {}
-        }
-      },
       "System.Numerics.Vectors/4.6.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -880,21 +738,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -952,68 +795,6 @@
           "build/net461/System.Runtime.WindowsRuntime.UI.Xaml.targets": {}
         }
       },
-      "System.Security.Cryptography.Algorithms/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Primitives.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Primitives.dll": {}
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.Algorithms": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        }
-      },
       "System.Threading.Channels/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -1065,51 +846,6 @@
           "lib/net47/System.ValueTuple.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "WindowsAPICodePack/8.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "7.0.0",
-          "System.Net.Http": "4.3.4"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "TestChanger/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/TestChanger.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -1138,6 +874,57 @@
       }
     },
     ".NETFramework,Version=v4.8/win-arm64": {
+      "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.5"
+        },
+        "frameworkAssemblies": [
+          "CustomMarshalers",
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "System.Xml",
+          "WindowsBase",
+          "WindowsFormsIntegration"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -1155,15 +942,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/7.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
         }
       },
       "Microsoft.Windows.SDK.Contracts/10.0.26100.1742": {
@@ -1358,19 +1136,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.IO/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.IO.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.IO.dll": {}
-        }
-      },
       "System.Memory/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -1392,23 +1157,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.Net.Http/4.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.X509Certificates": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Net.Http.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Net.Http.dll": {}
-        }
-      },
       "System.Numerics.Vectors/4.6.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -1426,21 +1174,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -1498,68 +1231,6 @@
           "build/net461/System.Runtime.WindowsRuntime.UI.Xaml.targets": {}
         }
       },
-      "System.Security.Cryptography.Algorithms/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Primitives.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Primitives.dll": {}
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.Algorithms": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        }
-      },
       "System.Threading.Channels/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -1611,51 +1282,6 @@
           "lib/net47/System.ValueTuple.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "WindowsAPICodePack/8.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "7.0.0",
-          "System.Net.Http": "4.3.4"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "TestChanger/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/TestChanger.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -1684,6 +1310,57 @@
       }
     },
     ".NETFramework,Version=v4.8/win-x64": {
+      "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.5"
+        },
+        "frameworkAssemblies": [
+          "CustomMarshalers",
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "System.Xml",
+          "WindowsBase",
+          "WindowsFormsIntegration"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -1701,15 +1378,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/7.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
         }
       },
       "Microsoft.Windows.SDK.Contracts/10.0.26100.1742": {
@@ -1904,19 +1572,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.IO/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.IO.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.IO.dll": {}
-        }
-      },
       "System.Memory/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -1938,23 +1593,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.Net.Http/4.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.X509Certificates": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Net.Http.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Net.Http.dll": {}
-        }
-      },
       "System.Numerics.Vectors/4.6.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -1972,21 +1610,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -2044,68 +1667,6 @@
           "build/net461/System.Runtime.WindowsRuntime.UI.Xaml.targets": {}
         }
       },
-      "System.Security.Cryptography.Algorithms/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Primitives.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Primitives.dll": {}
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.Algorithms": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        }
-      },
       "System.Threading.Channels/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -2157,51 +1718,6 @@
           "lib/net47/System.ValueTuple.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "WindowsAPICodePack/8.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "7.0.0",
-          "System.Net.Http": "4.3.4"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "TestChanger/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/TestChanger.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -2230,6 +1746,57 @@
       }
     },
     ".NETFramework,Version=v4.8/win-x86": {
+      "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft-WindowsAPICodePack-Core": "1.1.5"
+        },
+        "frameworkAssemblies": [
+          "CustomMarshalers",
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Drawing",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "System.Xml",
+          "WindowsBase",
+          "WindowsFormsIntegration"
+        ],
+        "compile": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -2247,15 +1814,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETCore.Platforms/7.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
         }
       },
       "Microsoft.Windows.SDK.Contracts/10.0.26100.1742": {
@@ -2450,19 +2008,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.IO/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.IO.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.IO.dll": {}
-        }
-      },
       "System.Memory/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -2484,23 +2029,6 @@
           "buildTransitive/net462/_._": {}
         }
       },
-      "System.Net.Http/4.3.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.X509Certificates": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Net.Http.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Net.Http.dll": {}
-        }
-      },
       "System.Numerics.Vectors/4.6.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -2518,21 +2046,6 @@
         },
         "build": {
           "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Runtime/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "System.ComponentModel.Composition",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net462/System.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.dll": {}
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -2590,68 +2103,6 @@
           "build/net461/System.Runtime.WindowsRuntime.UI.Xaml.targets": {}
         }
       },
-      "System.Security.Cryptography.Algorithms/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO": "4.3.0",
-          "System.Runtime": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0",
-          "System.Security.Cryptography.Primitives": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net463/System.Security.Cryptography.Algorithms.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Encoding/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Encoding.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll": {}
-        }
-      },
-      "System.Security.Cryptography.Primitives/4.3.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Security.Cryptography.Primitives.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Security.Cryptography.Primitives.dll": {}
-        }
-      },
-      "System.Security.Cryptography.X509Certificates/4.3.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Cryptography.Algorithms": "4.3.0",
-          "System.Security.Cryptography.Encoding": "4.3.0"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "System.Core",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        },
-        "runtime": {
-          "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll": {}
-        }
-      },
       "System.Threading.Channels/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -2703,51 +2154,6 @@
           "lib/net47/System.ValueTuple.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "WindowsAPICodePack/8.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "7.0.0",
-          "System.Net.Http": "4.3.4"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net48/Microsoft.WindowsAPICodePack.Core.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll": {},
-          "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll": {},
-          "lib/net48/System.Windows.Forms.dll": {
-            "related": ".xml"
-          },
-          "lib/net48/WindowsFormsIntegration.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "TestChanger/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/TestChanger.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/TestChanger.dll": {}
         }
       },
       "TestLib/1.0.0": {
@@ -2777,6 +2183,60 @@
     }
   },
   "libraries": {
+    "Microsoft-WindowsAPICodePack-Core/1.1.5": {
+      "sha512": "3feeT5wxrH/T4YmoZwCglVrUw6aS4+WJLA3FRADLVT2J85/zjptrCikvGNcLI1+gDeoI1AZ4w45gF2FvBv6eQw==",
+      "type": "package",
+      "path": "microsoft-windowsapicodepack-core/1.1.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Microsoft.WindowsAPICodePack.dll",
+        "lib/net452/Microsoft.WindowsAPICodePack.xml",
+        "lib/net462/Microsoft.WindowsAPICodePack.dll",
+        "lib/net462/Microsoft.WindowsAPICodePack.xml",
+        "lib/net472/Microsoft.WindowsAPICodePack.dll",
+        "lib/net472/Microsoft.WindowsAPICodePack.xml",
+        "lib/net48/Microsoft.WindowsAPICodePack.dll",
+        "lib/net48/Microsoft.WindowsAPICodePack.xml",
+        "lib/net481/Microsoft.WindowsAPICodePack.dll",
+        "lib/net481/Microsoft.WindowsAPICodePack.xml",
+        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.dll",
+        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.xml",
+        "lib/net7.0-windows7.0/Microsoft.WindowsAPICodePack.dll",
+        "lib/net7.0-windows7.0/Microsoft.WindowsAPICodePack.xml",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.dll",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.xml",
+        "microsoft-windowsapicodepack-core.1.1.5.nupkg.sha512",
+        "microsoft-windowsapicodepack-core.nuspec"
+      ]
+    },
+    "Microsoft-WindowsAPICodePack-Shell/1.1.5": {
+      "sha512": "lZ+oIxvTp1Ph0YrzFl3AKcrry7OCfi0awf43nrGwodWqDlFASktZ+pN532rbU/5o09irYjxVu1m3UxO5L1H8fw==",
+      "type": "package",
+      "path": "microsoft-windowsapicodepack-shell/1.1.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net452/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net462/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net462/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net472/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net472/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net48/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net481/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net481/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/net7.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net7.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.xml",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.Shell.xml",
+        "microsoft-windowsapicodepack-shell.1.1.5.nupkg.sha512",
+        "microsoft-windowsapicodepack-shell.nuspec"
+      ]
+    },
     "Microsoft.Bcl.AsyncInterfaces/9.0.1": {
       "sha512": "IVkmUqf+KzbuXKrxi2tyQlg11RArYk26t2eU5cHekff+7Ao09vH8vt8idC0BJSMnpiRV2OK66zM2EwJU6Tm5Cw==",
       "type": "package",
@@ -2800,23 +2260,6 @@
         "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml",
         "microsoft.bcl.asyncinterfaces.9.0.1.nupkg.sha512",
         "microsoft.bcl.asyncinterfaces.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "Microsoft.NETCore.Platforms/7.0.0": {
-      "sha512": "ZmCEGPLRDVy0WF6erzJw0G+puBM6s2DxRzRqvYvgHmXE6e34P0HVRtNl6s3nKKSDkD3DQH1QLKWL7fKe3GBSUA==",
-      "type": "package",
-      "path": "microsoft.netcore.platforms/7.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/_._",
-        "microsoft.netcore.platforms.7.0.0.nupkg.sha512",
-        "microsoft.netcore.platforms.nuspec",
-        "runtime.json",
         "useSharedDesignerContext.txt"
       ]
     },
@@ -3114,87 +2557,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.IO/4.3.0": {
-      "sha512": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg==",
-      "type": "package",
-      "path": "system.io/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net45/_._",
-        "lib/net462/System.IO.dll",
-        "lib/portable-net45+win8+wp8+wpa81/_._",
-        "lib/win8/_._",
-        "lib/wp80/_._",
-        "lib/wpa81/_._",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net45/_._",
-        "ref/net462/System.IO.dll",
-        "ref/netcore50/System.IO.dll",
-        "ref/netcore50/System.IO.xml",
-        "ref/netcore50/de/System.IO.xml",
-        "ref/netcore50/es/System.IO.xml",
-        "ref/netcore50/fr/System.IO.xml",
-        "ref/netcore50/it/System.IO.xml",
-        "ref/netcore50/ja/System.IO.xml",
-        "ref/netcore50/ko/System.IO.xml",
-        "ref/netcore50/ru/System.IO.xml",
-        "ref/netcore50/zh-hans/System.IO.xml",
-        "ref/netcore50/zh-hant/System.IO.xml",
-        "ref/netstandard1.0/System.IO.dll",
-        "ref/netstandard1.0/System.IO.xml",
-        "ref/netstandard1.0/de/System.IO.xml",
-        "ref/netstandard1.0/es/System.IO.xml",
-        "ref/netstandard1.0/fr/System.IO.xml",
-        "ref/netstandard1.0/it/System.IO.xml",
-        "ref/netstandard1.0/ja/System.IO.xml",
-        "ref/netstandard1.0/ko/System.IO.xml",
-        "ref/netstandard1.0/ru/System.IO.xml",
-        "ref/netstandard1.0/zh-hans/System.IO.xml",
-        "ref/netstandard1.0/zh-hant/System.IO.xml",
-        "ref/netstandard1.3/System.IO.dll",
-        "ref/netstandard1.3/System.IO.xml",
-        "ref/netstandard1.3/de/System.IO.xml",
-        "ref/netstandard1.3/es/System.IO.xml",
-        "ref/netstandard1.3/fr/System.IO.xml",
-        "ref/netstandard1.3/it/System.IO.xml",
-        "ref/netstandard1.3/ja/System.IO.xml",
-        "ref/netstandard1.3/ko/System.IO.xml",
-        "ref/netstandard1.3/ru/System.IO.xml",
-        "ref/netstandard1.3/zh-hans/System.IO.xml",
-        "ref/netstandard1.3/zh-hant/System.IO.xml",
-        "ref/netstandard1.5/System.IO.dll",
-        "ref/netstandard1.5/System.IO.xml",
-        "ref/netstandard1.5/de/System.IO.xml",
-        "ref/netstandard1.5/es/System.IO.xml",
-        "ref/netstandard1.5/fr/System.IO.xml",
-        "ref/netstandard1.5/it/System.IO.xml",
-        "ref/netstandard1.5/ja/System.IO.xml",
-        "ref/netstandard1.5/ko/System.IO.xml",
-        "ref/netstandard1.5/ru/System.IO.xml",
-        "ref/netstandard1.5/zh-hans/System.IO.xml",
-        "ref/netstandard1.5/zh-hant/System.IO.xml",
-        "ref/portable-net45+win8+wp8+wpa81/_._",
-        "ref/win8/_._",
-        "ref/wp80/_._",
-        "ref/wpa81/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.io.4.3.0.nupkg.sha512",
-        "system.io.nuspec"
-      ]
-    },
     "System.Memory/4.6.0": {
       "sha512": "OEkbBQoklHngJ8UD8ez2AERSk2g+/qpAaSWWCBFbpH727HxDq5ydVkuncBaKcKfwRqXGWx64dS6G1SUScMsitg==",
       "type": "package",
@@ -3215,48 +2577,6 @@
         "system.memory.nuspec"
       ]
     },
-    "System.Net.Http/4.3.4": {
-      "sha512": "aOa2d51SEbmM+H+Csw7yJOuNZoHkrP2XnAurye5HWYgGVVU54YZDvsLUYRv6h18X3sPnjNCANmN7ZhIPiqMcjA==",
-      "type": "package",
-      "path": "system.net.http/4.3.4",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/Xamarinmac20/_._",
-        "lib/monoandroid10/_._",
-        "lib/monotouch10/_._",
-        "lib/net45/_._",
-        "lib/net46/System.Net.Http.dll",
-        "lib/portable-net45+win8+wpa81/_._",
-        "lib/win8/_._",
-        "lib/wpa81/_._",
-        "lib/xamarinios10/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/Xamarinmac20/_._",
-        "ref/monoandroid10/_._",
-        "ref/monotouch10/_._",
-        "ref/net45/_._",
-        "ref/net46/System.Net.Http.dll",
-        "ref/netcore50/System.Net.Http.dll",
-        "ref/netstandard1.1/System.Net.Http.dll",
-        "ref/netstandard1.3/System.Net.Http.dll",
-        "ref/portable-net45+win8+wpa81/_._",
-        "ref/win8/_._",
-        "ref/wpa81/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "runtimes/unix/lib/netstandard1.6/System.Net.Http.dll",
-        "runtimes/win/lib/net46/System.Net.Http.dll",
-        "runtimes/win/lib/netcore50/System.Net.Http.dll",
-        "runtimes/win/lib/netstandard1.3/System.Net.Http.dll",
-        "system.net.http.4.3.4.nupkg.sha512",
-        "system.net.http.nuspec"
-      ]
-    },
     "System.Numerics.Vectors/4.6.0": {
       "sha512": "t+SoieZsRuEyiw/J+qXUbolyO219tKQQI0+2/YI+Qv7YdGValA6WiuokrNKqjrTNsy5ABWU11bdKOzUdheteXg==",
       "type": "package",
@@ -3275,98 +2595,6 @@
         "lib/netstandard2.0/System.Numerics.Vectors.xml",
         "system.numerics.vectors.4.6.0.nupkg.sha512",
         "system.numerics.vectors.nuspec"
-      ]
-    },
-    "System.Runtime/4.3.0": {
-      "sha512": "JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw==",
-      "type": "package",
-      "path": "system.runtime/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net45/_._",
-        "lib/net462/System.Runtime.dll",
-        "lib/portable-net45+win8+wp80+wpa81/_._",
-        "lib/win8/_._",
-        "lib/wp80/_._",
-        "lib/wpa81/_._",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net45/_._",
-        "ref/net462/System.Runtime.dll",
-        "ref/netcore50/System.Runtime.dll",
-        "ref/netcore50/System.Runtime.xml",
-        "ref/netcore50/de/System.Runtime.xml",
-        "ref/netcore50/es/System.Runtime.xml",
-        "ref/netcore50/fr/System.Runtime.xml",
-        "ref/netcore50/it/System.Runtime.xml",
-        "ref/netcore50/ja/System.Runtime.xml",
-        "ref/netcore50/ko/System.Runtime.xml",
-        "ref/netcore50/ru/System.Runtime.xml",
-        "ref/netcore50/zh-hans/System.Runtime.xml",
-        "ref/netcore50/zh-hant/System.Runtime.xml",
-        "ref/netstandard1.0/System.Runtime.dll",
-        "ref/netstandard1.0/System.Runtime.xml",
-        "ref/netstandard1.0/de/System.Runtime.xml",
-        "ref/netstandard1.0/es/System.Runtime.xml",
-        "ref/netstandard1.0/fr/System.Runtime.xml",
-        "ref/netstandard1.0/it/System.Runtime.xml",
-        "ref/netstandard1.0/ja/System.Runtime.xml",
-        "ref/netstandard1.0/ko/System.Runtime.xml",
-        "ref/netstandard1.0/ru/System.Runtime.xml",
-        "ref/netstandard1.0/zh-hans/System.Runtime.xml",
-        "ref/netstandard1.0/zh-hant/System.Runtime.xml",
-        "ref/netstandard1.2/System.Runtime.dll",
-        "ref/netstandard1.2/System.Runtime.xml",
-        "ref/netstandard1.2/de/System.Runtime.xml",
-        "ref/netstandard1.2/es/System.Runtime.xml",
-        "ref/netstandard1.2/fr/System.Runtime.xml",
-        "ref/netstandard1.2/it/System.Runtime.xml",
-        "ref/netstandard1.2/ja/System.Runtime.xml",
-        "ref/netstandard1.2/ko/System.Runtime.xml",
-        "ref/netstandard1.2/ru/System.Runtime.xml",
-        "ref/netstandard1.2/zh-hans/System.Runtime.xml",
-        "ref/netstandard1.2/zh-hant/System.Runtime.xml",
-        "ref/netstandard1.3/System.Runtime.dll",
-        "ref/netstandard1.3/System.Runtime.xml",
-        "ref/netstandard1.3/de/System.Runtime.xml",
-        "ref/netstandard1.3/es/System.Runtime.xml",
-        "ref/netstandard1.3/fr/System.Runtime.xml",
-        "ref/netstandard1.3/it/System.Runtime.xml",
-        "ref/netstandard1.3/ja/System.Runtime.xml",
-        "ref/netstandard1.3/ko/System.Runtime.xml",
-        "ref/netstandard1.3/ru/System.Runtime.xml",
-        "ref/netstandard1.3/zh-hans/System.Runtime.xml",
-        "ref/netstandard1.3/zh-hant/System.Runtime.xml",
-        "ref/netstandard1.5/System.Runtime.dll",
-        "ref/netstandard1.5/System.Runtime.xml",
-        "ref/netstandard1.5/de/System.Runtime.xml",
-        "ref/netstandard1.5/es/System.Runtime.xml",
-        "ref/netstandard1.5/fr/System.Runtime.xml",
-        "ref/netstandard1.5/it/System.Runtime.xml",
-        "ref/netstandard1.5/ja/System.Runtime.xml",
-        "ref/netstandard1.5/ko/System.Runtime.xml",
-        "ref/netstandard1.5/ru/System.Runtime.xml",
-        "ref/netstandard1.5/zh-hans/System.Runtime.xml",
-        "ref/netstandard1.5/zh-hant/System.Runtime.xml",
-        "ref/portable-net45+win8+wp80+wpa81/_._",
-        "ref/win8/_._",
-        "ref/wp80/_._",
-        "ref/wpa81/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.runtime.4.3.0.nupkg.sha512",
-        "system.runtime.nuspec"
       ]
     },
     "System.Runtime.CompilerServices.Unsafe/6.1.0": {
@@ -3592,173 +2820,6 @@
         "version.txt"
       ]
     },
-    "System.Security.Cryptography.Algorithms/4.3.0": {
-      "sha512": "W1kd2Y8mYSCgc3ULTAZ0hOP2dSdG5YauTb1089T0/kRcN2MpSAW1izOFROrJgxSlMn3ArsgHXagigyi+ibhevg==",
-      "type": "package",
-      "path": "system.security.cryptography.algorithms/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net46/System.Security.Cryptography.Algorithms.dll",
-        "lib/net461/System.Security.Cryptography.Algorithms.dll",
-        "lib/net463/System.Security.Cryptography.Algorithms.dll",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net46/System.Security.Cryptography.Algorithms.dll",
-        "ref/net461/System.Security.Cryptography.Algorithms.dll",
-        "ref/net463/System.Security.Cryptography.Algorithms.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.Algorithms.dll",
-        "ref/netstandard1.4/System.Security.Cryptography.Algorithms.dll",
-        "ref/netstandard1.6/System.Security.Cryptography.Algorithms.dll",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "runtimes/osx/lib/netstandard1.6/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/unix/lib/netstandard1.6/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/win/lib/net46/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/win/lib/net461/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/win/lib/net463/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/win/lib/netcore50/System.Security.Cryptography.Algorithms.dll",
-        "runtimes/win/lib/netstandard1.6/System.Security.Cryptography.Algorithms.dll",
-        "system.security.cryptography.algorithms.4.3.0.nupkg.sha512",
-        "system.security.cryptography.algorithms.nuspec"
-      ]
-    },
-    "System.Security.Cryptography.Encoding/4.3.0": {
-      "sha512": "1DEWjZZly9ae9C79vFwqaO5kaOlI5q+3/55ohmq/7dpDyDfc8lYe7YVxJUZ5MF/NtbkRjwFRo14yM4OEo9EmDw==",
-      "type": "package",
-      "path": "system.security.cryptography.encoding/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net46/System.Security.Cryptography.Encoding.dll",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net46/System.Security.Cryptography.Encoding.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.Encoding.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/de/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/es/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/fr/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/it/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/ja/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/ko/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/ru/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/zh-hans/System.Security.Cryptography.Encoding.xml",
-        "ref/netstandard1.3/zh-hant/System.Security.Cryptography.Encoding.xml",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "runtimes/unix/lib/netstandard1.3/System.Security.Cryptography.Encoding.dll",
-        "runtimes/win/lib/net46/System.Security.Cryptography.Encoding.dll",
-        "runtimes/win/lib/netstandard1.3/System.Security.Cryptography.Encoding.dll",
-        "system.security.cryptography.encoding.4.3.0.nupkg.sha512",
-        "system.security.cryptography.encoding.nuspec"
-      ]
-    },
-    "System.Security.Cryptography.Primitives/4.3.0": {
-      "sha512": "7bDIyVFNL/xKeFHjhobUAQqSpJq9YTOpbEs6mR233Et01STBMXNAc/V+BM6dwYGc95gVh/Zf+iVXWzj3mE8DWg==",
-      "type": "package",
-      "path": "system.security.cryptography.primitives/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net46/System.Security.Cryptography.Primitives.dll",
-        "lib/netstandard1.3/System.Security.Cryptography.Primitives.dll",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net46/System.Security.Cryptography.Primitives.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.Primitives.dll",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.security.cryptography.primitives.4.3.0.nupkg.sha512",
-        "system.security.cryptography.primitives.nuspec"
-      ]
-    },
-    "System.Security.Cryptography.X509Certificates/4.3.0": {
-      "sha512": "t2Tmu6Y2NtJ2um0RtcuhP7ZdNNxXEgUm2JeoA/0NvlMjAhKCnM1NX07TDl3244mVp3QU6LPEhT3HTtH1uF7IYw==",
-      "type": "package",
-      "path": "system.security.cryptography.x509certificates/4.3.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net46/System.Security.Cryptography.X509Certificates.dll",
-        "lib/net461/System.Security.Cryptography.X509Certificates.dll",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net46/System.Security.Cryptography.X509Certificates.dll",
-        "ref/net461/System.Security.Cryptography.X509Certificates.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.X509Certificates.dll",
-        "ref/netstandard1.3/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/de/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/es/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/fr/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/it/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/ja/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/ko/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/ru/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/zh-hans/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.3/zh-hant/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/System.Security.Cryptography.X509Certificates.dll",
-        "ref/netstandard1.4/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/de/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/es/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/fr/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/it/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/ja/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/ko/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/ru/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/zh-hans/System.Security.Cryptography.X509Certificates.xml",
-        "ref/netstandard1.4/zh-hant/System.Security.Cryptography.X509Certificates.xml",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "runtimes/unix/lib/netstandard1.6/System.Security.Cryptography.X509Certificates.dll",
-        "runtimes/win/lib/net46/System.Security.Cryptography.X509Certificates.dll",
-        "runtimes/win/lib/net461/System.Security.Cryptography.X509Certificates.dll",
-        "runtimes/win/lib/netcore50/System.Security.Cryptography.X509Certificates.dll",
-        "runtimes/win/lib/netstandard1.6/System.Security.Cryptography.X509Certificates.dll",
-        "system.security.cryptography.x509certificates.4.3.0.nupkg.sha512",
-        "system.security.cryptography.x509certificates.nuspec"
-      ]
-    },
     "System.Threading.Channels/9.0.1": {
       "sha512": "vpp0a6Prnrqza30863qzNXtb2TonmnJVdfGpIU99+wYyDyLJG3IyoxmjTxhInywqJ6G2HEV4yjZ6/Eo802qGpw==",
       "type": "package",
@@ -3853,90 +2914,6 @@
         "version.txt"
       ]
     },
-    "WindowsAPICodePack/8.0.6": {
-      "sha512": "g8AbjuW0W6m73dEmaPFxL72B1BHHK99zfTGvhsx1oSqjRqJlfl/V6QdDX/WoQi5xQmTgBGvl/pbxflIv75LUfg==",
-      "type": "package",
-      "path": "windowsapicodepack/8.0.6",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "License.md",
-        "README.md",
-        "Windows.png",
-        "lib/net462/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net462/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net462/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net462/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net462/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net462/System.Windows.Forms.dll",
-        "lib/net462/System.Windows.Forms.xml",
-        "lib/net462/WindowsFormsIntegration.dll",
-        "lib/net462/WindowsFormsIntegration.xml",
-        "lib/net47/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net47/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net47/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net47/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net47/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net47/System.Windows.Forms.dll",
-        "lib/net47/System.Windows.Forms.xml",
-        "lib/net47/WindowsFormsIntegration.dll",
-        "lib/net47/WindowsFormsIntegration.xml",
-        "lib/net471/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net471/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net471/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net471/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net471/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net471/System.Windows.Forms.dll",
-        "lib/net471/System.Windows.Forms.xml",
-        "lib/net471/WindowsFormsIntegration.dll",
-        "lib/net471/WindowsFormsIntegration.xml",
-        "lib/net472/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net472/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net472/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net472/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net472/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net472/System.Windows.Forms.dll",
-        "lib/net472/System.Windows.Forms.xml",
-        "lib/net472/WindowsFormsIntegration.dll",
-        "lib/net472/WindowsFormsIntegration.xml",
-        "lib/net48/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net48/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net48/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net48/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net48/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net48/System.Windows.Forms.dll",
-        "lib/net48/System.Windows.Forms.xml",
-        "lib/net48/WindowsFormsIntegration.dll",
-        "lib/net48/WindowsFormsIntegration.xml",
-        "lib/net481/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net481/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net481/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net481/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net481/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net6.0-windows7.0/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net8.0-windows7.0/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net8.0-windows7.0/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net8.0-windows7.0/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net8.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net8.0-windows7.0/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "lib/net9.0-windows7.0/Microsoft.WindowsAPICodePack.Core.dll",
-        "lib/net9.0-windows7.0/Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll",
-        "lib/net9.0-windows7.0/Microsoft.WindowsAPICodePack.Sensors.dll",
-        "lib/net9.0-windows7.0/Microsoft.WindowsAPICodePack.Shell.dll",
-        "lib/net9.0-windows7.0/Microsoft.WindowsAPICodePack.ShellExtensions.dll",
-        "windowsapicodepack.8.0.6.nupkg.sha512",
-        "windowsapicodepack.nuspec"
-      ]
-    },
-    "TestChanger/1.0.0": {
-      "type": "project",
-      "path": "../TestChanger/TestChanger.csproj",
-      "msbuildProject": "../TestChanger/TestChanger.csproj"
-    },
     "TestLib/1.0.0": {
       "type": "project",
       "path": "../TestLib/TestLib.csproj",
@@ -3945,6 +2922,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.8": [
+      "Microsoft-WindowsAPICodePack-Shell >= 1.1.5",
       "Microsoft.Windows.SDK.Contracts >= 10.0.26100.1742",
       "Serilog >= 4.2.0",
       "Serilog.Sinks.File >= 6.0.0",
@@ -3959,9 +2937,7 @@
       "System.Threading.Channels >= 9.0.1",
       "System.Threading.Tasks.Extensions >= 4.6.0",
       "System.ValueTuple >= 4.5.0",
-      "TestChanger >= 1.0.0",
-      "TestLib >= 1.0.0",
-      "WindowsAPICodePack >= 8.0.6"
+      "TestLib >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -3997,9 +2973,6 @@
       "frameworks": {
         "net48": {
           "projectReferences": {
-            "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj": {
-              "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestChanger\\TestChanger.csproj"
-            },
             "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj": {
               "projectPath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestLib\\TestLib.csproj"
             }
@@ -4015,6 +2988,10 @@
     "frameworks": {
       "net48": {
         "dependencies": {
+          "Microsoft-WindowsAPICodePack-Shell": {
+            "target": "Package",
+            "version": "[1.1.5, )"
+          },
           "Microsoft.Windows.SDK.Contracts": {
             "target": "Package",
             "version": "[10.0.26100.1742, )"
@@ -4070,10 +3047,6 @@
           "System.ValueTuple": {
             "target": "Package",
             "version": "[4.5.0, )"
-          },
-          "WindowsAPICodePack": {
-            "target": "Package",
-            "version": "[8.0.6, )"
           }
         }
       }

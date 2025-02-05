@@ -483,30 +483,20 @@ namespace ABT.Test.TestExec {
         #region Form Tool Strip Menu Items
         private void TSMI_Test_Change_Click(Object sender, EventArgs e) {
             // NOTE: Canonical method to load/unload DLLs in .Net Framework is AppDomain.
-            // - But, AppDomains require marshalling across process boundaries, as AppDomains are their own seperate processes.
+            // - But, AppDomains require marshalling across process boundaries, as AppDomains are their own separate processes.
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
             // - .Net instead provides AssemblyLoadContext, which will be perfect for this app, but isn't available in .Net Framework.
             // - Thus, this compromise.
 
-            //using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-            //    openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
-            //    openFileDialog.Filter = "TestExecutor Programs|*.exe";
-            //    openFileDialog.DereferenceLinks = true;
-            //    openFileDialog.RestoreDirectory = true;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+                openFileDialog.Filter = "TestPlan Programs|*.exe";
+                openFileDialog.DereferenceLinks = true;
+                openFileDialog.RestoreDirectory = true;
 
-            //    if (openFileDialog.ShowDialog() == DialogResult.OK) {
-
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
-                folderBrowserDialog.Description = "Select a TestPlan Folder";
-                folderBrowserDialog.ShowNewFolderButton = false;
-                folderBrowserDialog.RootFolder = Environment.SpecialFolder.UserProfile;
-                folderBrowserDialog.SelectedPath = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
-
-                if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
-                    String s = $"{folderBrowserDialog.SelectedPath}" + @"\bin\x64\Debug\" + $"{Path.GetFileName(folderBrowserDialog.SelectedPath)}.exe";
-
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
                     ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChanger\bin\x64\Debug\TestChanger.exe""") {
-                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{s}\"",
+                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{openFileDialog.FileName}\"",
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardError = false,
