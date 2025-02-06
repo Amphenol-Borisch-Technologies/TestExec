@@ -34,14 +34,14 @@ namespace ABT.Test.TestExec {
             this.ButtonEmergencyStop = new System.Windows.Forms.Button();
             this.MS = new System.Windows.Forms.MenuStrip();
             this.TSMI_Test = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Test_Change = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Test_Choose = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Test_SaveResults = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_Test_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABT = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTGenerate = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTValidate = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_Keysight = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightBenchVue = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightCommandExpert = new System.Windows.Forms.ToolStripMenuItem();
@@ -205,7 +205,7 @@ namespace ABT.Test.TestExec {
             // TSMI_Test
             // 
             this.TSMI_Test.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Test_Change,
+            this.TSMI_Test_Choose,
             this.TSMI_Test_SaveResults,
             this.TSMI_File_Separator1,
             this.TSMI_Test_Exit});
@@ -213,12 +213,12 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test.Size = new System.Drawing.Size(49, 24);
             this.TSMI_Test.Text = "&Test";
             // 
-            // TSMI_Test_Change
+            // TSMI_Test_Choose
             // 
-            this.TSMI_Test_Change.Name = "TSMI_Test_Change";
-            this.TSMI_Test_Change.Size = new System.Drawing.Size(228, 30);
-            this.TSMI_Test_Change.Text = "&Change";
-            this.TSMI_Test_Change.Click += new System.EventHandler(this.TSMI_Test_Change_Click);
+            this.TSMI_Test_Choose.Name = "TSMI_Test_Choose";
+            this.TSMI_Test_Choose.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_Choose.Text = "&Choose";
+            this.TSMI_Test_Choose.Click += new System.EventHandler(this.TSMI_Test_Choose_Click);
             // 
             // TSMI_Test_SaveResults
             // 
@@ -245,37 +245,37 @@ namespace ABT.Test.TestExec {
             // TSMI_Apps
             // 
             this.TSMI_Apps.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
+            this.TSMI_Apps_ABT,
             this.TSMI_Apps_Keysight,
             this.TSMI_Apps_Microsoft});
             this.TSMI_Apps.Name = "TSMI_Apps";
             this.TSMI_Apps.Size = new System.Drawing.Size(61, 24);
             this.TSMI_Apps.Text = " &Apps";
             // 
-            // toolStripMenuItem1
+            // TSMI_Apps_ABT
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.generateToolStripMenuItem,
-            this.validateToolStripMenuItem});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(155, 26);
-            this.toolStripMenuItem1.Text = "&ABT";
+            this.TSMI_Apps_ABT.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMI_Apps_ABTGenerate,
+            this.TSMI_Apps_ABTValidate});
+            this.TSMI_Apps_ABT.Name = "TSMI_Apps_ABT";
+            this.TSMI_Apps_ABT.Size = new System.Drawing.Size(155, 26);
+            this.TSMI_Apps_ABT.Text = "&ABT";
             // 
-            // generateToolStripMenuItem
+            // TSMI_Apps_ABTGenerate
             // 
-            this.generateToolStripMenuItem.Name = "generateToolStripMenuItem";
-            this.generateToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.generateToolStripMenuItem.Text = "&Generate";
-            this.generateToolStripMenuItem.ToolTipText = "Generate skeleton program.";
-            this.generateToolStripMenuItem.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerate_Click);
+            this.TSMI_Apps_ABTGenerate.Name = "TSMI_Apps_ABTGenerate";
+            this.TSMI_Apps_ABTGenerate.Size = new System.Drawing.Size(152, 26);
+            this.TSMI_Apps_ABTGenerate.Text = "&Generate";
+            this.TSMI_Apps_ABTGenerate.ToolTipText = "Generate skeleton program.";
+            this.TSMI_Apps_ABTGenerate.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerate_Click);
             // 
-            // validateToolStripMenuItem
+            // TSMI_Apps_ABTValidate
             // 
-            this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
-            this.validateToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.validateToolStripMenuItem.Text = "&Validate";
-            this.validateToolStripMenuItem.ToolTipText = "Validate TestDefinition.xml.";
-            this.validateToolStripMenuItem.Click += new System.EventHandler(this.TSMI_Apps_ABTValidate_Click);
+            this.TSMI_Apps_ABTValidate.Name = "TSMI_Apps_ABTValidate";
+            this.TSMI_Apps_ABTValidate.Size = new System.Drawing.Size(152, 26);
+            this.TSMI_Apps_ABTValidate.Text = "&Validate";
+            this.TSMI_Apps_ABTValidate.ToolTipText = "Validate TestDefinition.xml.";
+            this.TSMI_Apps_ABTValidate.Click += new System.EventHandler(this.TSMI_Apps_ABTValidate_Click);
             // 
             // TSMI_Apps_Keysight
             // 
@@ -722,13 +722,13 @@ namespace ABT.Test.TestExec {
         private ToolStripMenuItem TSMI_UUT_Statistics;
         private ToolStripMenuItem TSMI_UUT_StatisticsDisplay;
         private ToolStripMenuItem TSMI_UUT_StatisticsReset;
-        private ToolStripMenuItem toolStripMenuItem1;
-        private ToolStripMenuItem generateToolStripMenuItem;
-        private ToolStripMenuItem validateToolStripMenuItem;
+        private ToolStripMenuItem TSMI_Apps_ABT;
+        private ToolStripMenuItem TSMI_Apps_ABTGenerate;
+        private ToolStripMenuItem TSMI_Apps_ABTValidate;
         private ToolStripMenuItem TSMI_System_ColorCode;
         private ToolStripMenuItem TSMI_About;
         private ToolStripMenuItem TSMI_About_TestExec;
         private ToolStripMenuItem TSMI_About_TestPlan;
-        private ToolStripMenuItem TSMI_Test_Change;
+        private ToolStripMenuItem TSMI_Test_Choose;
     }
 }
