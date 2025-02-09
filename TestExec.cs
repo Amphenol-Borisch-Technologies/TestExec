@@ -770,9 +770,9 @@ namespace ABT.Test.TestExec {
         #endregion Methods
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime())); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime(); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { _ = Invoke((Action)(() => StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus())); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus(); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 
