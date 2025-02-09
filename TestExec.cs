@@ -26,8 +26,6 @@ using static ABT.Test.TestLib.Data;
 using ABT.Test.TestLib.Miscellaneous;
 // TODO:  Soon; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
 // - Briefly evaluated previously; time for reevaluation.
-// TODO:  Soon; final tuning of CancellationTokenSource code.
-// TODO:  Eventually; AppDomain loading/unloading of TestPlans as plugins.
 // TODO:  Eventually; GitHub automated workflows; CI/CD including automated deployment to subscribed TestExec PCs (assuming its possible).
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
 //        - Visual Studio Code is a co$t free, open-source Integrated Development Environment entirely suitable for textual C# development, like Tests.
@@ -146,7 +144,7 @@ namespace ABT.Test.TestExec {
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
             UserName = GetUserPrincipal();
-            _ = Task.Run(() => GetDeveloperAddresses());
+            _ = Task.Run(() => LoadDeveloperAddresses());
 
             InstrumentDrivers = GetInstrumentDriversTestDefinition();
 
@@ -174,10 +172,12 @@ namespace ABT.Test.TestExec {
             _ = MessageBox.Show(ActiveForm, $"Unexpected error:{Environment.NewLine}{Error}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
-        public static void ErrorMessage(System.Exception Ex) {
-            if (testDefinition != null && testDefinition.Development.Developer[0].EMailAddress != null && !String.Equals(testDefinition.Development.Developer[0].EMailAddress, String.Empty)) {
-                ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.Developer[0].EMailAddress}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
-                SendDeveloperMailMessage("Exception caught!", Ex);
+        public static void ErrorMessage(Exception Ex) {
+            if (testDefinition != null && testDefinition.Development.Developer != null && testDefinition.Development.EMailAddresses != null) {
+                if (!String.Equals(testDefinition.Development.EMailAddresses, String.Empty)) {
+                    ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.EMailAddresses}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+                    SendDevelopersMailMessage("Exception caught!", Ex);
+                }
             }
         }
 
@@ -322,20 +322,20 @@ namespace ABT.Test.TestExec {
             return false;
         }
 
-        public static void SendDeveloperMailMessage(String Subject, System.Exception Ex) {
+        public static void SendDevelopersMailMessage(String Subject, Exception Ex) {
             const Int32 PR = 22;
             StringBuilder sb = new StringBuilder();
             _ = sb.AppendLine($"{nameof(Environment.MachineName)}".PadRight(PR) + $": {Environment.MachineName}");
             _ = sb.AppendLine($"{UserName}".PadRight(PR) + $": {UserName}");
             _ = sb.AppendLine($"Exception.ToString()".PadRight(PR) + $": {Ex}");
-            SendDeveloperMailMessage(Subject, Body: sb.ToString());
+            SendDevelopersMailMessage(Subject, Body: sb.ToString());
         }
 
-        public static void SendDeveloperMailMessage(String Subject, String Body) {
+        public static void SendDevelopersMailMessage(String Subject, String Body) {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = testDefinition.Development.Developer[0].EMailAddress;
+                mailItem.To = testDefinition.Development.EMailAddresses;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -349,7 +349,7 @@ namespace ABT.Test.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = testDefinition.Development.Developer[0].EMailAddress;
+                mailItem.To = testDefinition.Development.EMailAddresses;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
@@ -364,7 +364,7 @@ namespace ABT.Test.TestExec {
             }
         }
 
-        private static async Task GetDeveloperAddresses() {
+        private static async Task LoadDeveloperAddresses() {
             Outlook.Application outlookApp = new Outlook.Application();
             Outlook.NameSpace outlookNamespace = outlookApp.GetNamespace("MAPI");
             Outlook.AddressList addressList = outlookNamespace.AddressLists["Offline Global Address List"];
@@ -375,8 +375,10 @@ namespace ABT.Test.TestExec {
                     foreach (Developer developer in testDefinition.Development.Developer) {
                         task = await Task.Run(() => GetAddress(addressList, developer.Name));
                         developer.EMailAddress = (String)task;
+                        if (!String.Equals(developer.EMailAddress, String.Empty)) testDefinition.Development.EMailAddresses += $"{developer.EMailAddress}; ";
                     }
                 } catch { };
+                if (testDefinition.Development.EMailAddresses.EndsWith("; ")) testDefinition.Development.EMailAddresses = testDefinition.Development.EMailAddresses.Substring(0, testDefinition.Development.EMailAddresses.Length - 2);
             }
         }
 
@@ -385,9 +387,7 @@ namespace ABT.Test.TestExec {
             foreach (Outlook.AddressEntry entry in addressList.AddressEntries) {
                 if (entry != null) {
                     exchangeUser = entry.GetExchangeUser();
-                    if (exchangeUser != null) {
-                        if (String.Equals(exchangeUser.Name, Name)) return exchangeUser.PrimarySmtpAddress;
-                    }
+                    if (exchangeUser != null && String.Equals(exchangeUser.Name, Name)) return exchangeUser.PrimarySmtpAddress;
                 }
             }
             return String.Empty;
@@ -506,8 +506,7 @@ namespace ABT.Test.TestExec {
                     Int32 iterations = 0;
                     Cursor.Current = Cursors.WaitCursor;
                     while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
-                        Console.WriteLine("Waiting for main window to open...");
-                        // TODO: write this to status bar.
+                        Console.WriteLine("Waiting for main window to open..."); // TODO: write this to status bar.
                         Thread.Sleep(500);
                         iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
                         process.Refresh();
@@ -695,7 +694,7 @@ namespace ABT.Test.TestExec {
                             SystemReset();
                             return;
                         }
-                    } catch (System.Exception e) {
+                    } catch (Exception e) {
                         SystemReset();
                         if (e.ToString().Contains(typeof(OperationCanceledException).Name)) {
                             method.Event = EVENTS.CANCEL;// NOTE:  May be altered to EVENTS.EMERGENCY_STOP in finally block.
@@ -786,8 +785,8 @@ namespace ABT.Test.TestExec {
         };
 
         private void StatusModeUpdate(MODES mode) {
-            _ = Invoke((Action)(() => StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode)));
-            _ = Invoke((Action)(() => StatusModeLabel.ForeColor = ModeColors[mode]));
+            StatusModeLabel.Text = Enum.GetName(typeof(MODES), mode);
+            StatusModeLabel.ForeColor = ModeColors[mode];
         }
 
         public void StatusCustomWrite(String Message, Color ForeColor) {
