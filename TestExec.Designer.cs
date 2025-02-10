@@ -36,7 +36,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Test_Choose = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Test_SaveResults = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.TSMI_File_Separator = new System.Windows.Forms.ToolStripSeparator();
             this.TSMI_Test_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_ABT = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,7 +207,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_Test_Choose,
             this.TSMI_Test_SaveResults,
-            this.TSMI_File_Separator1,
+            this.TSMI_File_Separator,
             this.TSMI_Test_Exit});
             this.TSMI_Test.Name = "TSMI_Test";
             this.TSMI_Test.Size = new System.Drawing.Size(49, 24);
@@ -230,10 +230,10 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_SaveResults.ToolTipText = "Save UUT results.";
             this.TSMI_Test_SaveResults.Click += new System.EventHandler(this.TSMI_Test_SaveResults_Click);
             // 
-            // TSMI_File_Separator1
+            // TSMI_File_Separator
             // 
-            this.TSMI_File_Separator1.Name = "TSMI_File_Separator1";
-            this.TSMI_File_Separator1.Size = new System.Drawing.Size(225, 6);
+            this.TSMI_File_Separator.Name = "TSMI_File_Separator";
+            this.TSMI_File_Separator.Size = new System.Drawing.Size(225, 6);
             // 
             // TSMI_Test_Exit
             // 
@@ -718,7 +718,7 @@ namespace ABT.Test.TestExec {
         private ToolStripStatusLabel StatusTimeLabel;
         private ToolStripStatusLabel StatusModeLabel;
         private ToolStripMenuItem TSMI_Test_Exit;
-        private ToolStripSeparator TSMI_File_Separator1;
+        private ToolStripSeparator TSMI_File_Separator;
         private ToolStripMenuItem TSMI_UUT_Statistics;
         private ToolStripMenuItem TSMI_UUT_StatisticsDisplay;
         private ToolStripMenuItem TSMI_UUT_StatisticsReset;

@@ -483,10 +483,10 @@ namespace ABT.Test.TestExec {
         #region Form Tool Strip Menu Items
         private void TSMI_Test_Choose_Click(Object sender, EventArgs e) {
             // NOTE: Canonical method to load/unload DLLs in .Net Framework is AppDomain.
-            // - But, AppDomains require marshalling across process boundaries, as AppDomains are their own separate processes.
+            // - But AppDomains require marshalling across process boundaries, as AppDomains are their own separate processes.
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
-            // - .Net instead provides AssemblyLoadContext, which will be perfect for this app, but isn't available in .Net Framework.
-            // - Thus, this compromise.
+            // - .Net instead provides AssemblyLoadContext which would be perfect for this app...but isn't available in .Net Framework.
+            // - Thus this compromise.
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
