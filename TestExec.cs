@@ -24,7 +24,7 @@ using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.Data;
 using ABT.Test.TestLib.Miscellaneous;
-// TODO:  Soon; evaluate Keysight OpenTAP as potential long-term replacement for TestExec/TestLib/TestPlan.  https://opentap.io/.
+// TODO:  Eventually; evaluate Keysight OpenTAP as potential option in addition to TestExec/TestLib/TestPlan.  https://opentap.io/.
 // - Briefly evaluated previously; time for reevaluation.
 // TODO:  Eventually; GitHub automated workflows; CI/CD including automated deployment to subscribed TestExec PCs (assuming its possible).
 // NOTE:  Recommend using Microsoft's Visual Studio Code to develop/debug Tests based closed source/proprietary projects:
@@ -485,39 +485,30 @@ namespace ABT.Test.TestExec {
             // NOTE: Canonical method to load/unload DLLs in .Net Framework is AppDomain.
             // - But AppDomains require marshalling across process boundaries, as AppDomains are their own separate processes.
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
-            // - .Net instead provides AssemblyLoadContext which would be perfect for this app...but isn't available in .Net Framework.
+            // - .Net instead provides AssemblyLoadContext which would be perfect for TestExec...but isn't available in .Net Framework.
             // - Thus this compromise.
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
+                Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardError = false,
+                RedirectStandardOutput = false
+            };
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = Path.GetDirectoryName(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
-                openFileDialog.Filter = "TestPlan Programs|*.exe";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
-                        Arguments = $"\"{AppDomain.CurrentDomain.FriendlyName}\" \"{openFileDialog.FileName}\"",
-                        // TODO:  Pass in process.ID from TestExec.
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = false,
-                        RedirectStandardOutput = false
-                    };
-
-                    Process process = Process.Start(processStartInfo);
-                    Int32 iterations = 0;
-                    Cursor.Current = Cursors.WaitCursor;
-                    while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
-                        Console.WriteLine("Waiting for main window to open..."); // TODO: write this to status bar.
-                        Thread.Sleep(500);
-                        iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
-                        process.Refresh();
-                    }
-                    Cursor.Current = Cursors.Default;
-                    if (process.MainWindowHandle != IntPtr.Zero) Application.Exit();
-                    else {
-                        _ = MessageBox.Show(ActiveForm, $"Non-existent Window handle for '{processStartInfo.FileName}'.{Environment.NewLine}{Environment.NewLine}" +
-                            "Please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
+            Process process = Process.Start(processStartInfo);
+            Int32 iterations = 0;
+            Cursor.Current = Cursors.WaitCursor;
+            while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
+                // TODO: Soon; display visual progress bar.
+                Thread.Sleep(500);
+                iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
+                process.Refresh();
+            }
+            Cursor.Current = Cursors.Default;
+            if (process.MainWindowHandle != IntPtr.Zero) Application.Exit();
+            else {
+                _ = MessageBox.Show(ActiveForm, $"Non-existent Window handle for '{processStartInfo.FileName}'.{Environment.NewLine}{Environment.NewLine}" +
+                    "Please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void TSMI_Test_SaveResults_Click(Object sender, EventArgs e) {

@@ -218,6 +218,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_Choose.Name = "TSMI_Test_Choose";
             this.TSMI_Test_Choose.Size = new System.Drawing.Size(228, 30);
             this.TSMI_Test_Choose.Text = "&Choose";
+            this.TSMI_Test_Choose.ToolTipText = "Closes current TestPlan & open another.";
             this.TSMI_Test_Choose.Click += new System.EventHandler(this.TSMI_Test_Choose_Click);
             // 
             // TSMI_Test_SaveResults
@@ -240,6 +241,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_Exit.Name = "TSMI_Test_Exit";
             this.TSMI_Test_Exit.Size = new System.Drawing.Size(228, 30);
             this.TSMI_Test_Exit.Text = "&Exit";
+            this.TSMI_Test_Exit.ToolTipText = "Close TestPlan.";
             this.TSMI_Test_Exit.Click += new System.EventHandler(this.TSMI_Test_Exit_Click);
             // 
             // TSMI_Apps
@@ -498,7 +500,7 @@ namespace ABT.Test.TestExec {
             // TSMI_UUT_eDocs
             // 
             this.TSMI_UUT_eDocs.Name = "TSMI_UUT_eDocs";
-            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(154, 26);
+            this.TSMI_UUT_eDocs.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_eDocs.Text = "&eDocs";
             this.TSMI_UUT_eDocs.ToolTipText = "UUT\'s P: drive eDocs folder.";
             this.TSMI_UUT_eDocs.Click += new System.EventHandler(this.TSMI_UUT_eDocs_Click);
@@ -508,15 +510,15 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_Manuals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TSMI_UUT_ManualsInstruments});
             this.TSMI_UUT_Manuals.Name = "TSMI_UUT_Manuals";
-            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(154, 26);
+            this.TSMI_UUT_Manuals.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_Manuals.Text = "&Manuals";
             // 
             // TSMI_UUT_ManualsInstruments
             // 
             this.TSMI_UUT_ManualsInstruments.Name = "TSMI_UUT_ManualsInstruments";
-            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(168, 26);
+            this.TSMI_UUT_ManualsInstruments.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_ManualsInstruments.Text = "&Instruments";
-            this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really bored...";
+            this.TSMI_UUT_ManualsInstruments.ToolTipText = "...really, really bored...";
             this.TSMI_UUT_ManualsInstruments.Click += new System.EventHandler(this.TSMI_UUT_ManualsInstruments_Click);
             // 
             // TSMI_UUT_Statistics
@@ -525,21 +527,23 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_StatisticsDisplay,
             this.TSMI_UUT_StatisticsReset});
             this.TSMI_UUT_Statistics.Name = "TSMI_UUT_Statistics";
-            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(154, 26);
+            this.TSMI_UUT_Statistics.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_Statistics.Text = "&Statistics";
             // 
             // TSMI_UUT_StatisticsDisplay
             // 
             this.TSMI_UUT_StatisticsDisplay.Name = "TSMI_UUT_StatisticsDisplay";
-            this.TSMI_UUT_StatisticsDisplay.Size = new System.Drawing.Size(141, 26);
+            this.TSMI_UUT_StatisticsDisplay.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_StatisticsDisplay.Text = "&Display";
+            this.TSMI_UUT_StatisticsDisplay.ToolTipText = "How\'re we doing?";
             this.TSMI_UUT_StatisticsDisplay.Click += new System.EventHandler(this.TSMI_UUT_StatisticsDisplay_Click);
             // 
             // TSMI_UUT_StatisticsReset
             // 
             this.TSMI_UUT_StatisticsReset.Name = "TSMI_UUT_StatisticsReset";
-            this.TSMI_UUT_StatisticsReset.Size = new System.Drawing.Size(141, 26);
+            this.TSMI_UUT_StatisticsReset.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_StatisticsReset.Text = "&Reset";
+            this.TSMI_UUT_StatisticsReset.ToolTipText = "Nothing like starting over...";
             this.TSMI_UUT_StatisticsReset.CheckStateChanged += new System.EventHandler(this.TSMI_UUT_StatisticsReset_Click);
             // 
             // TSMI_UUT_TestData
@@ -548,7 +552,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_UUT_TestDataP_DriveTDR_Folder,
             this.TSMI_UUT_TestDataSQL_ReportingAndQuerying});
             this.TSMI_UUT_TestData.Name = "TSMI_UUT_TestData";
-            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(154, 26);
+            this.TSMI_UUT_TestData.Size = new System.Drawing.Size(224, 26);
             this.TSMI_UUT_TestData.Text = "&Test Data";
             // 
             // TSMI_UUT_TestDataP_DriveTDR_Folder
@@ -580,15 +584,17 @@ namespace ABT.Test.TestExec {
             // TSMI_About_TestExec
             // 
             this.TSMI_About_TestExec.Name = "TSMI_About_TestExec";
-            this.TSMI_About_TestExec.Size = new System.Drawing.Size(148, 26);
+            this.TSMI_About_TestExec.Size = new System.Drawing.Size(224, 26);
             this.TSMI_About_TestExec.Text = "Test&Exec";
+            this.TSMI_About_TestExec.ToolTipText = "TestExec\'s details.";
             this.TSMI_About_TestExec.Click += new System.EventHandler(this.TSMI_About_TestExec_Click);
             // 
             // TSMI_About_TestPlan
             // 
             this.TSMI_About_TestPlan.Name = "TSMI_About_TestPlan";
-            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(148, 26);
+            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(224, 26);
             this.TSMI_About_TestPlan.Text = "Test&Plan";
+            this.TSMI_About_TestPlan.ToolTipText = "TestPlan\'s details.";
             this.TSMI_About_TestPlan.Click += new System.EventHandler(this.TSMI_About_TestPlan_Click);
             // 
             // StatusStrip
