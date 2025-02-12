@@ -489,7 +489,7 @@ namespace ABT.Test.TestExec {
             // - Thus this compromise.
             ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
                 Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
-                CreateNoWindow = true,
+                CreateNoWindow = false,
                 UseShellExecute = false,
                 RedirectStandardError = false,
                 RedirectStandardOutput = false
@@ -501,15 +501,13 @@ namespace ABT.Test.TestExec {
             while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
                 // TODO: Soon; display visual progress bar.
                 Thread.Sleep(500);
-                iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
                 process.Refresh();
+                iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
             }
             Cursor.Current = Cursors.Default;
             if (process.MainWindowHandle != IntPtr.Zero) Application.Exit();
-            else {
-                _ = MessageBox.Show(ActiveForm, $"Non-existent Window handle for '{processStartInfo.FileName}'.{Environment.NewLine}{Environment.NewLine}" +
+            else _ = MessageBox.Show(ActiveForm, $"Non-existent Window handle for '{processStartInfo.FileName}'.{Environment.NewLine}{Environment.NewLine}" +
                     "Please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
         private void TSMI_Test_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
