@@ -487,6 +487,7 @@ namespace ABT.Test.TestExec {
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
             // - .Net instead provides AssemblyLoadContext which would be perfect for TestExec...but isn't available in .Net Framework.
             // - Thus this compromise.
+            SystemReset();
             ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
                 Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
                 CreateNoWindow = false,
@@ -494,19 +495,8 @@ namespace ABT.Test.TestExec {
                 RedirectStandardError = false,
                 RedirectStandardOutput = false
             };
-
-            Process process = Process.Start(processStartInfo);
-            Int32 iterations = 0;
-            Cursor.Current = Cursors.WaitCursor;
-            while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
-                Thread.Sleep(500);
-                process.Refresh();
-                iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.
-            }
-            Cursor.Current = Cursors.Default;
-            if (process.MainWindowHandle != IntPtr.Zero) Application.Exit();
-            else _ = MessageBox.Show(ActiveForm, $"Non-existent Window handle for '{processStartInfo.FileName}'.{Environment.NewLine}{Environment.NewLine}" +
-                    "Please contact Test Engineering.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _ = Process.Start(processStartInfo);
+            Application.Exit();
         }
         private void TSMI_Test_SaveResults_Click(Object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog {
