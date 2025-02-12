@@ -499,7 +499,6 @@ namespace ABT.Test.TestExec {
             Int32 iterations = 0;
             Cursor.Current = Cursors.WaitCursor;
             while (process.MainWindowHandle == IntPtr.Zero && iterations <= 60) {
-                // TODO: Soon; display visual progress bar.
                 Thread.Sleep(500);
                 process.Refresh();
                 iterations++; // 60 iterations with 0.5 second sleeps = 30 seconds max.

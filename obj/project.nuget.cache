@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RG1dU0j0DoQ=",
+  "dgSpecHash": "BMyOH987kFU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\phils\\source\\repos\\ABT\\Test\\TestExec\\TestExec.csproj",
+  "projectFilePath": "C:\\Users\\phils\\Source\\Repos\\ABT\\Test\\TestExec\\TestExec.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\phils\\.nuget\\packages\\microsoft-windowsapicodepack-core\\1.1.5\\microsoft-windowsapicodepack-core.1.1.5.nupkg.sha512",
     "C:\\Users\\phils\\.nuget\\packages\\microsoft-windowsapicodepack-shell\\1.1.5\\microsoft-windowsapicodepack-shell.1.1.5.nupkg.sha512",
