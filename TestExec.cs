@@ -216,7 +216,7 @@ namespace ABT.Test.TestExec {
             ButtonEmergencyStopReset(enabled: true);
             ButtonSelect.Enabled = false;
             ButtonRunReset(enabled: false);
-            TSMI_Test_Exit.Enabled = false;
+            TSMI_Test.Enabled = false;
             TSMI_System_SelfTests.Enabled = false;
             TSMI_System_BarcodeScannerDiscovery.Enabled = false;
             TSMI_UUT_Statistics.Enabled = false;
@@ -226,7 +226,7 @@ namespace ABT.Test.TestExec {
         private void FormModeWait() {
             ButtonCancelReset(enabled: false);
             ButtonEmergencyStopReset(enabled: false);
-            TSMI_Test_Exit.Enabled = true;
+            TSMI_Test.Enabled = true;
             ButtonSelect.Enabled = true;
             ButtonRunReset(enabled: testSequence != null);
             TSMI_System_SelfTests.Enabled = true;
@@ -377,7 +377,8 @@ namespace ABT.Test.TestExec {
                         developer.EMailAddress = (String)task;
                         if (!String.Equals(developer.EMailAddress, String.Empty)) testDefinition.Development.EMailAddresses += $"{developer.EMailAddress}; ";
                     }
-                } catch { };
+                } catch { }
+                ;
                 if (testDefinition.Development.EMailAddresses.EndsWith("; ")) testDefinition.Development.EMailAddresses = testDefinition.Development.EMailAddresses.Substring(0, testDefinition.Development.EMailAddresses.Length - 2);
             }
         }
