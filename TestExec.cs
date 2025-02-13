@@ -488,7 +488,6 @@ namespace ABT.Test.TestExec {
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
             // - .Net instead provides AssemblyLoadContext which would be perfect for TestExec...but isn't available in .Net Framework.
             // - Thus this compromise.
-            SystemReset();
             ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
                 Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
                 CreateNoWindow = false,
