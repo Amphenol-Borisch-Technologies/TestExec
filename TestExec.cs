@@ -667,6 +667,7 @@ namespace ABT.Test.TestExec {
                     TestIndices.Method = method;
                     try {
                         method.Value = await Task.Run(() => MethodRun(method));
+                        method.LogString = method.Log.ToString(); // NOTE:  XmlSerializer doesn't support [OnSerializing] attribute, so have to explicitly invoke LogConvert().
                         method.Event = MethodEvaluate(method);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                             SystemReset();
