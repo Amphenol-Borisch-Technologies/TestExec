@@ -181,6 +181,10 @@ namespace ABT.Test.TestExec.Logging {
                     XmlAttributes xmlAttributes;
                     XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
                     xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(UUT), nameof(UUT.Documentation), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(TestOperation), nameof(TestOperation.ProductionTest), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
                     xmlAttributeOverrides.Add(typeof(Method), nameof(Method.CancelNotPassed), xmlAttributes);
                     xmlAttributes = new XmlAttributes { XmlIgnore = true };
                     xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.CancelNotPassed), xmlAttributes);
