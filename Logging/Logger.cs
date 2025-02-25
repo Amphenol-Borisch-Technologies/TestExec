@@ -10,22 +10,22 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.Data;
-using Windows.Data.Xml.Dom;
+using System.Data.SqlClient;
 
-// TODO:  Eventually; persist test data into PostgreSQL on IS server:
-// Only XML and PostgreSQL persisted test data is legitimate.
+// TODO:  Eventually; persist test data into Microsoft SQL Server Standard on IS server:
+// Only XML and SQL Server persisted test data is legitimate.
 //   - RichTextBoxSink test data are failures only, for trouble-shooting.
 //     - Can be exported as RTF if desired, then printed.
 //
-// Local PostgreSQL installations on all TestExec PCs in case LAN, IS Server or PostgreSQL server are down.
-//   - Local PostgreSQL exports test data periodically via Microsoft Task Scheduler to main PostgreSQL RBDMS, then deletes its local data.
+// Local SQL Server Express installations on all TestExec PCs in case LAN, IS Server or SQL Server Standard are down.
+//   - Local SQL Server Express  exports test data periodically via Microsoft Task Scheduler to main SQL Server Standard RBDMS, then deletes its local data.
 //
-// Create Microsoft Access app for querying & reporting PostgreSQL RBDMS:
-//   - PostgreSQL test data accessible as:
+// Create Microsoft Access app for querying & reporting SQL Server Standard RBDMS:
+//   - SQL Server Standard test data accessible as:
 //     - Read-only for all ABT personnel.
 //     - Read-write for Test Engineers & Technicians.
 //
-// PostgreSQL can integrate with Microsoft Active Directory for user access.
+// SQL Server Standard can integrate with Microsoft Active Directory for user access.
 //   - Include standard queries & reports.
 //     - Queries exportable as .CSV files for Excel.
 //     - Reports exportable solely as .PDF files for Acrobat Reader.
@@ -113,7 +113,8 @@ namespace ABT.Test.TestExec.Logging {
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{nameof(TestGroup.Methods)}:");
-            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) { stringBuilder.AppendLine($"{SPACES_2}{testGroup.Classname}, {testGroup.Description}");
+            foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
+                stringBuilder.AppendLine($"{SPACES_2}{testGroup.Classname}, {testGroup.Description}");
                 foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"{SPACES_4}{method.Name}".PadRight(PR + SPACES_4.Length) + $": {method.Description}");
             }
             Log.Information(stringBuilder.ToString());
@@ -153,7 +154,21 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         private static void StopSQL() {
-            // TODO:  Eventually; PostgreSQL.
+            using (StringWriter stringWriter = new StringWriter()) {
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
+                    xmlSerializer.Serialize(xmlWriter, testSequence);
+                    using (SqlConnection connection = new SqlConnection("connectionString")) {
+                        String query = "INSERT INTO EmployeesXml (EmployeeData) VALUES (@EmployeeData)";
+                        using (SqlCommand command = new SqlCommand(query, connection)) {
+                            command.Parameters.AddWithValue("@EmployeeData", xmlWriter);
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            connection.Close();
+                        }
+                    }
+                }
+            }
         }
 
         private static void StopXML() {
@@ -177,24 +192,26 @@ namespace ABT.Test.TestExec.Logging {
             using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{testSequence.Event}{_xml}", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
-
-                    XmlAttributes xmlAttributes;
-                    XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
-                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
-                    xmlAttributeOverrides.Add(typeof(UUT), nameof(UUT.Documentation), xmlAttributes);
-                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
-                    xmlAttributeOverrides.Add(typeof(TestOperation), nameof(TestOperation.ProductionTest), xmlAttributes);
-                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
-                    xmlAttributeOverrides.Add(typeof(Method), nameof(Method.CancelNotPassed), xmlAttributes);
-                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
-                    xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.CancelNotPassed), xmlAttributes);
-                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
-                    xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.Independent), xmlAttributes);
-
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), xmlAttributeOverrides);
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
                     xmlSerializer.Serialize(xmlTextWriter, testSequence);
                 }
             }
+        }
+
+        private static XmlAttributeOverrides GetOverrides() {
+            XmlAttributes xmlAttributes;
+            XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
+            xmlAttributes = new XmlAttributes { XmlIgnore = true };
+            xmlAttributeOverrides.Add(typeof(UUT), nameof(UUT.Documentation), xmlAttributes);
+            xmlAttributes = new XmlAttributes { XmlIgnore = true };
+            xmlAttributeOverrides.Add(typeof(TestOperation), nameof(TestOperation.ProductionTest), xmlAttributes);
+            xmlAttributes = new XmlAttributes { XmlIgnore = true };
+            xmlAttributeOverrides.Add(typeof(Method), nameof(Method.CancelNotPassed), xmlAttributes);
+            xmlAttributes = new XmlAttributes { XmlIgnore = true };
+            xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.CancelNotPassed), xmlAttributes);
+            xmlAttributes = new XmlAttributes { XmlIgnore = true };
+            xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.Independent), xmlAttributes);
+            return xmlAttributeOverrides;
         }
         #endregion Private
     }
