@@ -633,7 +633,7 @@ namespace ABT.Test.TestExec {
             stringBuilder.AppendLine($"\t{nameof(Name)}".PadRight(PR) + $": {assembly.GetName().Name}");
             stringBuilder.AppendLine($"\t{nameof(Version)}".PadRight(PR) + $": {assembly.GetName().Version}");
             stringBuilder.AppendLine($"\tBuilt".PadRight(PR) + $": {BuildDate(assembly.GetName().Version)}");
-            if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.Revision}, {testDefinition.Date:d}");
+            if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.GUID}, {testDefinition.Date:d}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
@@ -667,6 +667,7 @@ namespace ABT.Test.TestExec {
                     TestIndices.Method = method;
                     try {
                         method.Value = await Task.Run(() => MethodRun(method));
+                        method.LogString = method.Log.ToString(); // NOTE:  XmlSerializer doesn't support [OnSerializing] attribute, so have to explicitly invoke LogConvert().
                         method.Event = MethodEvaluate(method);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                             SystemReset();

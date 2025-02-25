@@ -10,6 +10,7 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.TestConfiguration;
 using static ABT.Test.TestLib.Data;
+using Windows.Data.Xml.Dom;
 
 // TODO:  Eventually; persist test data into PostgreSQL on IS server:
 // Only XML and PostgreSQL persisted test data is legitimate.
@@ -176,7 +177,21 @@ namespace ABT.Test.TestExec.Logging {
             using (FileStream fileStream = new FileStream($"{xmlFolder}\\{xmlBaseName}_{++maxNumber}_{testSequence.Event}{_xml}", FileMode.CreateNew)) {
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileStream, new UTF8Encoding(true))) {
                     xmlTextWriter.Formatting = Formatting.Indented;
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence));
+
+                    XmlAttributes xmlAttributes;
+                    XmlAttributeOverrides xmlAttributeOverrides = new XmlAttributeOverrides();
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(UUT), nameof(UUT.Documentation), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(TestOperation), nameof(TestOperation.ProductionTest), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(Method), nameof(Method.CancelNotPassed), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.CancelNotPassed), xmlAttributes);
+                    xmlAttributes = new XmlAttributes { XmlIgnore = true };
+                    xmlAttributeOverrides.Add(typeof(TestGroup), nameof(TestGroup.Independent), xmlAttributes);
+
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), xmlAttributeOverrides);
                     xmlSerializer.Serialize(xmlTextWriter, testSequence);
                 }
             }
