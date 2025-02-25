@@ -633,7 +633,7 @@ namespace ABT.Test.TestExec {
             stringBuilder.AppendLine($"\t{nameof(Name)}".PadRight(PR) + $": {assembly.GetName().Name}");
             stringBuilder.AppendLine($"\t{nameof(Version)}".PadRight(PR) + $": {assembly.GetName().Version}");
             stringBuilder.AppendLine($"\tBuilt".PadRight(PR) + $": {BuildDate(assembly.GetName().Version)}");
-            if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.GUID}, {testDefinition.Date:d}");
+            if (isTestPlan) stringBuilder.AppendLine($"\t{nameof(TestDefinition)} : {testDefinition.Date:d}");
             AssemblyCopyrightAttribute assemblyCopyrightAttribute = (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute));
             String copyRight = assemblyCopyrightAttribute is null ? "© Amphenol Borisch Technologies" : assemblyCopyrightAttribute.Copyright;
             stringBuilder.AppendLine($"\t{copyRight}{Environment.NewLine}{Environment.NewLine}");
