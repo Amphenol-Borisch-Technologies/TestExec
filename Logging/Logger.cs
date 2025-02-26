@@ -158,13 +158,12 @@ namespace ABT.Test.TestExec.Logging {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
                     xmlSerializer.Serialize(xmlWriter, testSequence);
-                    using (SqlConnection connection = new SqlConnection("connectionString")) {
-                        String query = "INSERT INTO EmployeesXml (EmployeeData) VALUES (@EmployeeData)";
-                        using (SqlCommand command = new SqlCommand(query, connection)) {
-                            command.Parameters.AddWithValue("@EmployeeData", xmlWriter);
-                            connection.Open();
-                            command.ExecuteNonQuery();
-                            connection.Close();
+
+                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)testDefinition.TestData.Item).ConnectionString)) {
+                        using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
+                            sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
+                            sqlConnection.Open();
+                            sqlCommand.ExecuteNonQuery();
                         }
                     }
                 }
