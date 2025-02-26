@@ -158,6 +158,7 @@ namespace ABT.Test.TestExec.Logging {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
                     xmlSerializer.Serialize(xmlWriter, testSequence);
+                    xmlWriter.Flush();
 
                     using (SqlConnection sqlConnection = new SqlConnection(((SQL)testDefinition.TestData.Item).ConnectionString)) {
                         using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
