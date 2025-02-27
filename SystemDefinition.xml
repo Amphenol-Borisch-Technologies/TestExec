@@ -10,7 +10,16 @@
     <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestPlan" />
   </Development>
 
-  <BarcodeScanner ID="\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner" Detail="Honeywell Voyager USB 1200g corded Barcode Scanner" />
+  <TestData>
+    <XML Folder="P:\Test\TDR\" />
+    <!--
+    <SQL ConnectionString="Server=ABT002780\SQLEXPRESS;Database=TestData;Integrated Security=true;" />
+    -->
+  </TestData>
+
+  <BarcodeReader ID="\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner" 
+                 Detail="Honeywell Voyager USB 1200g corded Barcode Scanner" 
+                 Folder="P:\Test\Engineers\Equipment_Manuals\TestExec\Honeywell_Voyager_1200g" />
   <!-- BarcodeScanner's  is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
         When a TestDefinition.xml file specifies SerialNumberEntry="Barcode":
 				- Class SerialNumberDialog is the Barcode Scanning method for prompting test operators for UUT Serial Numbers.
@@ -30,24 +39,18 @@
 
   <Apps>
     <Keysight>
-      <BenchVue>C:\TBD</BenchVue>
       <CommandExpert>C:\Program Files (x86)\Keysight\Command Expert\CommandExpert.exe</CommandExpert>
       <ConnectionExpert>C:\Program Files\Keysight\IO Libraries Suite\ConnectionExpert.exe</ConnectionExpert>
     </Keysight>
     <Microsoft>
-      <SQLServerManagementStudio>C:\TBD</SQLServerManagementStudio>
-      <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe</VisualStudio>
+      <SQLServerManagementStudio>C:\Program Files (x86)\Microsoft SQL Server Management Studio 20\Common7\IDE\Ssms.exe</SQLServerManagementStudio>
+      <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe</VisualStudio>
       <VisualStudioCode>C:\Program Files\Microsoft VS Code\Code.exe</VisualStudioCode>
       <XMLNotepad>C:\Program Files (x86)\LovettSoftware\XmlNotepad\XmlNotepad.exe</XMLNotepad>
     </Microsoft>
   </Apps>
 
-  <Folders>
-    <BarcodeScanner>P:\Test\Engineers\Equipment_Manuals\TestExec\Honeywell_Voyager_1200g</BarcodeScanner>
-    <Instruments>P:\Test\Engineers\Equipment_Manuals</Instruments>
-  </Folders>
-
-  <Instruments>
+  <Instruments Folder="P:\Test\Engineers\Equipment_Manuals" >
     <!--
 	Instruments:
   - List all stationary/permanently installed instruments for this test system.

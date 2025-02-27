@@ -81,6 +81,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SystemDefinition.cs">
+      <DependentUpon>SystemDefinition.xsd</DependentUpon>
+    </Compile>
     <Compile Include="TestExec.cs">
       <SubType>Form</SubType>
     </Compile>

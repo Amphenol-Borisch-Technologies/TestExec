@@ -155,7 +155,7 @@ namespace ABT.Test.TestExec {
                 TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (testDefinition.TestData.Item is SQL);
 
                 _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
-                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.SerialNumberRegEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
+                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.RegularEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
                 if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarcodeScanner").Attribute("ID").Value);
             }
 
@@ -531,7 +531,6 @@ namespace ABT.Test.TestExec {
                 return (openFileDialog.ShowDialog(), openFileDialog.FileName);
             }
         }
-        private void TSMI_Apps_KeysightBenchVue_Click(Object sender, EventArgs e) { OpenApp("Keysight", "BenchVue"); }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
 
@@ -596,7 +595,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
         }
-        private void TSMI_UUT_ManualsInstruments_Click(Object sender, EventArgs e) {
+        private void TSMI_UUT_Manuals_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.Development.Documentation) OpenFolder(documentation.Folder);
         }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
