@@ -9,7 +9,7 @@
     <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestLib" />
     <Repository URL="https://github.com/Amphenol-Borisch-Technologies/TestPlan" />
   </Development>
-  
+
   <BarcodeScanner ID="\\?\HID#VID_0C2E&amp;PID_0A07&amp;MI_00#7&amp;1f27e379&amp;0&amp;0000#{c243ffbd-3afc-45e9-b3d3-2ba18bc7ebc5}\posbarcodescanner" Detail="Honeywell Voyager USB 1200g corded Barcode Scanner" />
   <!-- BarcodeScanner's  is the identifier used to find & claim the Barcode Scanner used in class SerialNumberDialog.
         When a TestDefinition.xml file specifies SerialNumberEntry="Barcode":
@@ -27,13 +27,13 @@
               - Both "ReadMe" & "User's Guides" documents reside in Logging folder for convenience.
         NOTE:  Barcode Scanner must also be programmed to read the Code39 Barcode Symbology of ABT's Serial Numbers.
 	-->
-  
+
   <Apps>
-		<Keysight>
+    <Keysight>
       <BenchVue>C:\TBD</BenchVue>
       <CommandExpert>C:\Program Files (x86)\Keysight\Command Expert\CommandExpert.exe</CommandExpert>
       <ConnectionExpert>C:\Program Files\Keysight\IO Libraries Suite\ConnectionExpert.exe</ConnectionExpert>
-		</Keysight>
+    </Keysight>
     <Microsoft>
       <SQLServerManagementStudio>C:\TBD</SQLServerManagementStudio>
       <VisualStudio>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe</VisualStudio>
@@ -74,11 +74,11 @@
 	- https://www.ni.com/docs/en-US/bundle/labview/page/lvinstio/visa_resource_name_generic.html.
 	- https://www.ivifoundation.org/downloads/Architecture%20Specifications/vpp43_2022-05-19.pdf.
   -->
+    <!-- 
     <Instrument ID="WG1_33120A"   Detail="Keysight 33120A 15MHz Function/Arbitray Waveform Generator" Address="GPIB0::10::INSTR" NameSpacedClassName="ABT.Test.TestLib.InstrumentDrivers.Generic.SCPI_NET" />
-<!-- 
+-->
     <Instrument ID="MSMU1_34980A" Detail="Agilent 34980A Multifunction Switch/Measure Unit"        Address="GPIB0::2::INSTR" NameSpacedClassName="ABT.Test.TestLib.InstrumentDrivers.Multifunction.MSMU_34980A_SCPI_NET" />
     <Instrument ID="PS1ε2_E3649A" Detail="Agilent E3649A Dual Output DC Power Supply"              Address="GPIB0::1::INSTR" NameSpacedClassName="ABT.Test.TestLib.InstrumentDrivers.PowerSupplies.PS_E3649A_SCPI_NET" />
     <Instrument ID="PS3_E3634A"   Detail="Keysight E3634A Single Ouput Dual Range DC Power Supply" Address="GPIB0::3::INSTR" NameSpacedClassName="ABT.Test.TestLib.InstrumentDrivers.PowerSupplies.PS_E3634A_SCPI_NET" />
--->
   </Instruments>
 </SystemDefinition>
