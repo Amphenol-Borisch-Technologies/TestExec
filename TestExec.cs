@@ -21,7 +21,7 @@ using Windows.Devices.PointOfService;
 using ABT.Test.TestExec.Logging;
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
-using ABT.Test.TestLib.TestConfiguration;
+using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
 using ABT.Test.TestLib.Miscellaneous;
 // TODO:  Eventually; evaluate Keysight OpenTAP as potential option in addition to TestExec/TestLib/TestPlan.  https://opentap.io/.
@@ -139,7 +139,6 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
-            SystemDefinitionXML = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\SystemDefinition.xml";
             if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
 
@@ -148,15 +147,15 @@ namespace ABT.Test.TestExec {
 
             InstrumentDrivers = GetInstrumentDriversTestDefinition();
 
-            TSMI_UUT_TestData.Enabled = testDefinition.TestData.IsEnabled();
+            TSMI_UUT_TestData.Enabled = testDefinition.SerialNumberEntry.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
-                if (!(testDefinition.TestData.Item is XML) && !(testDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testDefinition.TestData.Item)}'.");
-                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (testDefinition.TestData.Item is XML);
-                TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (testDefinition.TestData.Item is SQL);
+                if (!(systemDefinition.TestData.Item is XML) && !(systemDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(systemDefinition.TestData.Item)}'.");
+                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (systemDefinition.TestData.Item is XML);
+                TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (systemDefinition.TestData.Item is SQL);
 
-                _serialNumberRegEx = ((SerialNumber)testDefinition.TestData.Item).SerialNumberRegEx;
-                if (RegexInvalid(_serialNumberRegEx)) throw new ArgumentException($"Invalid {nameof(SerialNumber.RegularEx)} '{_serialNumberRegEx}' in file '{TestDefinitionXML}'.");
-                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) _serialNumberDialog = new SerialNumberDialog(_serialNumberRegEx, ((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat, XElement.Load(SystemDefinitionXML).Element("BarcodeScanner").Attribute("ID").Value);
+                if (RegexInvalid(testDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testDefinition.SerialNumberEntry.RegularEx}' in file '{TestDefinitionXML}'.");
+                if (testDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) _serialNumberDialog = new SerialNumberDialog(testDefinition.SerialNumberEntry.RegularEx, testDefinition.SerialNumberEntry.Format, systemDefinition.BarcodeReader.ID);
+
             }
 
             StatusTimer.Elapsed += StatusTimeUpdate;
@@ -282,12 +281,10 @@ namespace ABT.Test.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
-        private void OpenApp(String CompanyID, String AppID, String Arguments = "") {
-            String app = XElement.Load(SystemDefinitionXML).Element("Apps").Element(CompanyID).Element(AppID).Value;
-
-            if (File.Exists(app)) {
+        private void OpenApp(String AppPath, String Arguments = "") {
+            if (File.Exists(AppPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = $"\"{app}\"",
+                    FileName = $"\"{AppPath}\"",
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
                     Arguments = $"\"{Arguments}\""
@@ -295,9 +292,9 @@ namespace ABT.Test.TestExec {
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
                 _ = Process.Start(psi);
-            } else InvalidPathError(app);
+            } else InvalidPathError(AppPath);
         }
-
+        
         private void OpenFolder(String FolderPath) {
             if (Directory.Exists(FolderPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -444,18 +441,18 @@ namespace ABT.Test.TestExec {
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
-            if (testDefinition.TestData.IsEnabled()) {
+            if (testDefinition.SerialNumberEntry.IsEnabled()) {
                 String serialNumber;
-                if (((SerialNumber)testDefinition.TestData.Item).SerialNumberEntry is SerialNumberEntry.Barcode) {
+                if (testDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) {
                     _serialNumberDialog.Set(testSequence.SerialNumber);
                     serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                     _serialNumberDialog.Hide();
                 } else {
                     serialNumber = Interaction.InputBox(
                         Prompt: $"Please enter Serial Number in below format:{Environment.NewLine}{Environment.NewLine}" +
-                        $"{((SerialNumber)testDefinition.TestData.Item).SerialNumberFormat}",
+                        $"{testDefinition.SerialNumberEntry.Format}",
                         Title: "Enter Serial Number", DefaultResponse: testSequence.SerialNumber).Trim().ToUpper();
-                    serialNumber = Regex.IsMatch(serialNumber, _serialNumberRegEx) ? serialNumber : String.Empty;
+                    serialNumber = Regex.IsMatch(serialNumber, testDefinition.SerialNumberEntry.RegularEx) ? serialNumber : String.Empty;
                 }
                 if (String.Equals(serialNumber, String.Empty)) return;
                 testSequence.SerialNumber = serialNumber;
@@ -531,13 +528,13 @@ namespace ABT.Test.TestExec {
                 return (openFileDialog.ShowDialog(), openFileDialog.FileName);
             }
         }
-        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "CommandExpert"); }
-        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp("Keysight", "ConnectionExpert"); }
+        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.CommandExpert); }
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.CommandExpert);}
 
-        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "SQLServerManagementStudio"); }
-        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudio"); }
-        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "VisualStudioCode"); }
-        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp("Microsoft", "XMLNotepad"); }
+        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.SQLServerManagementStudio);}
+        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.VisualStudio);}
+        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.VisualStudioCode);}
+        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.XMLNotepad);}
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
@@ -589,8 +586,8 @@ namespace ABT.Test.TestExec {
             if (passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
-        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("BarcodeScanner")); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(GetFolder("Instruments")); }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(systemDefinition.BarcodeReader.Folder); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(systemDefinition.InstrumentsSystem.Folder); }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
@@ -612,12 +609,13 @@ namespace ABT.Test.TestExec {
             StatusStatisticsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
-            Debug.Assert(testDefinition.TestData.Item is XML);
-            OpenFolder($"{((XML)testDefinition.TestData.Item).Folder}\\{testSequence.TestOperation.NamespaceTrunk}");
+            Debug.Assert(systemDefinition.TestData.Item is XML);
+            OpenFolder($"{((XML)systemDefinition.TestData.Item).Folder}\\{testSequence.TestOperation.NamespaceTrunk}");
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
-            Debug.Assert(testDefinition.TestData.Item is XML);
-        }
+            Debug.Assert(systemDefinition.TestData.Item is SQL);
+            OpenApp(systemDefinition.Apps.Microsoft.SQLServerManagementStudio);
+		}
         private void TSMI_About_TestExec_Click(Object sender, EventArgs e) {
             Development development = Serializing.DeserializeFromFile<Development>(SystemDefinitionXML);
             ShowAbout(Assembly.GetExecutingAssembly(), development);

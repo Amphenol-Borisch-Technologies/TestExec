@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using ABT.Test.TestLib;
-using ABT.Test.TestLib.TestConfiguration;
+using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
 using System.Data.SqlClient;
 
@@ -124,10 +124,10 @@ namespace ABT.Test.TestExec.Logging {
             ReplaceText(ref rtfResults, 0, $"{MESSAGE_UUT_EVENT}", $"{MESSAGE_UUT_EVENT}{testSequence.Event}");
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
-            if (testSequence.IsOperation) {
-                if (testDefinition.TestData.Item is XML) StopXML();
-                else if (testDefinition.TestData.Item is SQL) StopSQL();
-                else throw new ArgumentException($"Unknown {nameof(TestData)} item '{testDefinition.TestData.Item}'.");
+            if (testSequence.IsOperation && testDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
+                if (systemDefinition.TestData.Item is XML) StopXML();
+                else if (systemDefinition.TestData.Item is SQL) StopSQL();
+                else throw new ArgumentException($"Unknown {nameof(TestData)} item '{systemDefinition.TestData.Item}'.");
             }
         }
         #endregion Public Methods
@@ -160,7 +160,7 @@ namespace ABT.Test.TestExec.Logging {
                     xmlSerializer.Serialize(xmlWriter, testSequence);
                     xmlWriter.Flush();
 
-                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)testDefinition.TestData.Item).ConnectionString)) {
+                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)systemDefinition.TestData.Item).ConnectionString)) {
                         using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
                             sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
                             sqlConnection.Open();
@@ -173,7 +173,7 @@ namespace ABT.Test.TestExec.Logging {
 
         private static void StopXML() {
             const String _xml = ".xml";
-            XML xml = (XML)testDefinition.TestData.Item;
+            XML xml = (XML)systemDefinition.TestData.Item;
             String xmlFolder = $"{xml.Folder}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
