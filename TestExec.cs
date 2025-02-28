@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Xml.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -233,8 +232,6 @@ namespace ABT.Test.TestExec {
             TSMI_UUT_Statistics.Enabled = true;
             StatusModeUpdate(MODES.Waiting);
         }
-
-        private String GetFolder(String FolderID) { return XElement.Load(SystemDefinitionXML).Element("Folders").Element(FolderID).Value; }
 
         private static Outlook.MailItem GetMailItem() {
             Outlook.Application outlook;
@@ -610,7 +607,7 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
             Debug.Assert(systemDefinition.TestData.Item is XML);
-            OpenFolder($"{((XML)systemDefinition.TestData.Item).Folder}\\{testSequence.TestOperation.NamespaceTrunk}");
+            OpenFolder($"{((XML)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}");
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(systemDefinition.TestData.Item is SQL);

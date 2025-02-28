@@ -1,5 +1,6 @@
 ﻿#undef VERBOSE
 using System;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -10,7 +11,6 @@ using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://se
 using ABT.Test.TestLib;
 using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
-using System.Data.SqlClient;
 
 // TODO:  Eventually; persist test data into Microsoft SQL Server Standard on IS server:
 // Only XML and SQL Server persisted test data is legitimate.
@@ -173,8 +173,7 @@ namespace ABT.Test.TestExec.Logging {
 
         private static void StopXML() {
             const String _xml = ".xml";
-            XML xml = (XML)systemDefinition.TestData.Item;
-            String xmlFolder = $"{xml.Folder}\\{testSequence.TestOperation.NamespaceTrunk}";
+            String xmlFolder = $"{((XML)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
             // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
