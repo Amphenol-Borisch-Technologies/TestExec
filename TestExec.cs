@@ -525,7 +525,7 @@ namespace ABT.Test.TestExec {
             }
         }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.CommandExpert); }
-        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.CommandExpert);}
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.ConnectionExpert);}
 
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.SQLServerManagementStudio);}
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.VisualStudio);}
