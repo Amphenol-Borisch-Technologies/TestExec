@@ -130,7 +130,6 @@ namespace ABT.Test.TestExec {
         public static System.Timers.Timer StatusTimer = new System.Timers.Timer(10000);
         private const String _serialNumberMostRecent = "MostRecent";
         private const String _NOT_APPLICABLE = "NotApplicable";
-        private readonly String _serialNumberRegEx = null;
         private readonly SerialNumberDialog _serialNumberDialog = null;
 
         protected TestExec(Icon icon, String baseDirectory) {
