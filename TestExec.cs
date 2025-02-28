@@ -277,32 +277,32 @@ namespace ABT.Test.TestExec {
 
         public static String NotImplementedMessageEnum(Type enumType) { return $"Unimplemented Enum item; switch/case must support all items in enum '{String.Join(",", Enum.GetNames(enumType))}'."; }
 
-        private void OpenApp(String AppPath, String Arguments = "") {
-            if (File.Exists(AppPath)) {
+        private void OpenApp(String appPath, String arguments = "") {
+            if (File.Exists(appPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
-                    FileName = $"\"{AppPath}\"",
+                    FileName = $"\"{appPath}\"",
                     WindowStyle = ProcessWindowStyle.Normal,
                     WorkingDirectory = "",
-                    Arguments = $"\"{Arguments}\""
+                    Arguments = String.Equals(arguments, "") ? "" : $"\"{arguments}\""
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
                 _ = Process.Start(psi);
-            } else InvalidPathError(AppPath);
+            } else InvalidPathError(appPath);
         }
         
-        private void OpenFolder(String FolderPath) {
-            if (Directory.Exists(FolderPath)) {
+        private void OpenFolder(String folderPath) {
+            if (Directory.Exists(folderPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
                     FileName = "explorer.exe",
                     WindowStyle = ProcessWindowStyle.Normal,
-                    Arguments = $"\"{FolderPath}\""
+                    Arguments = $"\"{folderPath}\""
                     // Paths with embedded spaces require enclosing double-quotes (").
                     // Even then, simpler 'System.Diagnostics.Process.Start("explorer.exe", path);' invocation fails - thus using ProcessStartInfo class.
                     // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
                 };
                 _ = Process.Start(psi);
-            } else InvalidPathError(FolderPath);
+            } else InvalidPathError(folderPath);
         }
 
         public static Boolean RegexInvalid(String RegularExpression) {
