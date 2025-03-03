@@ -131,6 +131,7 @@ namespace ABT.Test.TestExec {
         private const String _serialNumberMostRecent = "MostRecent";
         private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly SerialNumberDialog _serialNumberDialog = null;
+        // NOTE
 
         protected TestExec(Icon icon, String baseDirectory) {
             InitializeComponent();
