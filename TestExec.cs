@@ -481,7 +481,7 @@ namespace ABT.Test.TestExec {
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
             // - .Net instead provides AssemblyLoadContext which would be perfect for TestExec...but isn't available in .Net Framework.
             // - Thus this compromise.
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(@"""C:\Users\phils\source\repos\ABT\Test\TestChooser\bin\x64\Debug\TestChooser.exe""") {
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(systemDefinition.Apps.ABT.TestChooser) {
                 Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
                 CreateNoWindow = false,
                 UseShellExecute = false,
@@ -511,6 +511,7 @@ namespace ABT.Test.TestExec {
             if (!Validator.ValidSpecification(TestDefinitionXSD: TestDefinitionXSD, TestDefinitionXML)) return;
             Generator.Generate(TestDefinitionXML);
         }
+        private void TSMI_Apps_ABTTestChooser_Click(Object sender, EventArgs e) { TSMI_Test_Choose_Click(sender, e); }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
             if (DR == DialogResult.OK && Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
