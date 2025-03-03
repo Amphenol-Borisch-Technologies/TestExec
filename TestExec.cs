@@ -147,8 +147,8 @@ namespace ABT.Test.TestExec {
 
             TSMI_UUT_TestData.Enabled = testDefinition.SerialNumberEntry.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
-                if (!(systemDefinition.TestData.Item is XML) && !(systemDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(systemDefinition.TestData.Item)}'.");
-                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (systemDefinition.TestData.Item is XML);
+                if (!(systemDefinition.TestData.Item is Files) && !(systemDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(systemDefinition.TestData.Item)}'.");
+                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (systemDefinition.TestData.Item is Files);
                 TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (systemDefinition.TestData.Item is SQL);
 
                 if (RegexInvalid(testDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testDefinition.SerialNumberEntry.RegularEx}' in file '{TestDefinitionXML}'.");
@@ -605,8 +605,8 @@ namespace ABT.Test.TestExec {
             StatusStatisticsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
-            Debug.Assert(systemDefinition.TestData.Item is XML);
-            OpenFolder($"{((XML)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}");
+            Debug.Assert(systemDefinition.TestData.Item is Files);
+            OpenFolder($"{((Files)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}");
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(systemDefinition.TestData.Item is SQL);

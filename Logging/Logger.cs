@@ -125,7 +125,7 @@ namespace ABT.Test.TestExec.Logging {
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
             if (testSequence.IsOperation && testDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
-                if (systemDefinition.TestData.Item is XML) StopXML();
+                if (systemDefinition.TestData.Item is Files) StopFiles();
                 else if (systemDefinition.TestData.Item is SQL) StopSQL();
                 else throw new ArgumentException($"Unknown {nameof(TestData)} item '{systemDefinition.TestData.Item}'.");
             }
@@ -153,27 +153,9 @@ namespace ABT.Test.TestExec.Logging {
             }
         }
 
-        private static void StopSQL() {
-            using (StringWriter stringWriter = new StringWriter()) {
-                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
-                    xmlSerializer.Serialize(xmlWriter, testSequence);
-                    xmlWriter.Flush();
-
-                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)systemDefinition.TestData.Item).ConnectionString)) {
-                        using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
-                            sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
-                            sqlConnection.Open();
-                            sqlCommand.ExecuteNonQuery();
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void StopXML() {
+        private static void StopFiles() {
             const String _xml = ".xml";
-            String xmlFolder = $"{((XML)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
+            String xmlFolder = $"{((Files)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
             // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
@@ -193,6 +175,24 @@ namespace ABT.Test.TestExec.Logging {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
                     xmlSerializer.Serialize(xmlTextWriter, testSequence);
+                }
+            }
+        }
+
+        private static void StopSQL() {
+            using (StringWriter stringWriter = new StringWriter()) {
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
+                    xmlSerializer.Serialize(xmlWriter, testSequence);
+                    xmlWriter.Flush();
+
+                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)systemDefinition.TestData.Item).ConnectionString)) {
+                        using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
+                            sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
+                            sqlConnection.Open();
+                            sqlCommand.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
         }
