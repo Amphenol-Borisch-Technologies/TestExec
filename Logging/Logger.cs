@@ -125,8 +125,8 @@ namespace ABT.Test.TestExec.Logging {
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
             if (testSequence.IsOperation && testPlanDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
-                if (testExecDefinition.TestData.Item is Files) StopFiles();
-                else if (testExecDefinition.TestData.Item is SQL) StopSQL();
+                if (testExecDefinition.TestData.Item is TextFiles) StopTextFiles();
+                else if (testExecDefinition.TestData.Item is SQL_DB) StopSQL_DB();
                 else throw new ArgumentException($"Unknown {nameof(TestData)} item '{testExecDefinition.TestData.Item}'.");
             }
         }
@@ -153,9 +153,9 @@ namespace ABT.Test.TestExec.Logging {
             }
         }
 
-        private static void StopFiles() {
+        private static void StopTextFiles() {
             const String _xml = ".xml";
-            String xmlFolder = $"{((Files)testExecDefinition.TestData.Item).Folder}\\{testPlanDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
+            String xmlFolder = $"{((TextFiles)testExecDefinition.TestData.Item).Folder}\\{testPlanDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
             // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestPlanDefinitionXML.
@@ -179,14 +179,14 @@ namespace ABT.Test.TestExec.Logging {
             }
         }
 
-        private static void StopSQL() {
+        private static void StopSQL_DB() {
             using (StringWriter stringWriter = new StringWriter()) {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings { Encoding = new UTF8Encoding(true), Indent = true })) {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(TestSequence), GetOverrides());
                     xmlSerializer.Serialize(xmlWriter, testSequence);
                     xmlWriter.Flush();
 
-                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)testExecDefinition.TestData.Item).ConnectionString)) {
+                    using (SqlConnection sqlConnection = new SqlConnection(((SQL_DB)testExecDefinition.TestData.Item).ConnectionString)) {
                         using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
                             sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
                             sqlConnection.Open();
