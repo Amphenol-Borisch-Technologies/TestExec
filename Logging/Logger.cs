@@ -20,15 +20,13 @@ using static ABT.Test.TestLib.Data;
 // Local SQL Server Express installations on all TestExec PCs in case LAN, IS Server or SQL Server Standard are down.
 //   - Local SQL Server Express  exports test data periodically via Microsoft Task Scheduler to main SQL Server Standard RBDMS, then deletes its local data.
 //
-// Create Microsoft Access app for querying & reporting SQL Server Standard RBDMS:
-//   - SQL Server Standard test data accessible as:
+// Create C# app for querying SQL Server Standard:
+//   - SQL Server test data accessible as:
 //     - Read-only for all ABT personnel.
 //     - Read-write for Test Engineers & Technicians.
 //
-// SQL Server Standard can integrate with Microsoft Active Directory for user access.
-//   - Include standard queries & reports.
-//     - Queries exportable as .CSV files for Excel.
-//     - Reports exportable solely as .PDF files for Acrobat Reader.
+// SQL Server integrates with Microsoft Active Directory for user access.
+//   - Include standard queries.
 //   - Custom querying/reporting permitted & encouraged.
 
 namespace ABT.Test.TestExec.Logging {

@@ -584,7 +584,7 @@ namespace ABT.Test.TestExec {
             UseWaitCursor = false;
         }
         private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(testExecDefinition.BarcodeReader.Folder); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(testExecDefinition.InstrumentsSystem.Folder); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(testExecDefinition.InstrumentsTestExec.Folder); }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
             foreach (Documentation documentation in testPlanDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
