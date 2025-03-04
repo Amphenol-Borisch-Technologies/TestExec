@@ -276,7 +276,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_ABTValidate.Name = "TSMI_Apps_ABTValidate";
             this.TSMI_Apps_ABTValidate.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_ABTValidate.Text = "&Validate";
-            this.TSMI_Apps_ABTValidate.ToolTipText = "Validate TestDefinition.xml.";
+            this.TSMI_Apps_ABTValidate.ToolTipText = "Validate TestPlanDefinition.xml.";
             this.TSMI_Apps_ABTValidate.Click += new System.EventHandler(this.TSMI_Apps_ABTValidate_Click);
             // 
             // TSMI_Apps_Keysight

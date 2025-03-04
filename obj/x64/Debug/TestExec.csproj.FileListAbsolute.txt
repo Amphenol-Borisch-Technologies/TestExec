@@ -62,7 +62,7 @@ C:\Users\phils\source\repos\ABT\Test\Exec\obj\x64\Debug\TestExec.csproj.CoreComp
 C:\Users\phils\source\repos\ABT\Test\Exec\obj\x64\Debug\TestExec.csproj.Up2Date
 C:\Users\phils\source\repos\ABT\Test\Exec\obj\x64\Debug\TestExec.dll
 C:\Users\phils\source\repos\ABT\Test\Exec\obj\x64\Debug\TestExec.pdb
-C:\Users\phils\source\repos\ABT\Test\TestExec\bin\x64\Debug\Configuration\SystemDefinition.xml
+C:\Users\phils\source\repos\ABT\Test\TestExec\bin\x64\Debug\Configuration\TestExecDefinition.xml
 C:\Users\phils\source\repos\ABT\Test\TestExec\bin\x64\Debug\Resources\EmergencyStop.png
 C:\Users\phils\source\repos\ABT\Test\TestExec\bin\x64\Debug\TestExec.dll
 C:\Users\phils\source\repos\ABT\Test\TestExec\bin\x64\Debug\TestExec.pdb

@@ -76,7 +76,7 @@ namespace ABT.Test.TestExec {
     ///  </item>
     ///  </remarks>
     /// <summary>
-    /// NOTE:  Test Developer is responsible for ensuring Methods can be both safely &amp; correctly called in sequence defined in TestDefinition.xml:
+    /// NOTE:  Test Developer is responsible for ensuring Methods can be both safely &amp; correctly called in sequence defined in TestPlanDefinition.xml:
     /// <para>
     ///        - That is, if Methods execute sequentially as (M1, M2, M3, M4, M5), Test Developer is responsible for ensuring all equipment is
     ///          configured safely &amp; correctly between each Method.
@@ -114,15 +114,15 @@ namespace ABT.Test.TestExec {
     ///          - Permits immediate cancellation if specific condition(s) occur in a Method; perhaps to prevent UUT or equipment damage,
     ///            or simply because futher execution is pointless.
     ///          - Simply throw an OperationCanceledException if the specific condition(s) occcur.
-    ///      4)  TestDefinition.xml's CancelNotPassed:
-    ///          - TestDefinition.xml's Method elements have Boolean "CancelNotPassed" fields:
+    ///      4)  TestPlanDefinition.xml's CancelNotPassed:
+    ///          - TestPlanDefinition.xml's Method elements have Boolean "CancelNotPassed" fields:
     ///          - If the current Test.MethodRun() has CancelNotPassed=true and it's resulting EvaluateResultMethod() doesn't return EVENTS.PASS,
     ///            TestExec.MethodsRun() will break/exit, stopping further testing.
     ///		    - Do not pass Go, do not collect $200, go directly to TestExec.MethodsPostRun().
     ///
     /// NOTE:  The Operator Proactive &amp; TestExec Developer initiated cancellations both occur while the currently executing Tests.MethodRun() conpletes, via 
     ///        thrown OperationCanceledException.
-    /// NOTE:  The Operator Reactive &amp; TestDefinition.xml's CancelNotPassed cancellations both occur after the currently executing Tests.MethodRun() completes, via checks
+    /// NOTE:  The Operator Reactive &amp; TestPlanDefinition.xml's CancelNotPassed cancellations both occur after the currently executing Tests.MethodRun() completes, via checks
     ///        inside the Exec.MethodsRun() loop.
     /// </para>
     /// </summary>
@@ -136,23 +136,23 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
-            TestDefinitionXML = BaseDirectory + @"\TestDefinition.xml";
-            if (Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) testDefinition = Serializing.DeserializeFromFile<TestDefinition>(xmlFile: $"{TestDefinitionXML}");
-            else throw new ArgumentException($"Invalid XML '{TestDefinitionXML}'; doesn't comply with XSD '{TestDefinitionXSD}'.");
+            TestPlanDefinitionXML = BaseDirectory + @"\TestPlanDefinition.xml";
+            if (Validator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) testPlanDefinition = Serializing.DeserializeFromFile<TestPlanDefinition>(xmlFile: $"{TestPlanDefinitionXML}");
+            else throw new ArgumentException($"Invalid XML '{TestPlanDefinitionXML}'; doesn't comply with XSD '{TestPlanDefinitionXSD}'.");
 
             UserName = GetUserPrincipal();
             _ = Task.Run(() => LoadDeveloperAddresses());
 
-            InstrumentDrivers = GetInstrumentDriversTestDefinition();
+            InstrumentDrivers = GetInstrumentDriversTestPlanDefinition();
 
-            TSMI_UUT_TestData.Enabled = testDefinition.SerialNumberEntry.IsEnabled();
+            TSMI_UUT_TestData.Enabled = testPlanDefinition.SerialNumberEntry.IsEnabled();
             if (TSMI_UUT_TestData.Enabled) {
-                if (!(systemDefinition.TestData.Item is Files) && !(systemDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(systemDefinition.TestData.Item)}'.");
-                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (systemDefinition.TestData.Item is Files);
-                TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (systemDefinition.TestData.Item is SQL);
+                if (!(testExecDefinition.TestData.Item is Files) && !(testExecDefinition.TestData.Item is SQL)) throw new ArgumentException($"Unknown {nameof(TestPlanDefinition)}.{nameof(TestData)}.{nameof(TestData.Item)} '{nameof(testExecDefinition.TestData.Item)}'.");
+                TSMI_UUT_TestDataP_DriveTDR_Folder.Enabled = (testExecDefinition.TestData.Item is Files);
+                TSMI_UUT_TestDataSQL_ReportingAndQuerying.Enabled = (testExecDefinition.TestData.Item is SQL);
 
-                if (RegexInvalid(testDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testDefinition.SerialNumberEntry.RegularEx}' in file '{TestDefinitionXML}'.");
-                if (testDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) _serialNumberDialog = new SerialNumberDialog(testDefinition.SerialNumberEntry.RegularEx, testDefinition.SerialNumberEntry.Format, systemDefinition.BarcodeReader.ID);
+                if (RegexInvalid(testPlanDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testPlanDefinition.SerialNumberEntry.RegularEx}' in file '{TestPlanDefinitionXML}'.");
+                if (testPlanDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) _serialNumberDialog = new SerialNumberDialog(testPlanDefinition.SerialNumberEntry.RegularEx, testPlanDefinition.SerialNumberEntry.Format, testExecDefinition.BarcodeReader.ID);
 
             }
 
@@ -170,9 +170,9 @@ namespace ABT.Test.TestExec {
         }
 
         public static void ErrorMessage(Exception Ex) {
-            if (testDefinition != null && testDefinition.Development.Developer != null && testDefinition.Development.EMailAddresses != null) {
-                if (!String.Equals(testDefinition.Development.EMailAddresses, String.Empty)) {
-                    ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testDefinition.Development.EMailAddresses}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
+            if (testPlanDefinition != null && testPlanDefinition.Development.Developer != null && testPlanDefinition.Development.EMailAddresses != null) {
+                if (!String.Equals(testPlanDefinition.Development.EMailAddresses, String.Empty)) {
+                    ErrorMessage($"'{Ex.Message}'{Environment.NewLine}{Environment.NewLine}Will attempt to E-Mail details To {testPlanDefinition.Development.EMailAddresses}.{Environment.NewLine}{Environment.NewLine}Please select your Microsoft 365 Outlook profile if dialog appears.");
                     SendDevelopersMailMessage("Exception caught!", Ex);
                 }
             }
@@ -252,24 +252,24 @@ namespace ABT.Test.TestExec {
         }
 
         public virtual void SystemReset() {
-            if (testDefinition.TestSpace.Simulate) return;
+            if (testPlanDefinition.TestSpace.Simulate) return;
             IPowerSuppliesOutputsOff();
             IInstrumentsResetClear();
             IRelaysOpenAll();
         }
 
         public virtual void IInstrumentsResetClear() {
-            if (testDefinition.TestSpace.Simulate) return;
+            if (testPlanDefinition.TestSpace.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments iInstruments) iInstruments.ResetClear();
         }
 
         public virtual void IPowerSuppliesOutputsOff() {
-            if (testDefinition.TestSpace.Simulate) return;
+            if (testPlanDefinition.TestSpace.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IPowerSupply iIPowerSupply) iIPowerSupply.OutputsOff();
         }
 
         public virtual void IRelaysOpenAll() {
-            if (testDefinition.TestSpace.Simulate) return;
+            if (testPlanDefinition.TestSpace.Simulate) return;
             foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays iRelays) iRelays.OpenAll();
         }
 
@@ -328,7 +328,7 @@ namespace ABT.Test.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = Subject;
-                mailItem.To = testDefinition.Development.EMailAddresses;
+                mailItem.To = testPlanDefinition.Development.EMailAddresses;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.BodyFormat = Outlook.OlBodyFormat.olFormatPlain;
                 mailItem.Body = Body;
@@ -342,15 +342,15 @@ namespace ABT.Test.TestExec {
             try {
                 Outlook.MailItem mailItem = GetMailItem();
                 mailItem.Subject = subject;
-                mailItem.To = testDefinition.Development.EMailAddresses;
+                mailItem.To = testPlanDefinition.Development.EMailAddresses;
                 mailItem.Importance = Outlook.OlImportance.olImportanceHigh;
                 mailItem.Body =
                     $"Please detail desired Bug Report or Improvement Request:{Environment.NewLine}" +
                     $" - Please attach relevant files, and/or embed relevant screen-captures.{Environment.NewLine}" +
                     $" - Be specific!  Be verbose!  Unleash your inner author!  It's your time to shine!{Environment.NewLine}";
-                String rtfTempFile = $"{Path.GetTempPath()}\\{testDefinition.UUT.Number}.rtf";
+                String rtfTempFile = $"{Path.GetTempPath()}\\{testPlanDefinition.UUT.Number}.rtf";
                 rtfResults.SaveFile(rtfTempFile);
-                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{testDefinition.UUT.Number}.rtf");
+                _ = mailItem.Attachments.Add(rtfTempFile, Outlook.OlAttachmentType.olByValue, 1, $"{testPlanDefinition.UUT.Number}.rtf");
                 mailItem.Display();
             } catch {
                 _ = MessageBox.Show(ActiveForm, $"Sorry, cannot E-Mail presently.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -365,14 +365,14 @@ namespace ABT.Test.TestExec {
             if (addressList != null) {
                 try {
                     Object task;
-                    foreach (Developer developer in testDefinition.Development.Developer) {
+                    foreach (Developer developer in testPlanDefinition.Development.Developer) {
                         task = await Task.Run(() => GetAddress(addressList, developer.Name));
                         developer.EMailAddress = (String)task;
-                        if (!String.Equals(developer.EMailAddress, String.Empty)) testDefinition.Development.EMailAddresses += $"{developer.EMailAddress}; ";
+                        if (!String.Equals(developer.EMailAddress, String.Empty)) testPlanDefinition.Development.EMailAddresses += $"{developer.EMailAddress}; ";
                     }
                 } catch { }
                 ;
-                if (testDefinition.Development.EMailAddresses.EndsWith("; ")) testDefinition.Development.EMailAddresses = testDefinition.Development.EMailAddresses.Substring(0, testDefinition.Development.EMailAddresses.Length - 2);
+                if (testPlanDefinition.Development.EMailAddresses.EndsWith("; ")) testPlanDefinition.Development.EMailAddresses = testPlanDefinition.Development.EMailAddresses.Substring(0, testPlanDefinition.Development.EMailAddresses.Length - 2);
             }
         }
 
@@ -437,18 +437,18 @@ namespace ABT.Test.TestExec {
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
-            if (testDefinition.SerialNumberEntry.IsEnabled()) {
+            if (testPlanDefinition.SerialNumberEntry.IsEnabled()) {
                 String serialNumber;
-                if (testDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) {
+                if (testPlanDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) {
                     _serialNumberDialog.Set(testSequence.SerialNumber);
                     serialNumber = _serialNumberDialog.ShowDialog(this).Equals(DialogResult.OK) ? _serialNumberDialog.Get() : String.Empty;
                     _serialNumberDialog.Hide();
                 } else {
                     serialNumber = Interaction.InputBox(
                         Prompt: $"Please enter Serial Number in below format:{Environment.NewLine}{Environment.NewLine}" +
-                        $"{testDefinition.SerialNumberEntry.Format}",
+                        $"{testPlanDefinition.SerialNumberEntry.Format}",
                         Title: "Enter Serial Number", DefaultResponse: testSequence.SerialNumber).Trim().ToUpper();
-                    serialNumber = Regex.IsMatch(serialNumber, testDefinition.SerialNumberEntry.RegularEx) ? serialNumber : String.Empty;
+                    serialNumber = Regex.IsMatch(serialNumber, testPlanDefinition.SerialNumberEntry.RegularEx) ? serialNumber : String.Empty;
                 }
                 if (String.Equals(serialNumber, String.Empty)) return;
                 testSequence.SerialNumber = serialNumber;
@@ -481,7 +481,7 @@ namespace ABT.Test.TestExec {
             // - Further, AppDomains aren't supported in .Net, just .Net Framework.
             // - .Net instead provides AssemblyLoadContext which would be perfect for TestExec...but isn't available in .Net Framework.
             // - Thus this compromise.
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(systemDefinition.Apps.ABT.TestChooser) {
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(testExecDefinition.Apps.ABT.TestChooser) {
                 Arguments = Convert.ToString(Process.GetCurrentProcess().Id),
                 CreateNoWindow = false,
                 UseShellExecute = false,
@@ -506,17 +506,17 @@ namespace ABT.Test.TestExec {
         private void TSMI_Test_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
 
         private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
+            (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
             if (DR != DialogResult.OK) return;
-            if (!Validator.ValidSpecification(TestDefinitionXSD: TestDefinitionXSD, TestDefinitionXML)) return;
-            Generator.Generate(TestDefinitionXML);
+            if (!Validator.ValidSpecification(TestPlanDefinitionXSD: TestPlanDefinitionXSD, TestPlanDefinitionXML)) return;
+            Generator.Generate(TestPlanDefinitionXML);
         }
         private void TSMI_Apps_ABTTestChooser_Click(Object sender, EventArgs e) { TSMI_Test_Choose_Click(sender, e); }
         private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestDefinitionXML) = GetTestDefinitionXML();
-            if (DR == DialogResult.OK && Validator.ValidSpecification(TestDefinitionXSD, TestDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
+            if (DR == DialogResult.OK && Validator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private (DialogResult DR, String TestDefinitionXML) GetTestDefinitionXML() {
+        private (DialogResult DR, String TestPlanDefinitionXML) GetTestPlanDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = BaseDirectory;
                 openFileDialog.Filter = "XML files (*.xml)|*.xml";
@@ -525,18 +525,18 @@ namespace ABT.Test.TestExec {
                 return (openFileDialog.ShowDialog(), openFileDialog.FileName);
             }
         }
-        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.CommandExpert); }
-        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Keysight.ConnectionExpert);}
+        private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.CommandExpert); }
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.ConnectionExpert);}
 
-        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.SQLServerManagementStudio);}
-        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.VisualStudio);}
-        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.VisualStudioCode);}
-        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(systemDefinition.Apps.Microsoft.XMLNotepad);}
+        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio);}
+        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudio);}
+        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudioCode);}
+        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.XMLNotepad);}
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show(ActiveForm, $"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
-        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
-        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserName} for {testDefinition.UUT.Number}, {testDefinition.UUT.Description}."); }
+        private void TSMI_Feedback_CritiqueBugReport_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Bug Report from {UserName} for {testPlanDefinition.UUT.Number}, {testPlanDefinition.UUT.Description}."); }
+        private void TSMI_Feedback_CritiqueImprovementRequest_Click(Object sender, EventArgs e) { SendMailMessageWithAttachment($"Improvement Request from {UserName} for {testPlanDefinition.UUT.Number}, {testPlanDefinition.UUT.Description}."); }
 
         private async void TSMI_System_BarcodeScannerDiscovery_Click(Object sender, EventArgs e) {
             DeviceInformationCollection dic = await DeviceInformation.FindAllAsync(BarcodeScanner.GetDeviceSelector(PosConnectionTypes.Local));
@@ -583,42 +583,42 @@ namespace ABT.Test.TestExec {
             if (passed) _ = MessageBox.Show(ActiveForm, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
-        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(systemDefinition.BarcodeReader.Folder); }
-        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(systemDefinition.InstrumentsSystem.Folder); }
+        private void TSMI_System_ManualsBarcodeScanner_Click(Object sender, EventArgs e) { OpenFolder(testExecDefinition.BarcodeReader.Folder); }
+        private void TSMI_System_ManualsInstruments_Click(Object sender, EventArgs e) { OpenFolder(testExecDefinition.InstrumentsSystem.Folder); }
 
         private void TSMI_UUT_eDocs_Click(Object sender, EventArgs e) {
-            foreach (Documentation documentation in testDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
+            foreach (Documentation documentation in testPlanDefinition.UUT.Documentation) OpenFolder(documentation.Folder);
         }
         private void TSMI_UUT_Manuals_Click(Object sender, EventArgs e) {
-            foreach (Documentation documentation in testDefinition.Development.Documentation) OpenFolder(documentation.Folder);
+            foreach (Documentation documentation in testPlanDefinition.Development.Documentation) OpenFolder(documentation.Folder);
         }
         private void TSMI_UUT_StatisticsDisplay_Click(Object sender, EventArgs e) {
             Form statistics = new Miscellaneous.MessageBoxMonoSpaced(
-                Title: $"{testSequence.UUT.Number}, {testSequence.TestOperation.NamespaceTrunk}, {testDefinition.TestSpace.StatusTime()}",
-                Text: testDefinition.TestSpace.StatisticsDisplay(),
+                Title: $"{testSequence.UUT.Number}, {testSequence.TestOperation.NamespaceTrunk}, {testPlanDefinition.TestSpace.StatusTime()}",
+                Text: testPlanDefinition.TestSpace.StatisticsDisplay(),
                 Link: String.Empty
             );
             _ = statistics.ShowDialog();
         }
         private void TSMI_UUT_StatisticsReset_Click(Object sender, EventArgs e) {
-            testDefinition.TestSpace.Statistics = new Statistics();
+            testPlanDefinition.TestSpace.Statistics = new Statistics();
             StatusTimeUpdate(null, null);
             StatusStatisticsUpdate(null, null);
         }
         private void TSMI_UUT_TestData_P_DriveTDR_Folder_Click(Object sender, EventArgs e) {
-            Debug.Assert(systemDefinition.TestData.Item is Files);
-            OpenFolder($"{((Files)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}");
+            Debug.Assert(testExecDefinition.TestData.Item is Files);
+            OpenFolder($"{((Files)testExecDefinition.TestData.Item).Folder}\\{testPlanDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}");
         }
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
-            Debug.Assert(systemDefinition.TestData.Item is SQL);
-            OpenApp(systemDefinition.Apps.Microsoft.SQLServerManagementStudio);
+            Debug.Assert(testExecDefinition.TestData.Item is SQL);
+            OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio);
 		}
         private void TSMI_About_TestExec_Click(Object sender, EventArgs e) {
-            Development development = Serializing.DeserializeFromFile<Development>(SystemDefinitionXML);
+            Development development = Serializing.DeserializeFromFile<Development>(TestExecDefinitionXML);
             ShowAbout(Assembly.GetExecutingAssembly(), development);
         }
         private void TSMI_About_TestPlan_Click(Object sender, EventArgs e) {
-            ShowAbout(Assembly.GetEntryAssembly(), testDefinition.Development, isTestPlan: true);
+            ShowAbout(Assembly.GetEntryAssembly(), testPlanDefinition.Development, isTestPlan: true);
         }
         private void ShowAbout(Assembly assembly, Development development, Boolean isTestPlan = false) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -700,7 +700,7 @@ namespace ABT.Test.TestExec {
             testSequence.PostRun(OperationEvaluate(testSequence.TestOperation));
             TextTest.Text = testSequence.Event.ToString();
             TextTest.BackColor = EventColors[testSequence.Event];
-            testDefinition.TestSpace.Statistics.Update(testSequence.Event);
+            testPlanDefinition.TestSpace.Statistics.Update(testSequence.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
         }
@@ -742,9 +742,9 @@ namespace ABT.Test.TestExec {
         #endregion Methods
 
         #region Status Strip methods.
-        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { StatusTimeLabel.Text = testDefinition.TestSpace.StatusTime(); }
+        private void StatusTimeUpdate(Object source, ElapsedEventArgs e) { StatusTimeLabel.Text = testPlanDefinition.TestSpace.StatusTime(); }
 
-        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { StatusStatisticsLabel.Text = testDefinition.TestSpace.StatisticsStatus(); }
+        private void StatusStatisticsUpdate(Object source, ElapsedEventArgs e) { StatusStatisticsLabel.Text = testPlanDefinition.TestSpace.StatisticsStatus(); }
 
         private enum MODES { Resetting, Running, Cancelling, Emergency_Stopping, Waiting };
 

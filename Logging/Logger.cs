@@ -124,10 +124,10 @@ namespace ABT.Test.TestExec.Logging {
             ReplaceText(ref rtfResults, 0, $"{MESSAGE_UUT_EVENT}", $"{MESSAGE_UUT_EVENT}{testSequence.Event}");
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
-            if (testSequence.IsOperation && testDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
-                if (systemDefinition.TestData.Item is Files) StopFiles();
-                else if (systemDefinition.TestData.Item is SQL) StopSQL();
-                else throw new ArgumentException($"Unknown {nameof(TestData)} item '{systemDefinition.TestData.Item}'.");
+            if (testSequence.IsOperation && testPlanDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
+                if (testExecDefinition.TestData.Item is Files) StopFiles();
+                else if (testExecDefinition.TestData.Item is SQL) StopSQL();
+                else throw new ArgumentException($"Unknown {nameof(TestData)} item '{testExecDefinition.TestData.Item}'.");
             }
         }
         #endregion Public Methods
@@ -155,10 +155,10 @@ namespace ABT.Test.TestExec.Logging {
 
         private static void StopFiles() {
             const String _xml = ".xml";
-            String xmlFolder = $"{((Files)systemDefinition.TestData.Item).Folder}\\{testDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
+            String xmlFolder = $"{((Files)testExecDefinition.TestData.Item).Folder}\\{testPlanDefinition.UUT.Number}\\{testSequence.TestOperation.NamespaceTrunk}";
             String xmlBaseName = $"{testSequence.UUT.Number}_{testSequence.SerialNumber}_{testSequence.TestOperation.NamespaceTrunk}";
             String[] xmlFileNames = Directory.GetFiles(xmlFolder, $"{xmlBaseName}_*{_xml}", SearchOption.TopDirectoryOnly);
-            // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestDefinitionXML.
+            // NOTE:  Will fail if invalid path.  Don't catch resulting Exception though; this has to be fixed in TestPlanDefinitionXML.
             Int32 maxNumber = 0; String s;
             foreach (String xmlFileName in xmlFileNames) {
                 s = xmlFileName;
@@ -186,7 +186,7 @@ namespace ABT.Test.TestExec.Logging {
                     xmlSerializer.Serialize(xmlWriter, testSequence);
                     xmlWriter.Flush();
 
-                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)systemDefinition.TestData.Item).ConnectionString)) {
+                    using (SqlConnection sqlConnection = new SqlConnection(((SQL)testExecDefinition.TestData.Item).ConnectionString)) {
                         using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Sequences (Sequence) VALUES (@XML)", sqlConnection)) {
                             sqlCommand.Parameters.AddWithValue("@XML", stringWriter.ToString());
                             sqlConnection.Open();
