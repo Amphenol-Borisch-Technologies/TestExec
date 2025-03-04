@@ -12,23 +12,6 @@ using ABT.Test.TestLib;
 using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
 
-// TODO:  Eventually; persist test data into Microsoft SQL Server Standard on IS server:
-// Only XML and SQL Server persisted test data is legitimate.
-//   - RichTextBoxSink test data are failures only, for trouble-shooting.
-//     - Can be exported as RTF if desired, then printed.
-//
-// Local SQL Server Express installations on all TestExec PCs in case LAN, IS Server or SQL Server Standard are down.
-//   - Local SQL Server Express  exports test data periodically via Microsoft Task Scheduler to main SQL Server Standard RBDMS, then deletes its local data.
-//
-// Create C# app for querying SQL Server Standard:
-//   - SQL Server test data accessible as:
-//     - Read-only for all ABT personnel.
-//     - Read-write for Test Engineers & Technicians.
-//
-// SQL Server integrates with Microsoft Active Directory for user access.
-//   - Include standard queries.
-//   - Custom querying/reporting permitted & encouraged.
-
 namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
