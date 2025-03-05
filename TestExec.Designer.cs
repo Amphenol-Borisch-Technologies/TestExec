@@ -40,8 +40,9 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_ABT = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_ABTGenerate = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_ABTValidate = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTGenerateTestPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTChooseTestPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTValidateTestPlanDefinition = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_Keysight = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightCommandExpert = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightConnectionExpert = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +83,6 @@ namespace ABT.Test.TestExec {
             this.StatusStatisticsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusModeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusCustomLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.TSMI_Apps_ABTTestChooser = new System.Windows.Forms.ToolStripMenuItem();
             this.MS.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -256,28 +256,35 @@ namespace ABT.Test.TestExec {
             // TSMI_Apps_ABT
             // 
             this.TSMI_Apps_ABT.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMI_Apps_ABTGenerate,
-            this.TSMI_Apps_ABTTestChooser,
-            this.TSMI_Apps_ABTValidate});
+            this.TSMI_Apps_ABTChooseTestPlan,
+            this.TSMI_Apps_ABTGenerateTestPlan,
+            this.TSMI_Apps_ABTValidateTestPlanDefinition});
             this.TSMI_Apps_ABT.Name = "TSMI_Apps_ABT";
             this.TSMI_Apps_ABT.Size = new System.Drawing.Size(224, 26);
             this.TSMI_Apps_ABT.Text = "&ABT";
             // 
-            // TSMI_Apps_ABTGenerate
+            // TSMI_Apps_ABTGenerateTestPlan
             // 
-            this.TSMI_Apps_ABTGenerate.Name = "TSMI_Apps_ABTGenerate";
-            this.TSMI_Apps_ABTGenerate.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_Apps_ABTGenerate.Text = "&Generate";
-            this.TSMI_Apps_ABTGenerate.ToolTipText = "Generate skeleton program.";
-            this.TSMI_Apps_ABTGenerate.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerate_Click);
+            this.TSMI_Apps_ABTGenerateTestPlan.Name = "TSMI_Apps_ABTGenerateTestPlan";
+            this.TSMI_Apps_ABTGenerateTestPlan.Size = new System.Drawing.Size(270, 26);
+            this.TSMI_Apps_ABTGenerateTestPlan.Text = "&Generate TestPlan";
+            this.TSMI_Apps_ABTGenerateTestPlan.ToolTipText = "Generate skeleton program.";
+            this.TSMI_Apps_ABTGenerateTestPlan.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerateTestPlan_Click);
             // 
-            // TSMI_Apps_ABTValidate
+            // TSMI_Apps_ABTChooseTestPlan
             // 
-            this.TSMI_Apps_ABTValidate.Name = "TSMI_Apps_ABTValidate";
-            this.TSMI_Apps_ABTValidate.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_Apps_ABTValidate.Text = "&Validate";
-            this.TSMI_Apps_ABTValidate.ToolTipText = "Validate TestPlanDefinition.xml.";
-            this.TSMI_Apps_ABTValidate.Click += new System.EventHandler(this.TSMI_Apps_ABTValidate_Click);
+            this.TSMI_Apps_ABTChooseTestPlan.Name = "TSMI_Apps_ABTChooseTestPlan";
+            this.TSMI_Apps_ABTChooseTestPlan.Size = new System.Drawing.Size(270, 26);
+            this.TSMI_Apps_ABTChooseTestPlan.Text = "&Choose TestPlan";
+            this.TSMI_Apps_ABTChooseTestPlan.Click += new System.EventHandler(this.TSMI_Apps_ABTChooseTestPlan_Click);
+            // 
+            // TSMI_Apps_ABTValidateTestPlanDefinition
+            // 
+            this.TSMI_Apps_ABTValidateTestPlanDefinition.Name = "TSMI_Apps_ABTValidateTestPlanDefinition";
+            this.TSMI_Apps_ABTValidateTestPlanDefinition.Size = new System.Drawing.Size(270, 26);
+            this.TSMI_Apps_ABTValidateTestPlanDefinition.Text = "&Validate TestPlanDefinition";
+            this.TSMI_Apps_ABTValidateTestPlanDefinition.ToolTipText = "Validate TestPlanDefinition.xml.";
+            this.TSMI_Apps_ABTValidateTestPlanDefinition.Click += new System.EventHandler(this.TSMI_Apps_ABTValidateTestPlanDefinition_Click);
             // 
             // TSMI_Apps_Keysight
             // 
@@ -362,7 +369,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Feedback_ComplimentsPraiseεPlaudits,
             this.TSMI_Feedback_ComplimentsMoney});
             this.TSMI_Feedback_Compliments.Name = "TSMI_Feedback_Compliments";
-            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Feedback_Compliments.Size = new System.Drawing.Size(180, 26);
             this.TSMI_Feedback_Compliments.Text = "&Compliments";
             // 
             // TSMI_Feedback_ComplimentsPraiseεPlaudits
@@ -387,7 +394,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Feedback_CritiquesBugReport,
             this.TSMI_Feedback_CritiquesImprovementRequest});
             this.TSMI_Feedback_Critiques.Name = "TSMI_Feedback_Critiques";
-            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Feedback_Critiques.Size = new System.Drawing.Size(180, 26);
             this.TSMI_Feedback_Critiques.Text = "Criti&ques";
             // 
             // TSMI_Feedback_CritiquesBugReport
@@ -564,7 +571,7 @@ namespace ABT.Test.TestExec {
             // TSMI_About_TestExec
             // 
             this.TSMI_About_TestExec.Name = "TSMI_About_TestExec";
-            this.TSMI_About_TestExec.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_About_TestExec.Size = new System.Drawing.Size(148, 26);
             this.TSMI_About_TestExec.Text = "Test&Exec";
             this.TSMI_About_TestExec.ToolTipText = "TestExec\'s details.";
             this.TSMI_About_TestExec.Click += new System.EventHandler(this.TSMI_About_TestExec_Click);
@@ -572,7 +579,7 @@ namespace ABT.Test.TestExec {
             // TSMI_About_TestPlan
             // 
             this.TSMI_About_TestPlan.Name = "TSMI_About_TestPlan";
-            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_About_TestPlan.Size = new System.Drawing.Size(148, 26);
             this.TSMI_About_TestPlan.Text = "Test&Plan";
             this.TSMI_About_TestPlan.ToolTipText = "TestPlan\'s details.";
             this.TSMI_About_TestPlan.Click += new System.EventHandler(this.TSMI_About_TestPlan_Click);
@@ -625,13 +632,6 @@ namespace ABT.Test.TestExec {
             this.StatusCustomLabel.Spring = true;
             this.StatusCustomLabel.Text = "Custom";
             this.StatusCustomLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TSMI_Apps_ABTTestChooser
-            // 
-            this.TSMI_Apps_ABTTestChooser.Name = "TSMI_Apps_ABTTestChooser";
-            this.TSMI_Apps_ABTTestChooser.Size = new System.Drawing.Size(224, 26);
-            this.TSMI_Apps_ABTTestChooser.Text = "&TestChooser";
-            this.TSMI_Apps_ABTTestChooser.Click += new System.EventHandler(this.TSMI_Apps_ABTTestChooser_Click);
             // 
             // TestExec
             // 
@@ -714,13 +714,13 @@ namespace ABT.Test.TestExec {
         private ToolStripMenuItem TSMI_UUT_StatisticsDisplay;
         private ToolStripMenuItem TSMI_UUT_StatisticsReset;
         private ToolStripMenuItem TSMI_Apps_ABT;
-        private ToolStripMenuItem TSMI_Apps_ABTGenerate;
-        private ToolStripMenuItem TSMI_Apps_ABTValidate;
+        private ToolStripMenuItem TSMI_Apps_ABTGenerateTestPlan;
+        private ToolStripMenuItem TSMI_Apps_ABTValidateTestPlanDefinition;
         private ToolStripMenuItem TSMI_System_ColorCode;
         private ToolStripMenuItem TSMI_About;
         private ToolStripMenuItem TSMI_About_TestExec;
         private ToolStripMenuItem TSMI_About_TestPlan;
         private ToolStripMenuItem TSMI_Test_Choose;
-        private ToolStripMenuItem TSMI_Apps_ABTTestChooser;
+        private ToolStripMenuItem TSMI_Apps_ABTChooseTestPlan;
     }
 }

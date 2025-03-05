@@ -137,7 +137,7 @@ namespace ABT.Test.TestExec {
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
             TestPlanDefinitionXML = BaseDirectory + @"\TestPlanDefinition.xml";
-            if (Validator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) testPlanDefinition = Serializing.DeserializeFromFile<TestPlanDefinition>(xmlFile: $"{TestPlanDefinitionXML}");
+            if (TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) testPlanDefinition = Serializing.DeserializeFromFile<TestPlanDefinition>(xmlFile: $"{TestPlanDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestPlanDefinitionXML}'; doesn't comply with XSD '{TestPlanDefinitionXSD}'.");
 
             UserName = GetUserPrincipal();
@@ -504,17 +504,16 @@ namespace ABT.Test.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
         }
         private void TSMI_Test_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
-
-        private void TSMI_Apps_ABTGenerate_Click(Object sender, EventArgs e) {
+        private void TSMI_Apps_ABTGenerateTestPlan_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
             if (DR != DialogResult.OK) return;
-            if (!Validator.ValidSpecification(TestPlanDefinitionXSD: TestPlanDefinitionXSD, TestPlanDefinitionXML)) return;
-            Generator.Generate(TestPlanDefinitionXML);
+            if (!TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD: TestPlanDefinitionXSD, TestPlanDefinitionXML)) return;
+            TestPlanGenerator.Generate(TestPlanDefinitionXML);
         }
-        private void TSMI_Apps_ABTTestChooser_Click(Object sender, EventArgs e) { TSMI_Test_Choose_Click(sender, e); }
-        private void TSMI_Apps_ABTValidate_Click(Object sender, EventArgs e) {
+        private void TSMI_Apps_ABTChooseTestPlan_Click(Object sender, EventArgs e) { TSMI_Test_Choose_Click(sender, e); }
+        private void TSMI_Apps_ABTValidateTestPlanDefinition_Click(Object sender, EventArgs e) {
             (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
-            if (DR == DialogResult.OK && Validator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (DR == DialogResult.OK && TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private (DialogResult DR, String TestPlanDefinitionXML) GetTestPlanDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
