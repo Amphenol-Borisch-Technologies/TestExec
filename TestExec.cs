@@ -517,7 +517,7 @@ namespace ABT.Test.TestExec {
         }
         private (DialogResult DR, String TestPlanDefinitionXML) GetTestPlanDefinitionXML() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = BaseDirectory;
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(TestPlanDefinitionXML);
                 openFileDialog.Filter = "XML files (*.xml)|*.xml";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = false;
