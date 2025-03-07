@@ -136,7 +136,7 @@ namespace ABT.Test.TestExec {
             InitializeComponent();
             Icon = icon; // NOTE:  https://stackoverflow.com/questions/40933304/how-to-create-an-icon-for-visual-studio-with-just-mspaint-and-visual-studio
             BaseDirectory = baseDirectory;
-            TestPlanDefinitionXML = BaseDirectory + @"\TestPlanDefinition.xml";
+            TestPlanDefinitionXML = BaseDirectory + @"\TestPlan\TestPlanDefinition.xml";
             if (TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) testPlanDefinition = Serializing.DeserializeFromFile<TestPlanDefinition>(xmlFile: $"{TestPlanDefinitionXML}");
             else throw new ArgumentException($"Invalid XML '{TestPlanDefinitionXML}'; doesn't comply with XSD '{TestPlanDefinitionXSD}'.");
 
@@ -505,24 +505,12 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_Test_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
         private void TSMI_Apps_ABTGenerateTestPlan_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
-            if (DR != DialogResult.OK) return;
             if (!TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD: TestPlanDefinitionXSD, TestPlanDefinitionXML)) return;
             TestPlanGenerator.Generate(TestPlanDefinitionXML);
         }
         private void TSMI_Apps_ABTChooseTestPlan_Click(Object sender, EventArgs e) { TSMI_Test_Choose_Click(sender, e); }
         private void TSMI_Apps_ABTValidateTestPlanDefinition_Click(Object sender, EventArgs e) {
-            (DialogResult DR, String TestPlanDefinitionXML) = GetTestPlanDefinitionXML();
-            if (DR == DialogResult.OK && TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        private (DialogResult DR, String TestPlanDefinitionXML) GetTestPlanDefinitionXML() {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
-                openFileDialog.InitialDirectory = BaseDirectory;
-                openFileDialog.Filter = "XML files (*.xml)|*.xml";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = false;
-                return (openFileDialog.ShowDialog(), openFileDialog.FileName);
-            }
+            if (TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(ActiveForm, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.CommandExpert); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.ConnectionExpert);}
