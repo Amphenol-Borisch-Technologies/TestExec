@@ -43,3 +43,6 @@ idea/
 /obj/x64/Debug/TestExec.csproj.GenerateResource.cache
 /obj/x64/Debug/TestExec.csproj.ResolveComReference.cache
 /obj/x64/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/obj/project.assets.json
+/obj/project.nuget.cache
+/obj/TestExec.csproj.nuget.dgspec.json
