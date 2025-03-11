@@ -76,7 +76,6 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.Append($"{SPACES_2}{method.Log}");
             Log.Information(stringBuilder.ToString());
             SetBackColor(ref rtfResults, EVENTS.FAIL.ToString(), EventColors[EVENTS.FAIL]);
-            SetBackColor(ref rtfResults, EVENTS.PASS.ToString(), EventColors[EVENTS.PASS]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
