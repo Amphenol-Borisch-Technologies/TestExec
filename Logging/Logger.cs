@@ -75,6 +75,8 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append($"{SPACES_2}{method.Log}");
             Log.Information(stringBuilder.ToString());
+            SetBackColor(ref rtfResults, EVENTS.FAIL.ToString(), EventColors[EVENTS.FAIL]);
+            SetBackColor(ref rtfResults, EVENTS.PASS.ToString(), EventColors[EVENTS.PASS]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
@@ -128,6 +130,15 @@ namespace ABT.Test.TestExec.Logging {
             Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
             if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
             else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findText.Length;
+                richTextBox.SelectionBackColor = backColor;
+            }
+        }
+
+        private static void SetBackColor(ref RichTextBox richTextBox, String findText, Color backColor) {
+            Int32 selectionStart = richTextBox.Find(findText, 0, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart != -1) {
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
                 richTextBox.SelectionBackColor = backColor;
