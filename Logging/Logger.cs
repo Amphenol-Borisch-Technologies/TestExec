@@ -137,11 +137,14 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         private static void SetBackColor(ref RichTextBox richTextBox, String findText, Color backColor) {
-            Int32 selectionStart = richTextBox.Find(findText, 0, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart != -1) {
+            Int32 startIndex = 0, selectionStart;
+            while (startIndex < richTextBox.TextLength) {
+                selectionStart = richTextBox.Find(findText, startIndex, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                if (selectionStart == -1) break;
                 richTextBox.SelectionStart = selectionStart;
                 richTextBox.SelectionLength = findText.Length;
                 richTextBox.SelectionBackColor = backColor;
+                startIndex = selectionStart + findText.Length;
             }
         }
 
