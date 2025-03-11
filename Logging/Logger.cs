@@ -67,7 +67,7 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.CancelNotPassed)}", method.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.Description)}", method.Description));
 
-            if (method is MethodCustom) stringBuilder.Append(method.LogString);
+            if (method is MethodCustom) stringBuilder.Append(method.Value);
             else if (method is MethodInterval methodInterval) stringBuilder.Append(FormatNumeric(methodInterval));
             else if (method is MethodProcess methodProcess) stringBuilder.Append(FormatProcess(methodProcess));
             else if (method is MethodTextual methodTextual) stringBuilder.Append(FormatTextual(methodTextual));
