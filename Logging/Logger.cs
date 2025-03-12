@@ -74,8 +74,9 @@ namespace ABT.Test.TestExec.Logging {
             else throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append($"{SPACES_2}{method.Log}");
+            Int32 startFind = rtfResults.TextLength;
             Log.Information(stringBuilder.ToString());
-            SetBackColor(ref rtfResults, EVENTS.FAIL.ToString(), EventColors[EVENTS.FAIL]);
+            SetBackColors(ref rtfResults, startFind, EVENTS.FAIL.ToString(), EventColors[EVENTS.FAIL]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
@@ -103,7 +104,7 @@ namespace ABT.Test.TestExec.Logging {
         }
 
         public static void Stop(ref RichTextBox rtfResults) {
-            ReplaceText(ref rtfResults, 0, $"{MESSAGE_UUT_EVENT}", $"{MESSAGE_UUT_EVENT}{testSequence.Event}");
+            ReplaceString(ref rtfResults, 0, $"{MESSAGE_UUT_EVENT}", $"{MESSAGE_UUT_EVENT}{testSequence.Event}");
             SetBackColor(ref rtfResults, 0, testSequence.Event.ToString(), EventColors[testSequence.Event]);
             Log.CloseAndFlush();
             if (testSequence.IsOperation && testPlanDefinition.SerialNumberEntry.EntryType != SerialNumberEntryType.None) {
@@ -115,35 +116,48 @@ namespace ABT.Test.TestExec.Logging {
         #endregion Public Methods
 
         #region Private Methods
-        private static void ReplaceText(ref RichTextBox richTextBox, Int32 startFind, String originalText, String replacementText) {
-            Int32 selectionStart = richTextBox.Find(originalText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{originalText}' not found after character '{startFind}', cannot replace with '{replacementText}'.");
+        private static void ReplaceString(ref RichTextBox richTextBox, Int32 startFind, String findString, String replacementString) {
+            Int32 selectionStart = richTextBox.Find(findString, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{findString}' not found after character '{startFind}', cannot replace with '{replacementString}'.");
             else {
                 richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = originalText.Length;
-                richTextBox.SelectedText = replacementText;
+                richTextBox.SelectionLength = findString.Length;
+                richTextBox.SelectedText = replacementString;
             }
         }
 
-        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findText, Color backColor) {
-            Int32 selectionStart = richTextBox.Find(findText, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
-            if (selectionStart == -1) Log.Error($"Rich Text '{findText}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
-            else {
-                richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = findText.Length;
-                richTextBox.SelectionBackColor = backColor;
-            }
-        }
+        private static void ReplaceStrings(ref RichTextBox richTextBox, Int32 startFind, String findString, String replacementString) {
+            Int32 selectionStart;
 
-        private static void SetBackColor(ref RichTextBox richTextBox, String findText, Color backColor) {
-            Int32 startIndex = 0, selectionStart;
-            while (startIndex < richTextBox.TextLength) {
-                selectionStart = richTextBox.Find(findText, startIndex, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            while (startFind < richTextBox.TextLength) {
+                selectionStart = richTextBox.Find(findString, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
                 if (selectionStart == -1) break;
                 richTextBox.SelectionStart = selectionStart;
-                richTextBox.SelectionLength = findText.Length;
+                richTextBox.SelectionLength = findString.Length;
+                richTextBox.SelectedText = replacementString;
+                startFind = selectionStart + findString.Length;
+            }
+        }
+
+        private static void SetBackColor(ref RichTextBox richTextBox, Int32 startFind, String findString, Color backColor) {
+            Int32 selectionStart = richTextBox.Find(findString, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+            if (selectionStart == -1) Log.Error($"Rich Text '{findString}' not found after character '{startFind}', cannot highlight with '{backColor.Name}'.");
+            else {
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findString.Length;
                 richTextBox.SelectionBackColor = backColor;
-                startIndex = selectionStart + findText.Length;
+            }
+        }
+
+        private static void SetBackColors(ref RichTextBox richTextBox, Int32 startFind, String findString, Color backColor) {
+            Int32 selectionStart;
+            while (startFind < richTextBox.TextLength) {
+                selectionStart = richTextBox.Find(findString, startFind, RichTextBoxFinds.MatchCase | RichTextBoxFinds.WholeWord);
+                if (selectionStart == -1) break;
+                richTextBox.SelectionStart = selectionStart;
+                richTextBox.SelectionLength = findString.Length;
+                richTextBox.SelectionBackColor = backColor;
+                startFind = selectionStart + findString.Length;
             }
         }
 
