@@ -77,6 +77,7 @@ namespace ABT.Test.TestExec.Logging {
             Int32 startFind = rtfResults.TextLength;
             Log.Information(stringBuilder.ToString());
             SetBackColors(ref rtfResults, startFind, EVENTS.FAIL.ToString(), EventColors[EVENTS.FAIL]);
+            SetBackColors(ref rtfResults, startFind, EVENTS.PASS.ToString(), EventColors[EVENTS.PASS]);
         }
 
         public static void Start(ref RichTextBox rtfResults) {
