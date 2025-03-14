@@ -260,7 +260,7 @@ namespace ABT.Test.TestExec {
 
         public virtual void IInstrumentsResetClear() {
             if (testPlanDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstruments iInstruments) iInstruments.ResetClear();
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IInstrument iInstrument) iInstrument.ResetClear();
         }
 
         public virtual void IPowerSuppliesOutputsOff() {
@@ -270,7 +270,7 @@ namespace ABT.Test.TestExec {
 
         public virtual void IRelaysOpenAll() {
             if (testPlanDefinition.TestSpace.Simulate) return;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelays iRelays) iRelays.OpenAll();
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) if (kvp.Value is IRelay iRelay) iRelay.OpenAll();
         }
 
         private void InvalidPathError(String InvalidPath) { _ = MessageBox.Show(this, $"Path {InvalidPath} invalid.", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -566,7 +566,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_System_SelfTestsInstruments_Click(Object sender, EventArgs e) {
             UseWaitCursor = true;
             Boolean passed = true;
-            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) passed &= ((IInstruments)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
+            foreach (KeyValuePair<String, Object> kvp in InstrumentDrivers) passed &= ((IInstrument)kvp.Value).SelfTests() is SELF_TEST_RESULTS.PASS;
             if (passed) _ = MessageBox.Show(this, "SCPI VISA Instrument Self-Tests all passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UseWaitCursor = false;
         }
