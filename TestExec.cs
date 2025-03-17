@@ -550,7 +550,7 @@ namespace ABT.Test.TestExec {
                 Text = "Event Color Codes"
             };
             RichTextBox richTextBox = (RichTextBox)customMessageBox.Controls["richTextBox"];
-            richTextBox.Font = new Font(richTextBox.Font.FontFamily, 20);
+            richTextBox.Font = new Font(richTextBox.Font.FontFamily, 12);
             richTextBox.Text = String.Empty;
             foreach (EVENTS Event in Enum.GetValues(typeof(EVENTS))) richTextBox.Text += $"{nameof(EVENTS)}.{Event}{Environment.NewLine}{Environment.NewLine}";
 
