@@ -389,6 +389,10 @@ namespace ABT.Test.TestExec {
         #endregion Form Miscellaneous
 
         #region Form Command Buttons
+        private void ButtonCancel_Enter(Object sender, EventArgs e) {
+            TSMI_About_TestPlan.Select(); // Prevents ButtonCanel or ButtonEmergencyStop from having focus, so if a MessageBox loses focus while testing and operator presses keyboard Enter key, won't cancel or Emergency Stop.
+        }
+
         private void ButtonCancel_Clicked(Object sender, EventArgs e) {
             ButtonCancelReset(enabled: false);
             StatusModeUpdate(MODES.Cancelling);
@@ -409,6 +413,10 @@ namespace ABT.Test.TestExec {
                 CT_Cancel = CTS_Cancel.Token;
             }
             ButtonCancel.Enabled = enabled;
+        }
+
+        private void ButtonEmergencyStop_Enter(Object sender, EventArgs e) {
+            TSMI_About_TestPlan.Select(); // Prevents ButtonCanel or ButtonEmergencyStop from having focus, so if a MessageBox loses focus while testing and operator presses keyboard Enter key, won't cancel or Emergency Stop.
         }
 
         private void ButtonEmergencyStop_Clicked(Object sender, EventArgs e) {
@@ -437,6 +445,7 @@ namespace ABT.Test.TestExec {
         }
 
         private async void ButtonRun_Clicked(Object sender, EventArgs e) {
+            TSMI_About_TestPlan.Select(); // Prevents ButtonCanel or ButtonEmergencyStop from having focus, so if a MessageBox loses focus while testing and operator presses keyboard Enter key, won't cancel or Emergency Stop.
             if (testPlanDefinition.SerialNumberEntry.IsEnabled()) {
                 String serialNumber;
                 if (testPlanDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) {

@@ -40,8 +40,8 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_ABT = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSMI_Apps_ABTGenerateTestPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_ABTChooseTestPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.TSMI_Apps_ABTGenerateTestPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_ABTValidateTestPlanDefinition = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_Keysight = new System.Windows.Forms.ToolStripMenuItem();
             this.TSMI_Apps_KeysightCommandExpert = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,9 +111,11 @@ namespace ABT.Test.TestExec {
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(117, 64);
             this.ButtonCancel.TabIndex = 2;
-            this.ButtonCancel.Text = "&Cancel";
+            this.ButtonCancel.TabStop = false;
+            this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = false;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Clicked);
+            this.ButtonCancel.Enter += new System.EventHandler(this.ButtonCancel_Enter);
             // 
             // TextTest
             // 
@@ -180,9 +182,11 @@ namespace ABT.Test.TestExec {
             this.ButtonEmergencyStop.Name = "ButtonEmergencyStop";
             this.ButtonEmergencyStop.Size = new System.Drawing.Size(109, 102);
             this.ButtonEmergencyStop.TabIndex = 5;
-            this.ButtonEmergencyStop.Text = "&Emergency Stop";
+            this.ButtonEmergencyStop.TabStop = false;
+            this.ButtonEmergencyStop.Text = "Emergency Stop";
             this.ButtonEmergencyStop.UseVisualStyleBackColor = true;
             this.ButtonEmergencyStop.Click += new System.EventHandler(this.ButtonEmergencyStop_Clicked);
+            this.ButtonEmergencyStop.Enter += new System.EventHandler(this.ButtonEmergencyStop_Enter);
             // 
             // MS
             // 
@@ -215,7 +219,7 @@ namespace ABT.Test.TestExec {
             // TSMI_Test_Choose
             // 
             this.TSMI_Test_Choose.Name = "TSMI_Test_Choose";
-            this.TSMI_Test_Choose.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_Choose.Size = new System.Drawing.Size(173, 26);
             this.TSMI_Test_Choose.Text = "&Choose";
             this.TSMI_Test_Choose.ToolTipText = "Closes current TestPlan & open another.";
             this.TSMI_Test_Choose.Click += new System.EventHandler(this.TSMI_Test_Choose_Click);
@@ -225,7 +229,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Test_SaveResults.Image = ((System.Drawing.Image)(resources.GetObject("TSMI_Test_SaveResults.Image")));
             this.TSMI_Test_SaveResults.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.TSMI_Test_SaveResults.Name = "TSMI_Test_SaveResults";
-            this.TSMI_Test_SaveResults.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_SaveResults.Size = new System.Drawing.Size(173, 26);
             this.TSMI_Test_SaveResults.Text = "&Save Results";
             this.TSMI_Test_SaveResults.ToolTipText = "Save UUT results.";
             this.TSMI_Test_SaveResults.Click += new System.EventHandler(this.TSMI_Test_SaveResults_Click);
@@ -233,12 +237,12 @@ namespace ABT.Test.TestExec {
             // TSMI_File_Separator
             // 
             this.TSMI_File_Separator.Name = "TSMI_File_Separator";
-            this.TSMI_File_Separator.Size = new System.Drawing.Size(225, 6);
+            this.TSMI_File_Separator.Size = new System.Drawing.Size(170, 6);
             // 
             // TSMI_Test_Exit
             // 
             this.TSMI_Test_Exit.Name = "TSMI_Test_Exit";
-            this.TSMI_Test_Exit.Size = new System.Drawing.Size(228, 30);
+            this.TSMI_Test_Exit.Size = new System.Drawing.Size(173, 26);
             this.TSMI_Test_Exit.Text = "&Exit";
             this.TSMI_Test_Exit.ToolTipText = "Close TestPlan.";
             this.TSMI_Test_Exit.Click += new System.EventHandler(this.TSMI_Test_Exit_Click);
@@ -260,8 +264,15 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_ABTGenerateTestPlan,
             this.TSMI_Apps_ABTValidateTestPlanDefinition});
             this.TSMI_Apps_ABT.Name = "TSMI_Apps_ABT";
-            this.TSMI_Apps_ABT.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Apps_ABT.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_ABT.Text = "&ABT";
+            // 
+            // TSMI_Apps_ABTChooseTestPlan
+            // 
+            this.TSMI_Apps_ABTChooseTestPlan.Name = "TSMI_Apps_ABTChooseTestPlan";
+            this.TSMI_Apps_ABTChooseTestPlan.Size = new System.Drawing.Size(270, 26);
+            this.TSMI_Apps_ABTChooseTestPlan.Text = "&Choose TestPlan";
+            this.TSMI_Apps_ABTChooseTestPlan.Click += new System.EventHandler(this.TSMI_Apps_ABTChooseTestPlan_Click);
             // 
             // TSMI_Apps_ABTGenerateTestPlan
             // 
@@ -270,13 +281,6 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_ABTGenerateTestPlan.Text = "&Generate TestPlan";
             this.TSMI_Apps_ABTGenerateTestPlan.ToolTipText = "Generate skeleton program.";
             this.TSMI_Apps_ABTGenerateTestPlan.Click += new System.EventHandler(this.TSMI_Apps_ABTGenerateTestPlan_Click);
-            // 
-            // TSMI_Apps_ABTChooseTestPlan
-            // 
-            this.TSMI_Apps_ABTChooseTestPlan.Name = "TSMI_Apps_ABTChooseTestPlan";
-            this.TSMI_Apps_ABTChooseTestPlan.Size = new System.Drawing.Size(270, 26);
-            this.TSMI_Apps_ABTChooseTestPlan.Text = "&Choose TestPlan";
-            this.TSMI_Apps_ABTChooseTestPlan.Click += new System.EventHandler(this.TSMI_Apps_ABTChooseTestPlan_Click);
             // 
             // TSMI_Apps_ABTValidateTestPlanDefinition
             // 
@@ -292,7 +296,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_KeysightCommandExpert,
             this.TSMI_Apps_KeysightConnectionExpert});
             this.TSMI_Apps_Keysight.Name = "TSMI_Apps_Keysight";
-            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Apps_Keysight.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Keysight.Text = "&Keysight";
             // 
             // TSMI_Apps_KeysightCommandExpert
@@ -319,7 +323,7 @@ namespace ABT.Test.TestExec {
             this.TSMI_Apps_MicrosoftVisualStudioCode,
             this.TSMI_Apps_MicrosoftXML_Notepad});
             this.TSMI_Apps_Microsoft.Name = "TSMI_Apps_Microsoft";
-            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(224, 26);
+            this.TSMI_Apps_Microsoft.Size = new System.Drawing.Size(155, 26);
             this.TSMI_Apps_Microsoft.Text = "&Microsoft";
             // 
             // TSMI_Apps_MicrosoftSQLServerManagementStudio
