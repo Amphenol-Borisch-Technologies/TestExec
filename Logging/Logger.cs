@@ -1,5 +1,4 @@
-﻿#undef VERBOSE
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;

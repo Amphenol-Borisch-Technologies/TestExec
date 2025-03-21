@@ -128,8 +128,6 @@ namespace ABT.Test.TestExec {
     /// </summary>
     public abstract partial class TestExec : Form {
         public static System.Timers.Timer StatusTimer = new System.Timers.Timer(10000);
-        private const String _serialNumberMostRecent = "MostRecent";
-        private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly SerialNumberDialog _serialNumberDialog = null;
 
         protected TestExec(Icon icon, String baseDirectory) {
@@ -153,7 +151,6 @@ namespace ABT.Test.TestExec {
 
                 if (RegexInvalid(testPlanDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testPlanDefinition.SerialNumberEntry.RegularEx}' in file '{TestPlanDefinitionXML}'.");
                 if (testPlanDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) _serialNumberDialog = new SerialNumberDialog(testPlanDefinition.SerialNumberEntry.RegularEx, testPlanDefinition.SerialNumberEntry.Format, testExecDefinition.BarcodeReader.ID);
-
             }
 
             StatusTimer.Elapsed += StatusTimeUpdate;
