@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
+﻿using ABT.Test.TestLib;
 using Serilog.Core; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
-using ABT.Test.TestLib;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace ABT.Test.TestExec.Logging {
     public class RichTextBoxSink : ILogEventSink {
