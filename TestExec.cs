@@ -1,4 +1,10 @@
-﻿using System;
+﻿using ABT.Test.TestExec.Logging;
+using ABT.Test.TestLib;
+using ABT.Test.TestLib.Configuration;
+using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
+using ABT.Test.TestLib.Miscellaneous;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
@@ -13,16 +19,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Outlook = Microsoft.Office.Interop.Outlook;
 using Windows.Devices.Enumeration;
 using Windows.Devices.PointOfService;
-using ABT.Test.TestExec.Logging;
-using ABT.Test.TestLib;
-using ABT.Test.TestLib.InstrumentDrivers.Interfaces;
-using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
-using ABT.Test.TestLib.Miscellaneous;
+using Outlook = Microsoft.Office.Interop.Outlook;
 // TODO:  Eventually; evaluate Keysight OpenTAP as potential option in addition to TestExec/TestLib/TestPlan.  https://opentap.io/.
 // - Briefly evaluated previously; time for reevaluation.
 // TODO:  Eventually; GitHub automated workflows; CI/CD including automated deployment to subscribed TestExec PCs (assuming its possible).
@@ -128,6 +128,8 @@ namespace ABT.Test.TestExec {
     /// </summary>
     public abstract partial class TestExec : Form {
         public static System.Timers.Timer StatusTimer = new System.Timers.Timer(10000);
+        private const String _serialNumberMostRecent = "MostRecent";
+        private const String _NOT_APPLICABLE = "NotApplicable";
         private readonly SerialNumberDialog _serialNumberDialog = null;
 
         protected TestExec(Icon icon, String baseDirectory) {
@@ -151,6 +153,7 @@ namespace ABT.Test.TestExec {
 
                 if (RegexInvalid(testPlanDefinition.SerialNumberEntry.RegularEx)) throw new ArgumentException($"Invalid {nameof(SerialNumberEntry.RegularEx)} '{testPlanDefinition.SerialNumberEntry.RegularEx}' in file '{TestPlanDefinitionXML}'.");
                 if (testPlanDefinition.SerialNumberEntry.EntryType is SerialNumberEntryType.Barcode) _serialNumberDialog = new SerialNumberDialog(testPlanDefinition.SerialNumberEntry.RegularEx, testPlanDefinition.SerialNumberEntry.Format, testExecDefinition.BarcodeReader.ID);
+
             }
 
             StatusTimer.Elapsed += StatusTimeUpdate;
@@ -287,7 +290,7 @@ namespace ABT.Test.TestExec {
                 _ = Process.Start(psi);
             } else InvalidPathError(appPath);
         }
-        
+
         private void OpenFolder(String folderPath) {
             if (Directory.Exists(folderPath)) {
                 ProcessStartInfo psi = new ProcessStartInfo {
@@ -519,12 +522,12 @@ namespace ABT.Test.TestExec {
             if (TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD, TestPlanDefinitionXML)) _ = MessageBox.Show(this, "Validation passed.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.CommandExpert); }
-        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.ConnectionExpert);}
+        private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.ConnectionExpert); }
 
-        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio);}
-        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudio);}
-        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudioCode);}
-        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.XMLNotepad);}
+        private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio); }
+        private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudio); }
+        private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudioCode); }
+        private void TSMI_Apps_MicrosoftXML_Notepad_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.XMLNotepad); }
 
         private void TSMI_Feedback_ComplimentsPraiseεPlaudits_Click(Object sender, EventArgs e) { _ = MessageBox.Show(this, $"You are a kind person, {UserName}.", $"Thank you!", MessageBoxButtons.OK, MessageBoxIcon.Information); }
         private void TSMI_Feedback_ComplimentsMoney_Click(Object sender, EventArgs e) { _ = MessageBox.Show(this, $"Prefer ₿itcoin donations!", $"₿₿₿", MessageBoxButtons.OK, MessageBoxIcon.Information); }
@@ -605,7 +608,7 @@ namespace ABT.Test.TestExec {
         private void TSMI_UUT_TestDataSQL_ReportingAndQuerying_Click(Object sender, EventArgs e) {
             Debug.Assert(testExecDefinition.TestData.Item is SQL_DB);
             OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio);
-		}
+        }
         private void TSMI_About_TestExec_Click(Object sender, EventArgs e) {
             Development development = Serializing.DeserializeFromFile<Development>(TestExecDefinitionXML);
             ShowAbout(Assembly.GetExecutingAssembly(), development);

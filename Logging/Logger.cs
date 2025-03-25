@@ -1,4 +1,8 @@
-﻿using System;
+﻿#undef VERBOSE
+using ABT.Test.TestLib;
+using ABT.Test.TestLib.Configuration;
+using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
+using System;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
@@ -6,9 +10,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using Serilog; // Install Serilog via NuGet Package Manager.  Site is https://serilog.net/.
-using ABT.Test.TestLib;
-using ABT.Test.TestLib.Configuration;
 using static ABT.Test.TestLib.Data;
 
 namespace ABT.Test.TestExec.Logging {
