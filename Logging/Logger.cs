@@ -66,6 +66,13 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.CancelNotPassed)}", method.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.Description)}", method.Description));
 
+            // TODO: Eventually; create XML object formatting method in class MethodCustom, so can actually serialize MethodCustom objects into XML in the Value property.
+            // TODO: Add IFormat interface to abstract base class Method, to implement formatting methods for sub-classes.
+            // TODO: Soon; implement Logger.FormatNumeric() method in class MethodInterval as IFormat interface.
+            // TODO: Soon; implement Logger.FormatProcess() method in class MethodProcess as IFormat interface.
+            // TODO: Soon; implement Logger.FormatTextual() method in class MethodTextual as IFormat interface.
+            // TODO: Soon; delete Logger's FormatNumeric(), FormatProcess() & FormatTextual() methods.
+            // TODO: Soon; cast method to IFormat interface and invoke it's Format method, instead of below 4 if statements.
             if (method is MethodCustom) stringBuilder.Append(method.Value);
             else if (method is MethodInterval methodInterval) stringBuilder.Append(FormatNumeric(methodInterval));
             else if (method is MethodProcess methodProcess) stringBuilder.Append(FormatProcess(methodProcess));
