@@ -47,3 +47,13 @@ idea/
 /obj/project.nuget.cache
 /obj/TestExec.csproj.nuget.dgspec.json
 /.vs/TestExec/CopilotIndices/17.13.441.19478
+/bin/x64/Debug/Configuration/TestExecDefinition.xml
+/.vs/TestExec/v17/DocumentLayout.backup.json
+/.vs/TestExec/CopilotIndices/17.12.53.23981/CodeChunks.db
+/.vs/TestExec/CopilotIndices/17.12.53.23981/SemanticSymbols.db
+/.vs/TestExec/CopilotIndices/17.12.53.23981/SemanticSymbols.db-shm
+/.vs/TestExec/CopilotIndices/17.12.53.23981/SemanticSymbols.db-wal
+/.vs/TestExec/v17/DocumentLayout.json
+/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/obj/Debug/TestExec.csproj.AssemblyReference.cache
+/obj/Debug/TestExec.csproj.ResolveComReference.cache
