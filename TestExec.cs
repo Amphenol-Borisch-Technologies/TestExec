@@ -513,6 +513,7 @@ namespace ABT.Test.TestExec {
             if (saveFileDialog.ShowDialog() == DialogResult.OK) rtfResults.SaveFile(saveFileDialog.FileName);
         }
         private void TSMI_Test_Exit_Click(Object sender, EventArgs e) { Application.Exit(); }
+
         private void TSMI_Apps_ABTGenerateTestPlan_Click(Object sender, EventArgs e) {
             if (!TestPlanDefinitionValidator.ValidSpecification(TestPlanDefinitionXSD: TestPlanDefinitionXSD, TestPlanDefinitionXML)) return;
             TestPlanGenerator.Generate(TestPlanDefinitionXML);
@@ -523,7 +524,6 @@ namespace ABT.Test.TestExec {
         }
         private void TSMI_Apps_KeysightCommandExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.CommandExpert); }
         private void TSMI_Apps_KeysightConnectionExpert_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Keysight.ConnectionExpert); }
-
         private void TSMI_Apps_MicrosoftSQL_ServerManagementStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.SQLServerManagementStudio); }
         private void TSMI_Apps_MicrosoftVisualStudio_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudio); }
         private void TSMI_Apps_MicrosoftVisualStudioCode_Click(Object sender, EventArgs e) { OpenApp(testExecDefinition.Apps.Microsoft.VisualStudioCode); }
@@ -702,6 +702,7 @@ namespace ABT.Test.TestExec {
         }
 
         private EVENTS MethodEvaluate(Method method) {
+            // TODO: Soon; similar to IFormat interface, create IEvaluate interface.
             if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
             if (method is MethodInterval methodInterval) {
                 if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' {nameof(Method.Value)} '{method.Value}' ≠ System.Double.");
