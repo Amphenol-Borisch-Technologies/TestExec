@@ -15,44 +15,10 @@ using static ABT.Test.TestLib.Data;
 namespace ABT.Test.TestExec.Logging {
     public static class Logger {
         public const String LOGGER_TEMPLATE = "{Message}{NewLine}";
-        public const String SPACES_2 = "  ";
-        public const String SPACES_4 = SPACES_2 + SPACES_2; // Embedded tabs in strings (\t) seem to cause method ReplaceText() issues.
         private const String MESSAGE_TEST_EVENT = "Test Event";
-        private const Int32 PR = 21;
-        private static readonly String MESSAGE_UUT_EVENT = (SPACES_2 + MESSAGE_TEST_EVENT).PadRight(PR) + ": ";
-        private const String EXPECTED = "Expected";
-        private const String ACTUAL = "Actual";
+        private static readonly String MESSAGE_UUT_EVENT = (SPACES_2 + MESSAGE_TEST_EVENT).PadRight(PAD_RIGHT) + ": ";
 
         #region Public Methods
-        public static String FormatMessage(String Label, String Message) { return $"{SPACES_2}{Label}".PadRight(PR) + $": {Message}"; }
-
-        public static StringBuilder FormatNumeric(MethodInterval methodInterval) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.High), $"{methodInterval.High:G}"));
-            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Value), $"{Math.Round(Double.Parse(methodInterval.Value), (Int32)methodInterval.FractionalDigits, MidpointRounding.ToEven)}"));
-            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Low), $"{methodInterval.Low:G}"));
-            String units = String.Empty;
-            if (methodInterval.UnitPrefix != MI_UnitPrefix.NONE) units += $"{Enum.GetName(typeof(MI_UnitPrefix), methodInterval.UnitPrefix)}";
-            units += $"{Enum.GetName(typeof(MI_Units), methodInterval.Units)}";
-            if (methodInterval.UnitSuffix != MI_UnitSuffix.NONE) units += $" {Enum.GetName(typeof(MI_UnitSuffix), methodInterval.UnitSuffix)}";
-            stringBuilder.AppendLine(FormatMessage(nameof(MethodInterval.Units), units));
-            return stringBuilder;
-        }
-
-        public static StringBuilder FormatProcess(MethodProcess methodProcess) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage(EXPECTED, methodProcess.Expected));
-            stringBuilder.AppendLine(FormatMessage(ACTUAL, methodProcess.Value));
-            return stringBuilder;
-        }
-
-        public static StringBuilder FormatTextual(MethodTextual methodTextual) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage(EXPECTED, methodTextual.Text));
-            stringBuilder.AppendLine(FormatMessage(ACTUAL, methodTextual.Value));
-            return stringBuilder;
-        }
-
         public static void LogError(String logMessage) { Log.Error(logMessage); }
 
         public static void LogMessageAppend(String Message) { Log.Information(Message); }
@@ -66,19 +32,7 @@ namespace ABT.Test.TestExec.Logging {
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method)}", method.Name));
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.CancelNotPassed)}", method.CancelNotPassed.ToString()));
             stringBuilder.AppendLine(FormatMessage($"{nameof(Method.Description)}", method.Description));
-
-            // TODO: Eventually; create XML object formatting method in class MethodCustom, so can actually serialize MethodCustom objects into XML in the Value property.
-            // TODO: Add IFormat interface to abstract base class Method, to implement formatting methods for sub-classes.
-            // TODO: Soon; implement Logger.FormatNumeric() method in class MethodInterval as IFormat interface.
-            // TODO: Soon; implement Logger.FormatProcess() method in class MethodProcess as IFormat interface.
-            // TODO: Soon; implement Logger.FormatTextual() method in class MethodTextual as IFormat interface.
-            // TODO: Soon; delete Logger's FormatNumeric(), FormatProcess() & FormatTextual() methods.
-            // TODO: Soon; cast method to IFormat interface and invoke it's Format method, instead of below 4 if statements.
-            if (method is MethodCustom) stringBuilder.Append(method.Value);
-            else if (method is MethodInterval methodInterval) stringBuilder.Append(FormatNumeric(methodInterval));
-            else if (method is MethodProcess methodProcess) stringBuilder.Append(FormatProcess(methodProcess));
-            else if (method is MethodTextual methodTextual) stringBuilder.Append(FormatTextual(methodTextual));
-            else throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
+            stringBuilder.Append(((IFormat)method).Format());
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append($"{SPACES_2}{method.Log}");
             Int32 startFind = rtfResults.TextLength;
@@ -95,18 +49,19 @@ namespace ABT.Test.TestExec.Logging {
 
             Log.Information($"{nameof(UUT)}:");
             Log.Information($"{MESSAGE_UUT_EVENT}");
-            Log.Information($"{SPACES_2}{nameof(TestSequence.SerialNumber)}".PadRight(PR) + $": {testSequence.SerialNumber}");
-            Log.Information($"{SPACES_2}{nameof(UUT.Number)}".PadRight(PR) + $": {testSequence.UUT.Number}");
-            Log.Information($"{SPACES_2}{nameof(UUT.Revision)}".PadRight(PR) + $": {testSequence.UUT.Revision}");
-            Log.Information($"{SPACES_2}{nameof(UUT.Description)}".PadRight(PR) + $": {testSequence.UUT.Description}");
-            Log.Information($"{SPACES_2}{nameof(UUT.Category)}".PadRight(PR) + $": {testSequence.UUT.Category}");
-            Log.Information($"{SPACES_2}{nameof(UUT.Customer)}".PadRight(PR) + $": {testSequence.UUT.Customer.Name}\n");
+            Log.Information($"{SPACES_2}{nameof(TestSequence.SerialNumber)}".PadRight(PAD_RIGHT) + $": {testSequence.SerialNumber}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Number)}".PadRight(PAD_RIGHT) + $": {testSequence.UUT.Number}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Revision)}".PadRight(PAD_RIGHT) + $": {testSequence.UUT.Revision}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Description)}".PadRight(PAD_RIGHT) + $": {testSequence.UUT.Description}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Category)}".PadRight(PAD_RIGHT) + $": {testSequence.UUT.Category}");
+            Log.Information($"{SPACES_2}{nameof(UUT.Customer)}".PadRight(PAD_RIGHT) + $": {testSequence.UUT.Customer.Name}\n");
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{nameof(TestGroup.Methods)}:");
+            const String SPACING = SPACES_2 + SPACES_2; // Embedded tabs in strings (\t) seem to cause method ReplaceText() issues.
             foreach (TestGroup testGroup in testSequence.TestOperation.TestGroups) {
                 stringBuilder.AppendLine($"{SPACES_2}{testGroup.Classname}, {testGroup.Description}");
-                foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"{SPACES_4}{method.Name}".PadRight(PR + SPACES_4.Length) + $": {method.Description}");
+                foreach (Method method in testGroup.Methods) stringBuilder.AppendLine($"{SPACING}{method.Name}".PadRight(PAD_RIGHT + SPACING.Length) + $": {method.Description}");
             }
             Log.Information(stringBuilder.ToString());
         }
