@@ -57,3 +57,11 @@ idea/
 /obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /obj/Debug/TestExec.csproj.AssemblyReference.cache
 /obj/Debug/TestExec.csproj.ResolveComReference.cache
+/.vs/TestExec/FileContentIndex/1ba134ed-5767-41c8-8fab-61245e7e5d4e.vsidx
+*.vsidx
+/.vs/TestExec/FileContentIndex/31b42a04-3a97-400d-a083-73d886acf35e.vsidx
+/.vs/TestExec/FileContentIndex/509a1989-8097-4a5f-ad0d-24e58193e95d.vsidx
+/.vs/TestExec/FileContentIndex/7a16687a-c440-49e9-9e02-e3bf9d720c0f.vsidx
+/.vs/TestExec/FileContentIndex/97c8e9a2-abea-457a-b4ca-7675ca576d83.vsidx
+/bin/x64/Debug/Ivi.Scope.Interop.xml
+/obj/x64/Debug/TestExec.csproj.CoreCompileInputs.cache
