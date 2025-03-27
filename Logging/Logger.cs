@@ -28,11 +28,7 @@ namespace ABT.Test.TestExec.Logging {
         public static void LogMethod(ref RichTextBox rtfResults, Method method) {
             SetBackColor(ref rtfResults, 0, method.Name, EventColors[method.Event]);
             if (method.Event is EVENTS.PASS) return;
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(FormatMessage($"{nameof(Method)}", method.Name));
-            stringBuilder.AppendLine(FormatMessage($"{nameof(Method.CancelNotPassed)}", method.CancelNotPassed.ToString()));
-            stringBuilder.AppendLine(FormatMessage($"{nameof(Method.Description)}", method.Description));
-            stringBuilder.Append(((IFormat)method).Format());
+            StringBuilder stringBuilder = new StringBuilder(((IFormat)method).Format());
             stringBuilder.AppendLine(FormatMessage(MESSAGE_TEST_EVENT, method.Event.ToString()));
             stringBuilder.Append($"{SPACES_2}{method.Log}");
             Int32 startFind = rtfResults.TextLength;
