@@ -656,8 +656,8 @@ namespace ABT.Test.TestExec {
                     TestIndices.Method = method;
                     try {
                         method.Value = await Task.Run(() => MethodRun(method));
+                        method.Event = ((IEvaluate)method).Evaluate();
                         method.LogString = method.Log.ToString(); // NOTE:  XmlSerializer doesn't support [OnSerializing] attribute, so have to explicitly invoke LogConvert().
-                        method.Event = MethodEvaluate(method);
                         if (CT_EmergencyStop.IsCancellationRequested || CT_Cancel.IsCancellationRequested) {
                             SystemReset();
                             return;
@@ -699,24 +699,6 @@ namespace ABT.Test.TestExec {
             testPlanDefinition.TestSpace.Statistics.Update(testSequence.Event);
             StatusStatisticsUpdate(null, null);
             Logger.Stop(ref rtfResults);
-        }
-
-        private EVENTS MethodEvaluate(Method method) {
-            // TODO: Soon; similar to IFormat interface, create IEvaluate interface.
-            if (method is MethodCustom) return method.Event; // NOTE:  Custom methods have their Events set in their methods.
-            if (method is MethodInterval methodInterval) {
-                if (!Double.TryParse(methodInterval.Value, NumberStyles.Float, CultureInfo.CurrentCulture, out Double d)) throw new InvalidOperationException($"{nameof(Method)} '{method.Name}' {nameof(Method.Value)} '{method.Value}' ≠ System.Double.");
-                d /= MethodInterval.UnitPrefixes[methodInterval.UnitPrefix];
-                methodInterval.Value = d.ToString("G");
-                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low <= d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GToE && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low <= d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LToE) return ((methodInterval.Low < d) && (d <= methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                if (methodInterval.LowComparator is MI_LowComparator.GT && methodInterval.HighComparator is MI_HighComparator.LT) return ((methodInterval.Low < d) && (d < methodInterval.High)) ? EVENTS.PASS : EVENTS.FAIL;
-                throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', contains unimplemented comparators '{methodInterval.LowComparator}' and/or '{methodInterval.HighComparator}'.");
-            }
-            if (method is MethodProcess methodProcess) return (String.Equals(methodProcess.Expected, methodProcess.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            if (method is MethodTextual methodTextual) return (String.Equals(methodTextual.Text, methodTextual.Value, StringComparison.Ordinal)) ? EVENTS.PASS : EVENTS.FAIL;
-            throw new NotImplementedException($"{nameof(Method)} '{method.Name}', {nameof(Method.Description)} '{method.Description}', of type '{nameof(method)}' not implemented.");
         }
 
         private Boolean EventSet(Int32 aggregatedEvents, EVENTS events) { return ((aggregatedEvents & (Int32)events) == (Int32)events); }
