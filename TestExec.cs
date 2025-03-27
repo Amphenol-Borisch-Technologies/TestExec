@@ -546,12 +546,12 @@ namespace ABT.Test.TestExec {
             _ = stringBuilder.AppendLine(@"    - See: file:///P:/Test/Engineers/Equipment_Manuals/Honeywell/Honeywell_Voyager_1200G_User's_Guide_ReadMe.pdf");
             _ = stringBuilder.AppendLine($"    - Or:  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/ppr/en-us/public/products/barcode-scanners/general-purpose-handheld/1200g/documents/sps-ppr-vg1200-ug.pdf{Environment.NewLine}{Environment.NewLine}");
             foreach (DeviceInformation di in dic) {
-                _ = sb.AppendLine($"Name: '{di.Name}'.");
-                _ = sb.AppendLine($"Kind: '{di.Kind}'.");
-                _ = sb.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
+                _ = stringBuilder.AppendLine($"Name: '{di.Name}'.");
+                _ = stringBuilder.AppendLine($"Kind: '{di.Kind}'.");
+                _ = stringBuilder.AppendLine($"ID  : '{di.Id}'.{Environment.NewLine}");
             }
 
-            CustomMessageBox.Show(Title: $"Microsoft supported, corded Barcode Scanner(s)", Message: sb.ToString());
+            CustomMessageBox.Show(Title: $"Microsoft supported, corded Barcode Scanner(s)", Message: stringBuilder.ToString());
         }
         private void TSMI_System_ColorCode_Click(Object sender, EventArgs e) {
             CustomMessageBox customMessageBox = new CustomMessageBox {
